@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>TurboWash Mobile - غسيل سيارات متنقل في الرياض</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4Qj6ZpJQG8z7+M1CwCkS7Qbqj0pglp3FV9C8HkWf3s="
+          crossorigin=""/>
+    <style>
+        :root {
+            --font-main: 'Tajawal', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font-main);
+            background: #f5f7fb;
+            color: #111827;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* Layout basics */
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        button, .btn {
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-main);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.2rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .card {
+            border-radius: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.9);
+            box-shadow: 0 10px 30px rgba(15,23,42,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .card-price {
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .section {
+            padding: 2.5rem 0;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.95rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        /* THEME SYSTEM */
+        body[data-theme="royal"] {
+            --bg-main: radial-gradient(circle at top, #0f172a 0, #020617 40%, #020617 100%);
+            --bg-card: rgba(15,23,42,0.9);
+            --bg-header: rgba(15,23,42,0.85);
+            --accent: #facc15;
+            --accent-soft: rgba(250,204,21,0.15);
+            --accent-strong: #fbbf24;
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --primary: #1d4ed8;
+            --primary-soft: rgba(37,99,235,0.2);
+            --danger: #ef4444;
+            --success: #22c55e;
+            --info: #0ea5e9;
+        }
+
+        body[data-theme="app"] {
+            --bg-main: linear-gradient(180deg,#0f172a 0,#020617 40%,#0b1120 100%);
+            --bg-card: #020617;
+            --bg-header: rgba(15,23,42,0.95);
+            --accent: #22c55e;
+            --accent-soft: rgba(34,197,94,0.15);
+            --accent-strong: #4ade80;
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --primary: #0ea5e9;
+            --primary-soft: rgba(14,165,233,0.2);
+            --danger: #ef4444;
+            --success: #22c55e;
+            --info: #38bdf8;
+        }
+
+        body[data-theme="darkneon"] {
+            --bg-main: radial-gradient(circle at top,#0f172a 0,#020617 40%,#000000 100%);
+            --bg-card: rgba(15,23,42,0.95);
+            --bg-header: rgba(15,23,42,0.95);
+            --accent: #22d3ee;
+            --accent-soft: rgba(56,189,248,0.18);
+            --accent-strong: #a855f7;
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --primary: #22d3ee;
+            --primary-soft: rgba(34,211,238,0.2);
+            --danger: #fb7185;
+            --success: #4ade80;
+            --info: #38bdf8;
+        }
+
+        body[data-theme="promo"] {
+            --bg-main: linear-gradient(180deg,#f97316 0,#facc15 40%,#fef3c7 100%);
+            --bg-card: #ffffff;
+            --bg-header: rgba(248,250,252,0.95);
+            --accent: #ea580c;
+            --accent-soft: rgba(234,88,12,0.12);
+            --accent-strong: #f97316;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --primary: #0f766e;
+            --primary-soft: rgba(15,118,110,0.15);
+            --danger: #b91c1c;
+            --success: #16a34a;
+            --info: #0284c7;
+        }
+
+        body[data-theme="minimal"] {
+            --bg-main: #f9fafb;
+            --bg-card: #ffffff;
+            --bg-header: rgba(249,250,251,0.95);
+            --accent: #0f766e;
+            --accent-soft: rgba(15,118,110,0.12);
+            --accent-strong: #0ea5e9;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --primary: #0ea5e9;
+            --primary-soft: rgba(14,165,233,0.15);
+            --danger: #b91c1c;
+            --success: #16a34a;
+            --info: #2563eb;
+        }
+
+        body[data-theme] {
+            background: var(--bg-main);
+            color: var(--text-main);
+        }
+
+        body[data-theme] .card {
+            background: var(--bg-card);
+            color: var(--text-main);
+        }
+
+        body[data-theme] header {
+            background: var(--bg-header);
+            backdrop-filter: blur(16px);
+        }
+
+        body[data-theme] .section-subtitle {
+            color: var(--text-muted);
+        }
+
+        body[data-theme] .btn-primary {
+            background: var(--primary);
+            color: #f9fafb;
+        }
+
+        body[data-theme] .btn-outline {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        body[data-theme] .btn-accent {
+            background: var(--accent);
+            color: #111827;
+        }
+
+        body[data-theme] .badge-accent {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        body[data-theme] .badge-success {
+            background: rgba(34,197,94,0.15);
+            color: var(--success);
+        }
+
+        body[data-theme] .badge-danger {
+            background: rgba(239,68,68,0.15);
+            color: var(--danger);
+        }
+
+        body[data-theme] .badge-info {
+            background: rgba(14,165,233,0.15);
+            color: var(--info);
+        }
+
+        body[data-theme] .nav-link {
+            color: var(--text-main);
+        }
+
+        body[data-theme] .nav-link.active {
+            color: var(--accent);
+        }
+
+        body[data-theme] .ticker {
+            background: var(--accent-soft);
+            color: var(--accent-strong);
+        }
+
+        /* HEADER */
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 30%, #facc15 0, #f97316 40%, #0f172a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 2px rgba(250,204,21,0.4);
+        }
+
+        .logo-icon svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .logo-text-main {
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .logo-text-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .phone-display {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 999px;
+            background: #22c55e;
+            color: #f9fafb;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .whatsapp-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* HERO */
+        .hero {
+            padding: 2.5rem 0 2rem;
+        }
+
+        .hero-inner {
+            display: grid;
+            grid-template-columns: minmax(0,1.2fr) minmax(0,1fr);
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-size: 2.1rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-highlight {
+            color: var(--accent-strong);
+        }
+
+        .hero-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .hero-stat {
+            min-width: 120px;
+        }
+
+        .hero-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .hero-stat-value {
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .hero-visual {
+            position: relative;
+            min-height: 260px;
+        }
+
+        .hero-bg-city {
+            position: absolute;
+            inset: 0;
+            opacity: 0.25;
+            background-image:
+                    radial-gradient(circle at 10% 0%, rgba(37,99,235,0.6) 0, transparent 55%),
+                    radial-gradient(circle at 90% 0%, rgba(250,204,21,0.6) 0, transparent 55%);
+            mix-blend-mode: screen;
+        }
+
+        .hero-bike-card {
+            position: relative;
+            margin: 0 auto;
+            max-width: 320px;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            background: radial-gradient(circle at 0 0,#1d4ed8 0,#020617 55%);
+            box-shadow: 0 20px 50px rgba(15,23,42,0.8);
+            overflow: hidden;
+        }
+
+        .hero-bike-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.6rem;
+        }
+
+        .hero-bike-title {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .hero-bike-status {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            background: rgba(34,197,94,0.2);
+            color: #bbf7d0;
+        }
+
+        .hero-bike-svg {
+            width: 100%;
+            height: 140px;
+        }
+
+        .hero-bike-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.6rem;
+            font-size: 0.8rem;
+            color: #cbd5f5;
+        }
+
+        /* SERVICES */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+            gap: 1rem;
+        }
+
+        .service-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 0 0,var(--accent-soft) 0,transparent 55%);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .service-body {
+            position: relative;
+        }
+
+        .service-price {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-top: 0.4rem;
+        }
+
+        /* OFFERS */
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+            gap: 1rem;
+        }
+
+        .countdown {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* FLEET */
+        .fleet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+            gap: 1rem;
+        }
+
+        .fleet-bike-svg {
+            width: 100%;
+            height: 120px;
+        }
+
+        /* HOW IT WORKS */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+            gap: 1rem;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        /* CTA */
+        .cta {
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .cta-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 1.5rem 0 1rem;
+            border-top: 1px solid rgba(148,163,184,0.3);
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+        }
+
+        /* PAGES (SPA) */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            font-size: 0.85rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            border-radius: 0.7rem;
+            border: 1px solid rgba(148,163,184,0.5);
+            padding: 0.5rem 0.7rem;
+            font-family: var(--font-main);
+            font-size: 0.85rem;
+            background: rgba(15,23,42,0.03);
+            color: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.5rem 0.4rem;
+            border-bottom: 1px solid rgba(148,163,184,0.3);
+            text-align: right;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-ready {
+            background: rgba(34,197,94,0.15);
+            color: var(--success);
+        }
+
+        .status-progress {
+            background: rgba(14,165,233,0.15);
+            color: var(--info);
+        }
+
+        .status-done {
+            background: rgba(37,99,235,0.15);
+            color: var(--primary);
+        }
+
+        /* MAP */
+        #map {
+            width: 100%;
+            height: 260px;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(15,23,42,0.4);
+        }
+
+        /* DESIGN SWITCHER */
+        .design-switcher {
+            position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            z-index: 60;
+        }
+
+        .design-switcher-toggle {
+            width: 52px;
+            height: 52px;
+            border-radius: 999px;
+            background: var(--accent);
+            color: #111827;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 30px rgba(15,23,42,0.4);
+        }
+
+        .design-switcher-toggle svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .design-switcher-panel {
+            position: absolute;
+            bottom: 60px;
+            left: 0;
+            min-width: 220px;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            background: var(--bg-card);
+            box-shadow: 0 18px 40px rgba(15,23,42,0.7);
+            display: none;
+        }
+
+        .design-switcher-panel.open {
+            display: block;
+        }
+
+        .design-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.6rem;
+            padding: 0.4rem 0.3rem;
+            border-radius: 0.7rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .design-option:hover {
+            background: rgba(148,163,184,0.18);
+        }
+
+        .design-option.active {
+            background: var(--accent-soft);
+        }
+
+        .design-option-label {
+            font-weight: 600;
+        }
+
+        .design-option-tag {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* BOT */
+        .bot-toggle {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            z-index: 60;
+            width: 52px;
+            height: 52px;
+            border-radius: 999px;
+            background: var(--primary);
+            color: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 30px rgba(15,23,42,0.4);
+        }
+
+        .bot-toggle svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .bot-panel {
+            position: fixed;
+            bottom: 70px;
+            right: 1rem;
+            width: 280px;
+            max-height: 380px;
+            border-radius: 1rem;
+            background: var(--bg-card);
+            box-shadow: 0 18px 40px rgba(15,23,42,0.7);
+            display: none;
+            overflow: hidden;
+            z-index: 60;
+        }
+
+        .bot-panel.open {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bot-header {
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid rgba(148,163,184,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .bot-body {
+            flex: 1;
+            padding: 0.6rem 0.8rem;
+            overflow-y: auto;
+            font-size: 0.8rem;
+        }
+
+        .bot-footer {
+            padding: 0.6rem 0.8rem;
+            border-top: 1px solid rgba(148,163,184,0.3);
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .bot-msg {
+            margin-bottom: 0.4rem;
+            max-width: 90%;
+            padding: 0.4rem 0.6rem;
+            border-radius: 0.7rem;
+        }
+
+        .bot-msg-user {
+            margin-left: auto;
+            background: var(--primary-soft);
+        }
+
+        .bot-msg-bot {
+            margin-right: auto;
+            background: var(--accent-soft);
+        }
+
+        .bot-quick {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,0.5);
+            font-size: 0.75rem;
+            margin: 0.1rem;
+            cursor: pointer;
+        }
+
+        /* TICKER */
+        .ticker {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+        }
+
+        .ticker-inner {
+            display: inline-block;
+            animation: tickerMove 18s linear infinite;
+        }
+
+        @keyframes tickerMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero-inner {
+                grid-template-columns: minmax(0,1fr);
+            }
+
+            .header-inner {
+                flex-wrap: wrap;
+                gap: 0.6rem;
+            }
+
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .header-right {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .design-switcher-panel {
+                left: auto;
+                right: 0;
+            }
+        }
+    </style>
+</head>
+<body data-theme="royal">
+<div class="app">
+    <!-- HEADER -->
+    <header>
+        <div class="container">
+            <div class="header-inner">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <!-- SVG Logo: TurboWash Bike -->
+                        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="bikeBody" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0" stop-color="#facc15"/>
+                                    <stop offset="1" stop-color="#f97316"/>
+                                </linearGradient>
+                            </defs>
+                            <circle cx="18" cy="44" r="8" fill="#0f172a"/>
+                            <circle cx="46" cy="44" r="8" fill="#0f172a"/>
+                            <path d="M18 44c2-10 8-16 16-16s14 6 16 16" fill="none" stroke="url(#bikeBody)" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M20 26h10l4-6h10" fill="none" stroke="#e5e7eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M26 30l4 10" fill="none" stroke="#e5e7eb" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M40 30l-4 10" fill="none" stroke="#e5e7eb" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M14 24c4-6 10-10 18-10 8 0 14 4 18 10" fill="none" stroke="rgba(248,250,252,0.6)" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="logo-text-main">TurboWash Mobile</div>
+                        <div class="logo-text-sub">غسيل سيارات متنقل في الرياض</div>
+                    </div>
+                </div>
+                <nav class="nav">
+                    <span class="nav-link active" data-page-link="home">الرئيسية</span>
+                    <span class="nav-link" data-page-link="booking">الحجز</span>
+                    <span class="nav-link" data-page-link="orders">إدارة الطلبات</span>
+                    <span class="nav-link" data-page-link="fleet">إدارة الدبابات</span>
+                    <span class="nav-link" data-page-link="contact">التواصل</span>
+                    <span class="nav-link" data-page-link="rating">التقييم</span>
+                </nav>
+                <div class="header-right">
+                    <div class="phone-display">📞 +966 50 007 9374</div>
+                    <a class="whatsapp-btn" href="https://wa.me/966500079374" target="_blank" rel="noopener">
+                        <svg viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12 2C6.5 2 2.3 6.2 2.3 11.7c0 2 .6 3.8 1.7 5.4L2 22l5-2c1.5.8 3.1 1.2 4.8 1.2 5.5 0 9.7-4.2 9.7-9.7S17.5 2 12 2zm0 17.3c-1.4 0-2.7-.4-3.9-1.1l-.3-.2-3 .9.9-2.9-.2-.3c-.9-1.2-1.4-2.6-1.4-4.1 0-3.9 3.2-7.1 7.1-7.1s7.1 3.2 7.1 7.1-3.2 7.1-7.1 7.1zm3.9-5.3c-.2-.1-1.3-.6-1.5-.7-.2-.1-.4-.1-.6.1-.2.2-.7.8-.9 1-.2.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1-.6-.5-1-1.1-1.1-1.3-.1-.2 0-.3.1-.4.1-.1.2-.3.3-.4.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3.1-.1.1-.2.2-.3" />
+                        </svg>
+                        واتساب
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Ticker -->
+        <div class="ticker">
+            <div class="ticker-inner">
+                🔥 عرض الأسبوع: غسيل شامل بـ 35 ريال بدل 40 | ⭐ اشتراك شهري مخفّض: 70 ريال بدل 80 (4 غسلات) | 🕓 أوقات العمل: من 4 العصر إلى 11 الليل | 🚀 خدمة غسيل سيارات متنقل في جميع أحياء الرياض | 💎 نقاط ولاء: كل غسلة = 10 نقاط | 
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- HOME PAGE -->
+        <section class="page active" id="page-home">
+            <div class="container">
+                <!-- HERO -->
+                <section class="hero section">
+                    <div class="hero-inner">
+                        <div>
+                            <div class="badge badge-accent">خدمة غسيل سيارات متنقل في الرياض</div>
+                            <h1 class="hero-title">
+                                غسيل سيارتك <span class="hero-highlight">وأنت في مكانك</span><br>
+                                مع TurboWash Mobile
+                            </h1>
+                            <p class="hero-desc">
+                                نرسل دبابات غسيل مجهزة بخزان ماء ومضخة ضغط عالية إلى موقعك في أي حي داخل الرياض،
+                                ونقوم بغسيل سيارتك في مكانها، بجودة عالية ووقت قياسي، مع إمكانية الاشتراك الشهري ونظام نقاط ولاء.
+                            </p>
+                            <div class="hero-actions">
+                                <button class="btn btn-primary" id="hero-book-btn">احجز الآن</button>
+                                <button class="btn btn-outline" id="hero-offers-btn">شاهد العروض</button>
+                                <button class="btn btn-accent" id="hero-loyalty-btn">نقاط الولاء</button>
+                            </div>
+                            <div class="hero-stats">
+                                <div class="hero-stat">
+                                    <div class="hero-stat-label">عدد الغسلات المنفذة</div>
+                                    <div class="hero-stat-value" id="stat-washes">+1200</div>
+                                </div>
+                                <div class="hero-stat">
+                                    <div class="hero-stat-label">متوسط تقييم العملاء</div>
+                                    <div class="hero-stat-value" id="stat-rating">4.8 ⭐</div>
+                                </div>
+                                <div class="hero-stat">
+                                    <div class="hero-stat-label">أحياء الرياض المغطاة</div>
+                                    <div class="hero-stat-value">+60 حي</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero-visual">
+                            <div class="hero-bg-city"></div>
+                            <div class="hero-bike-card">
+                                <div class="hero-bike-header">
+                                    <div class="hero-bike-title">دباب غسيل - الرياض</div>
+                                    <div class="hero-bike-status">متاح الآن</div>
+                                </div>
+                                <!-- SVG Bike -->
+                                <svg class="hero-bike-svg" viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="bikeGradient" x1="0" y1="0" x2="1" y2="1">
+                                            <stop offset="0" stop-color="#facc15"/>
+                                            <stop offset="1" stop-color="#f97316"/>
+                                        </linearGradient>
+                                        <linearGradient id="waterGradient" x1="0" y1="0" x2="1" y2="0">
+                                            <stop offset="0" stop-color="#38bdf8"/>
+                                            <stop offset="1" stop-color="#22c55e"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <!-- Ground -->
+                                    <rect x="0" y="110" width="320" height="4" fill="rgba(15,23,42,0.8)"/>
+                                    <!-- Wheels -->
+                                    <circle cx="90" cy="110" r="18" fill="#020617" stroke="#e5e7eb" stroke-width="2"/>
+                                    <circle cx="220" cy="110" r="18" fill="#020617" stroke="#e5e7eb" stroke-width="2"/>
+                                    <!-- Frame -->
+                                    <path d="M90 110c8-26 26-40 52-40 26 0 44 14 52 40" fill="none" stroke="url(#bikeGradient)" stroke-width="4" stroke-linecap="round"/>
+                                    <!-- Tank -->
+                                    <rect x="130" y="50" width="40" height="26" rx="8" fill="#0f172a" stroke="#e5e7eb" stroke-width="2"/>
+                                    <path d="M132 52h36v10c-8 4-20 4-36 0z" fill="url(#waterGradient)" opacity="0.8"/>
+                                    <!-- Seat -->
+                                    <path d="M150 46h32l-6 8h-26z" fill="#e5e7eb"/>
+                                    <!-- Handle -->
+                                    <path d="M182 46h18" stroke="#e5e7eb" stroke-width="3" stroke-linecap="round"/>
+                                    <!-- Spray gun -->
+                                    <path d="M210 70h26" stroke="#e5e7eb" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M236 70c10 0 18 6 22 14" stroke="url(#waterGradient)" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 4"/>
+                                    <!-- City skyline hint -->
+                                    <path d="M40 40c20-18 40-26 70-26 30 0 50 8 70 26 20-18 40-26 70-26 30 0 50 8 70 26" fill="none" stroke="rgba(248,250,252,0.4)" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 6"/>
+                                </svg>
+                                <div class="hero-bike-footer">
+                                    <span>خزان ماء 60 لتر | مضخة ضغط عالي</span>
+                                    <span>وقت الوصول التقريبي: 20 دقيقة</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SERVICES -->
+                <section class="section">
+                    <h2 class="section-title">الخدمات</h2>
+                    <p class="section-subtitle">اختر نوع الغسيل المناسب لسيارتك، مع إمكانية الاشتراك الشهري.</p>
+                    <div class="services-grid">
+                        <div class="card service-card" data-service="external">
+                            <div class="service-body">
+                                <div class="card-header">
+                                    <div class="card-title">غسيل خارجي</div>
+                                    <span class="badge badge-info">الأكثر طلباً</span>
+                                </div>
+                                <p class="section-subtitle">تنظيف كامل للهيكل الخارجي، الجنوط، والزجاج باستخدام مواد آمنة على الطلاء.</p>
+                                <div class="service-price">20 ريال</div>
+                                <button class="btn btn-primary service-book-btn" data-service-name="غسيل خارجي">احجز هذه الخدمة</button>
+                            </div>
+                        </div>
+                        <div class="card service-card" data-service="internal">
+                            <div class="service-body">
+                                <div class="card-header">
+                                    <div class="card-title">غسيل داخلي</div>
+                                    <span class="badge badge-accent">تنظيف عميق</span>
+                                </div>
+                                <p class="section-subtitle">تنظيف المقاعد، الأرضيات، الطبلون، وتعقيم المقصورة برائحة منعشة.</p>
+                                <div class="service-price">25 ريال</div>
+                                <button class="btn btn-primary service-book-btn" data-service-name="غسيل داخلي">احجز هذه الخدمة</button>
+                            </div>
+                        </div>
+                        <div class="card service-card" data-service="full">
+                            <div class="service-body">
+                                <div class="card-header">
+                                    <div class="card-title">غسيل شامل</div>
+                                    <span class="badge badge-success">أفضل قيمة</span>
+                                </div>
+                                <p class="section-subtitle">غسيل داخلي وخارجي كامل مع تلميع خفيف للهيكل والزجاج.</p>
+                                <div class="service-price">40 ريال</div>
+                                <button class="btn btn-primary service-book-btn" data-service-name="غسيل شامل">احجز هذه الخدمة</button>
+                            </div>
+                        </div>
+                        <div class="card service-card" data-service="subscription">
+                            <div class="service-body">
+                                <div class="card-header">
+                                    <div class="card-title">اشتراك شهري</div>
+                                    <span class="badge badge-accent">4 غسلات</span>
+                                </div>
+                                <p class="section-subtitle">أربع غسلات في الشهر، يمكن توزيعها على الأيام التي تناسبك.</p>
+                                <div class="service-price">80 ريال</div>
+                                <button class="btn btn-primary service-book-btn" data-service-name="اشتراك شهري">اشترك الآن</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- OFFERS -->
+                <section class="section" id="offers-section">
+                    <h2 class="section-title">العروض</h2>
+                    <p class="section-subtitle">استفد من عروض الأسبوع والاشتراك الشهري المخفّض.</p>
+                    <div class="offers-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">عرض الأسبوع</div>
+                                <span class="badge badge-danger">لفترة محدودة</span>
+                            </div>
+                            <p class="section-subtitle">غسيل شامل بـ <strong>35 ريال</strong> بدل 40 ريال، يشمل الغسيل الداخلي والخارجي.</p>
+                            <div class="row" style="align-items:center;">
+                                <div class="col">
+                                    <div class="countdown" id="countdown-offer">ينتهي خلال: --:--:--</div>
+                                </div>
+                                <div class="col" style="text-align:left;">
+                                    <button class="btn btn-accent service-book-btn" data-service-name="غسيل شامل - عرض الأسبوع">احجز عرض الأسبوع</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">اشتراك شهري مخفّض</div>
+                                <span class="badge badge-success">4 غسلات</span>
+                            </div>
+                            <p class="section-subtitle">اشتراك شهري بـ <strong>70 ريال</strong> بدل 80 ريال، مع نظام نقاط ولاء إضافية.</p>
+                            <ul class="section-subtitle">
+                                <li>كل غسلة = 10 نقاط ولاء.</li>
+                                <li>يمكن استبدال النقاط بغسلة مجانية أو خصم.</li>
+                            </ul>
+                            <button class="btn btn-primary service-book-btn" data-service-name="اشتراك شهري مخفّض">اشترك في العرض الشهري</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FLEET -->
+                <section class="section">
+                    <h2 class="section-title">أسطول الدبابات</h2>
+                    <p class="section-subtitle">ثلاث دبابات مجهزة بألوان مختلفة، جاهزة للوصول إلى موقعك في الرياض.</p>
+                    <div class="fleet-grid" id="fleet-grid">
+                        <!-- Yellow -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">دباب أصفر</div>
+                                <span class="badge badge-success" data-bike-status="yellow">متاح</span>
+                            </div>
+                            <svg class="fleet-bike-svg" viewBox="0 0 260 120">
+                                <defs>
+                                    <linearGradient id="fleetYellow" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0" stop-color="#facc15"/>
+                                        <stop offset="1" stop-color="#f97316"/>
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="70" cy="90" r="16" fill="#020617" stroke="#e5e7eb" stroke-width="2"/>
+                                <circle cx="190" cy="90" r="16" fill="#020617" stroke="#e5e7eb" stroke-width="2"/>
+                                <path d="M70 90c8-22 22-32 40-32s32 10 40 32" fill="none" stroke="url(#fleetYellow)" stroke-width="4" stroke-linecap="round"/>
+                                <rect x="110" y="40" width="34" height="22" rx="8" fill="#0f172a" stroke="#e5e7eb" stroke-width="2"/>
+                                <path d="M112 42h30v8c-8 4-20 4-30 0z" fill="#38bdf8" opacity="0.8"/>
+                                <path d="M140 36h26" stroke="#e5e7eb" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                            <p class="section-subtitle">مناسب للأحياء الشمالية والشرقية.</p>
+                            <button class="btn btn-primary fleet-request-btn" data-bike-id="yellow">إرسال الطلب</button>
+                        </div>
+                        <!-- Red -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">دباب أحمر</div>
+                                <span class="badge badge-info" data-bike-status="red">مشغول</span>
+                            </div>
+                            <svg class="fleet-bike-svg" viewBox="0 0 260 120">
+                                <defs>
+                                    <linearGradient id="fleetRed" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0" stop-color="#ef4444"/>
+                                        <stop offset="1" stop-color="#b91c1c"/>
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="70" cy="90" r="16" fill="#020617" stroke="#e5e7eb" stroke-width="2"/>
+                                <circle cx="190" cy="90" r="16" fill="#020617" stroke="#e5e7eb" stroke-width="2"/>
+                                <path d="M70 90c8-22 22-32 40-32s32 10 40 32" fill="none" stroke="url(#fleetRed)" stroke-width="4" stroke-linecap="round"/>
+                                <rect x="110" y="40" width="34" height="22" rx="8" fill="#0f172a" stroke="#e5e7eb" stroke-width="2"/>
+                                <path d="M112 42h30v8c-8 4-20 4-30 0z" fill="#fb7185" opacity="0.8"/>
+                                <path d="M140 36h26" stroke="#e5e7eb" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                            <p class="section-subtitle">مخصص للطلبات ذات الضغط العالي.</p>
+                            <button class="btn btn-primary fleet-request-btn" data-bike-id="red">إرسال الطلب</button>
+                        </div>
+                        <!-- Black -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">دباب أسود</div>
+                                <span class="badge badge-success" data-bike-status="black">متاح</span>
+                            </div>
+                            <svg class="fleet-bike-svg" viewBox="0 0 260 120">
+                                <defs>
+                                    <linearGradient id="fleetBlack" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0" stop-color="#22c55e"/>
+                                        <stop offset="1" stop-color="#0f766e"/>
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="70" cy="90" r="16" fill="#020617" stroke="#e5e7eb" stroke-width="2"/>
+                                <circle cx="190" cy="90" r="16" fill="#020617" stroke="#e5e7eb" stroke-width="2"/>
+                                <path d="M70 90c8-22 22-32 40-32s32 10 40 32" fill="none" stroke="url(#fleetBlack)" stroke-width="4" stroke-linecap="round"/>
+                                <rect x="110" y="40" width="34" height="22" rx="8" fill="#0f172a" stroke="#e5e7eb" stroke-width="2"/>
+                                <path d="M112 42h30v8c-8 4-20 4-30 0z" fill="#22c55e" opacity="0.8"/>
+                                <path d="M140 36h26" stroke="#e5e7eb" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                            <p class="section-subtitle">مناسب للأحياء الجنوبية والغربية.</p>
+                            <button class="btn btn-primary fleet-request-btn" data-bike-id="black">إرسال الطلب</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- HOW IT WORKS -->
+                <section class="section">
+                    <h2 class="section-title">كيف نعمل؟</h2>
+                    <p class="section-subtitle">أربع خطوات بسيطة من لحظة الحجز حتى تسليم السيارة نظيفة.</p>
+                    <div class="steps-grid">
+                        <div class="card">
+                            <div class="step-number">1</div>
+                            <div class="card-title">تسجيل الطلب</div>
+                            <p class="section-subtitle">تدخل بياناتك الأساسية: الاسم، رقم الجوال، موقعك في الرياض، ونوع السيارة.</p>
+                        </div>
+                        <div class="card">
+                            <div class="step-number">2</div>
+                            <div class="card-title">تحديد الخدمة والوقت</div>
+                            <p class="section-subtitle">تختار نوع الغسيل (خارجي، داخلي، شامل، اشتراك) وتحدد الوقت المناسب بين 4 العصر و11 الليل.</p>
+                        </div>
+                        <div class="card">
+                            <div class="step-number">3</div>
+                            <div class="card-title">إرسال الدباب</div>
+                            <p class="section-subtitle">نرسل أقرب دباب متاح إلى موقعك، مع متابعة حالة الطلب من صفحة إدارة الطلبات.</p>
+                        </div>
+                        <div class="card">
+                            <div class="step-number">4</div>
+                            <div class="card-title">تنفيذ الغسيل والتقييم</div>
+                            <p class="section-subtitle">يتم الغسيل في مكان السيارة، وبعد الانتهاء يمكنك تقييم الخدمة وكسب نقاط ولاء.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CTA -->
+                <section class="section cta">
+                    <h2 class="cta-title">جاهز نغسل سيارتك اليوم؟</h2>
+                    <p class="cta-desc">اضغط على زر الحجز، واختر الوقت والخدمة، ودباب TurboWash Mobile يكون عندك في أسرع وقت.</p>
+                    <button class="btn btn-primary" id="cta-book-btn">ابدأ الحجز الآن</button>
+                    <button class="btn btn-outline" id="cta-contact-btn">تواصل معنا مباشرة</button>
+                </section>
+            </div>
+        </section>
+
+        <!-- BOOKING PAGE -->
+        <section class="page" id="page-booking">
+            <div class="container">
+                <section class="section">
+                    <h2 class="section-title">صفحة الحجز</h2>
+                    <p class="section-subtitle">أدخل بياناتك ليتم إرسال دباب الغسيل إلى موقعك في الرياض.</p>
+                    <div class="card">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="booking-name">الاسم الكامل</label>
+                                <input id="booking-name" type="text" placeholder="اكتب اسمك">
+                            </div>
+                            <div class="form-group">
+                                <label for="booking-phone">رقم الجوال</label>
+                                <input id="booking-phone" type="tel" placeholder="+966 5XXXXXXXX">
+                            </div>
+                            <div class="form-group">
+                                <label for="booking-location">الموقع (الحي / الشارع)</label>
+                                <input id="booking-location" type="text" placeholder="مثال: حي النظيم، شارع ...">
+                            </div>
+                            <div class="form-group">
+                                <label for="booking-car">نوع السيارة</label>
+                                <input id="booking-car" type="text" placeholder="مثال: تويوتا كامري 2022">
+                            </div>
+                            <div class="form-group">
+                                <label for="booking-service">نوع الخدمة</label>
+                                <select id="booking-service">
+                                    <option value="غسيل خارجي">غسيل خارجي - 20 ريال</option>
+                                    <option value="غسيل داخلي">غسيل داخلي - 25 ريال</option>
+                                    <option value="غسيل شامل">غسيل شامل - 40 ريال</option>
+                                    <option value="غسيل شامل - عرض الأسبوع">غسيل شامل - عرض الأسبوع 35 ريال</option>
+                                    <option value="اشتراك شهري">اشتراك شهري - 80 ريال</option>
+                                    <option value="اشتراك شهري مخفّض">اشتراك شهري مخفّض - 70 ريال</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="booking-time">الوقت المطلوب</label>
+                                <input id="booking-time" type="datetime-local">
+                                <small>أوقات العمل: من 4 العصر إلى 11 الليل.</small>
+                            </div>
+                        </div>
+                        <div style="margin-top:1rem; display:flex; gap:0.6rem; flex-wrap:wrap;">
+                            <button class="btn btn-primary" id="booking-confirm-btn">تأكيد الحجز</button>
+                            <button class="btn btn-outline" id="booking-clear-btn">مسح البيانات</button>
+                        </div>
+                        <p class="section-subtitle" id="booking-message" style="margin-top:0.8rem;"></p>
+                    </div>
+                </section>
+                <section class="section">
+                    <h2 class="section-title">خريطة الرياض</h2>
+                    <p class="section-subtitle">يمكنك تحديد موقعك تقريبياً على الخريطة لمساعدة السائق.</p>
+                    <div id="map"></div>
+                </section>
+            </div>
+        </section>
+
+        <!-- ORDERS PAGE -->
+        <section class="page" id="page-orders">
+            <div class="container">
+                <section class="section">
+                    <h2 class="section-title">إدارة الطلبات</h2>
+                    <p class="section-subtitle">تابع حالة الطلبات، وغيّر الحالة إلى "قيد التنفيذ" أو "تم التسليم".</p>
+                    <div class="card">
+                        <table class="table" id="orders-table">
+                            <thead>
+                            <tr>
+                                <th>العميل</th>
+                                <th>الجوال</th>
+                                <th>الخدمة</th>
+                                <th>الموقع</th>
+                                <th>الوقت</th>
+                                <th>الحالة</th>
+                                <th>إجراء</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Filled by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <!-- FLEET MANAGEMENT PAGE -->
+        <section class="page" id="page-fleet">
+            <div class="container">
+                <section class="section">
+                    <h2 class="section-title">إدارة الدبابات</h2>
+                    <p class="section-subtitle">تحديث حالة الدبابات وإرسالها للطلبات المناسبة.</p>
+                    <div class="card">
+                        <table class="table" id="fleet-table">
+                            <thead>
+                            <tr>
+                                <th>الدباب</th>
+                                <th>اللون</th>
+                                <th>الحالة</th>
+                                <th>إرسال الطلب</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr data-bike-row="yellow">
+                                <td>دباب 1</td>
+                                <td>أصفر</td>
+                                <td><span class="status-pill status-ready" data-bike-status-cell="yellow">متاح</span></td>
+                                <td><button class="btn btn-primary fleet-request-btn" data-bike-id="yellow">إرسال الطلب</button></td>
+                            </tr>
+                            <tr data-bike-row="red">
+                                <td>دباب 2</td>
+                                <td>أحمر</td>
+                                <td><span class="status-pill status-progress" data-bike-status-cell="red">مشغول</span></td>
+                                <td><button class="btn btn-primary fleet-request-btn" data-bike-id="red">إرسال الطلب</button></td>
+                            </tr>
+                            <tr data-bike-row="black">
+                                <td>دباب 3</td>
+                                <td>أسود</td>
+                                <td><span class="status-pill status-ready" data-bike-status-cell="black">متاح</span></td>
+                                <td><button class="btn btn-primary fleet-request-btn" data-bike-id="black">إرسال الطلب</button></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <!-- CONTACT PAGE -->
+        <section class="page" id="page-contact">
+            <div class="container">
+                <section class="section">
+                    <h2 class="section-title">التواصل</h2>
+                    <p class="section-subtitle">يمكنك التواصل معنا عبر الجوال أو الواتساب أو نموذج المراسلة.</p>
+                    <div class="card">
+                        <p class="section-subtitle">
+                            📍 الموقع: الرياض، السعودية<br>
+                            🕓 أوقات العمل: من 4 العصر إلى 11 الليل<br>
+                            📞 رقم الجوال: +966 50 007 9374<br>
+                            💬 واتساب: <a href="https://wa.me/966500079374" target="_blank" rel="noopener">اضغط هنا</a>
+                        </p>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="contact-name">الاسم</label>
+                                <input id="contact-name" type="text" placeholder="اكتب اسمك">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-phone">رقم الجوال</label>
+                                <input id="contact-phone" type="tel" placeholder="+966 5XXXXXXXX">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-message">رسالتك</label>
+                                <textarea id="contact-message" placeholder="اكتب تفاصيل استفسارك أو طلبك"></textarea>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="contact-send-btn" style="margin-top:0.8rem;">إرسال الرسالة</button>
+                        <p class="section-subtitle" id="contact-message-status" style="margin-top:0.6rem;"></p>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <!-- RATING PAGE -->
+        <section class="page" id="page-rating">
+            <div class="container">
+                <section class="section">
+                    <h2 class="section-title">التقييم</h2>
+                    <p class="section-subtitle">قيّم تجربتك مع TurboWash Mobile وساعدنا في تحسين الخدمة.</p>
+                    <div class="card">
+                        <div style="font-size:1.6rem; margin-bottom:0.6rem;" id="rating-stars">
+                            ⭐⭐⭐⭐⭐
+                        </div>
+                        <div class="form-group">
+                            <label for="rating-value">اختر عدد النجوم (1 إلى 5)</label>
+                            <select id="rating-value">
+                                <option value="5">5 نجوم - ممتاز جداً</option>
+                                <option value="4">4 نجوم - ممتاز</option>
+                                <option value="3">3 نجوم - جيد</option>
+                                <option value="2">2 نجوم - مقبول</option>
+                                <option value="1">1 نجمة - يحتاج تحسين</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="rating-comment">تعليقك</label>
+                            <textarea id="rating-comment" placeholder="اكتب رأيك في الخدمة"></textarea>
+                        </div>
+                        <button class="btn btn-primary" id="rating-send-btn" style="margin-top:0.8rem;">إرسال التقييم</button>
+                        <p class="section-subtitle" id="rating-status" style="margin-top:0.6rem;"></p>
+                        <p class="section-subtitle" id="rating-summary" style="margin-top:0.6rem;"></p>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 64 64">
+                            <circle cx="32" cy="32" r="28" fill="rgba(15,23,42,0.9)" stroke="#facc15" stroke-width="3"/>
+                            <path d="M18 40c4-10 10-16 14-16s10 6 14 16" fill="none" stroke="#f97316" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M22 24h10l4-6h10" fill="none" stroke="#e5e7eb" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="logo-text-main">TurboWash Mobile</div>
+                        <div class="logo-text-sub">غسيل سيارات متنقل في الرياض</div>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <a href="#" data-page-link="home">الرئيسية</a>
+                    <a href="#" data-page-link="booking">الحجز</a>
+                    <a href="#" data-page-link="orders">الطلبات</a>
+                    <a href="#" data-page-link="fleet">الدبابات</a>
+                    <a href="#" data-page-link="contact">التواصل</a>
+                    <a href="#" data-page-link="rating">التقييم</a>
+                </div>
+                <div>
+                    <span class="section-subtitle">© جميع الحقوق محفوظة لـ TurboWash Mobile - الرياض، السعودية</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!-- DESIGN SWITCHER -->
+<div class="design-switcher">
+    <button class="design-switcher-toggle" id="design-toggle-btn" title="تبديل التصميم">
+        <svg viewBox="0 0 24 24">
+            <path fill="currentColor" d="M4 6h16v2H4V6zm2 5h12v2H6v-2zm3 5h6v2H9v-2z"/>
+        </svg>
+    </button>
+    <div class="design-switcher-panel" id="design-panel">
+        <div style="font-size:0.8rem; margin-bottom:0.4rem;">اختر التصميم:</div>
+        <div class="design-option" data-theme="royal">
+            <div>
+                <div class="design-option-label">تصميم فخم وطني</div>
+                <div class="design-option-tag">أزرق ملكي + ذهبي + برج المملكة</div>
+            </div>
+            <span class="badge badge-accent">Royal</span>
+        </div>
+        <div class="design-option" data-theme="app">
+            <div>
+                <div class="design-option-label">تصميم تطبيقي (App Style)</div>
+                <div class="design-option-tag">يشبه تطبيق جوال مع شريط سفلي</div>
+            </div>
+            <span class="badge badge-info">App</span>
+        </div>
+        <div class="design-option" data-theme="darkneon">
+            <div>
+                <div class="design-option-label">تصميم عصري داكن (Dark Neon)</div>
+                <div class="design-option-tag">خلفية سوداء + ألوان نيون</div>
+            </div>
+            <span class="badge badge-info">Neon</span>
+        </div>
+        <div class="design-option" data-theme="promo">
+            <div>
+                <div class="design-option-label">تصميم إعلاني تسويقي</div>
+                <div class="design-option-tag">بانرات + عدّاد تنازلي + عروض</div>
+            </div>
+            <span class="badge badge-success">Promo</span>
+        </div>
+        <div class="design-option" data-theme="minimal">
+            <div>
+                <div class="design-option-label">تصميم أبيض بسيط (Minimal)</div>
+                <div class="design-option-tag">نظيف وهادئ للشركات</div>
+            </div>
+            <span class="badge badge-accent">Minimal</span>
+        </div>
+    </div>
+</div>
+
+<!-- BOT -->
+<div class="bot-toggle" id="bot-toggle-btn" title="البوت الذكي">
+    <svg viewBox="0 0 24 24">
+        <path fill="currentColor" d="M12 2a5 5 0 0 1 5 5v1h1a3 3 0 0 1 3 3v3a7 7 0 0 1-7 7h-4a7 7 0 0 1-7-7v-3a3 3 0 0 1 3-3h1V7a5 5 0 0 1 5-5zm-3 9a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm6 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-6.5 5h7a1 1 0 0 0 0-2h-7a1 1 0 0 0 0 2z"/>
+    </svg>
+</div>
+<div class="bot-panel" id="bot-panel">
+    <div class="bot-header">
+        <span>TurboWash Bot</span>
+        <span style="font-size:0.75rem; color:var(--text-muted);">يرد على أسئلتك فوراً</span>
+    </div>
+    <div class="bot-body" id="bot-body">
+        <div class="bot-msg bot-msg-bot">
+            أهلاً بك 👋، أنا البوت الذكي لـ TurboWash Mobile.<br>
+            اسألني عن الأسعار، الخدمات، العروض، الحجز، الموقع، الأوقات، الاشتراك الشهري، أو التقييم.
+        </div>
+        <div style="margin-top:0.4rem;">
+            <span class="bot-quick" data-bot-q="الأسعار">الأسعار</span>
+            <span class="bot-quick" data-bot-q="الخدمات">الخدمات</span>
+            <span class="bot-quick" data-bot-q="العروض">العروض</span>
+            <span class="bot-quick" data-bot-q="الحجز">الحجز</span>
+            <span class="bot-quick" data-bot-q="الموقع">الموقع</span>
+            <span class="bot-quick" data-bot-q="الأوقات">الأوقات</span>
+            <span class="bot-quick" data-bot-q="الاشتراك الشهري">الاشتراك الشهري</span>
+            <span class="bot-quick" data-bot-q="التقييم">التقييم</span>
+        </div>
+    </div>
+    <div class="bot-footer">
+        <input id="bot-input" type="text" placeholder="اكتب سؤالك هنا..." style="flex:1; border-radius:0.7rem; border:1px solid rgba(148,163,184,0.5); padding:0.4rem 0.6rem; font-size:0.8rem;">
+        <button class="btn btn-primary" id="bot-send-btn" style="font-size:0.8rem;">إرسال</button>
+    </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-o9N1j7kGStb6QpGpG8JwYq8A1Lw4xvLQqf0zE2Jk0Wc="
+        crossorigin=""></script>
+<script>
+    // ===== SPA NAVIGATION =====
+    const pages = {
+        home: document.getElementById('page-home'),
+        booking: document.getElementById('page-booking'),
+        orders: document.getElementById('page-orders'),
+        fleet: document.getElementById('page-fleet'),
+        contact: document.getElementById('page-contact'),
+        rating: document.getElementById('page-rating')
+    };
+    const navLinks = document.querySelectorAll('[data-page-link]');
+    function showPage(pageId) {
+        Object.values(pages).forEach(p => p.classList.remove('active'));
+        if (pages[pageId]) pages[pageId].classList.add('active');
+        navLinks.forEach(link => {
+            if (link.dataset.pageLink === pageId) link.classList.add('active');
+            else link.classList.remove('active');
+        });
+    }
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage(link.dataset.pageLink);
+        });
+    });
+
+    document.getElementById('hero-book-btn').addEventListener('click', () => showPage('booking'));
+    document.getElementById('hero-offers-btn').addEventListener('click', () => {
+        showPage('home');
+        document.getElementById('offers-section').scrollIntoView({behavior:'smooth'});
+    });
+    document.getElementById('cta-book-btn').addEventListener('click', () => showPage('booking'));
+    document.getElementById('cta-contact-btn').addEventListener('click', () => showPage('contact'));
+
+    // ===== DESIGN SWITCHER =====
+    const designToggleBtn = document.getElementById('design-toggle-btn');
+    const designPanel = document.getElementById('design-panel');
+    const designOptions = document.querySelectorAll('.design-option');
+
+    function applyTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('turboTheme', theme);
+        designOptions.forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.theme === theme);
+        });
+    }
+
+    const savedTheme = localStorage.getItem('turboTheme') || 'royal';
+    applyTheme(savedTheme);
+
+    designToggleBtn.addEventListener('click', () => {
+        designPanel.classList.toggle('open');
+    });
+
+    designOptions.forEach(opt => {
+        opt.addEventListener('click', () => {
+            applyTheme(opt.dataset.theme);
+            designPanel.classList.remove('open');
+        });
+    });
+
+    // ===== BOOKING & LOCALSTORAGE =====
+    const bookingConfirmBtn = document.getElementById('booking-confirm-btn');
+    const bookingClearBtn = document.getElementById('booking-clear-btn');
+    const bookingMessage = document.getElementById('booking-message');
+
+    function getBookings() {
+        try {
+            return JSON.parse(localStorage.getItem('turboBookings') || '[]');
+        } catch (e) {
+            return [];
+        }
+    }
+    function saveBookings(bookings) {
+        localStorage.setItem('turboBookings', JSON.stringify(bookings));
+        renderOrders();
+    }
+
+    bookingConfirmBtn.addEventListener('click', () => {
+        const name = document.getElementById('booking-name').value.trim();
+        const phone = document.getElementById('booking-phone').value.trim();
+        const location = document.getElementById('booking-location').value.trim();
+        const car = document.getElementById('booking-car').value.trim();
+        const service = document.getElementById('booking-service').value;
+        const time = document.getElementById('booking-time').value;
+
+        if (!name || !phone || !location || !car || !time) {
+            bookingMessage.textContent = '⚠️ يرجى تعبئة جميع البيانات المطلوبة قبل تأكيد الحجز.';
+            return;
+        }
+
+        const bookings = getBookings();
+        const newBooking = {
+            id: Date.now(),
+            name, phone, location, car, service, time,
+            status: 'جاهز'
+        };
+        bookings.push(newBooking);
+        saveBookings(bookings);
+
+        bookingMessage.textContent = '✅ تم تسجيل الحجز بنجاح، يمكنك متابعة حالته من صفحة إدارة الطلبات.';
+    });
+
+    bookingClearBtn.addEventListener('click', () => {
+        document.getElementById('booking-name').value = '';
+        document.getElementById('booking-phone').value = '';
+        document.getElementById('booking-location').value = '';
+        document.getElementById('booking-car').value = '';
+        document.getElementById('booking-time').value = '';
+        bookingMessage.textContent = '';
+    });
+
+    // ===== ORDERS RENDERING =====
+    const ordersTableBody = document.querySelector('#orders-table tbody');
+
+    function renderOrders() {
+        const bookings = getBookings();
+        ordersTableBody.innerHTML = '';
+        bookings.forEach(order => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${order.name}</td>
+                <td>${order.phone}</td>
+                <td>${order.service}</td>
+                <td>${order.location}</td>
+                <td>${order.time}</td>
+                <td>
+                    <span class="status-pill ${order.status === 'جاهز' ? 'status-ready' : order.status === 'قيد التنفيذ' ? 'status-progress' : 'status-done'}">
+                        ${order.status}
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-primary" data-order-id="${order.id}" data-action="start">بدء الغسيل</button>
+                    <button class="btn btn-outline" data-order-id="${order.id}" data-action="finish">تم التسليم</button>
+                </td>
+            `;
+            ordersTableBody.appendChild(tr);
+        });
+
+        ordersTableBody.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = Number(btn.dataset.orderId);
+                const action = btn.dataset.action;
+                const bookings = getBookings();
+                const order = bookings.find(o => o.id === id);
+                if (!order) return;
+                if (action === 'start') order.status = 'قيد التنفيذ';
+                if (action === 'finish') order.status = 'تم التسليم';
+                saveBookings(bookings);
+            });
+        });
+    }
+
+    renderOrders();
+
+    // ===== SERVICES QUICK BOOK =====
+    document.querySelectorAll('.service-book-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            showPage('booking');
+            document.getElementById('booking-service').value = btn.dataset.serviceName;
+        });
+    });
+
+    // ===== FLEET REQUEST =====
+    function getFleetStatus() {
+        try {
+            return JSON.parse(localStorage.getItem('turboFleet') || '{"yellow":"متاح","red":"مشغول","black":"متاح"}');
+        } catch (e) {
+            return {"yellow":"متاح","red":"مشغول","black":"متاح"};
+        }
+    }
+    function saveFleetStatus(status) {
+        localStorage.setItem('turboFleet', JSON.stringify(status));
+        updateFleetUI();
+    }
+
+    function updateFleetUI() {
+        const status = getFleetStatus();
+        document.querySelectorAll('[data-bike-status]').forEach(el => {
+            const id = el.dataset.bikeStatus;
+            el.textContent = status[id] || 'متاح';
+            el.className = 'badge ' + (status[id] === 'متاح' ? 'badge-success' : 'badge-info');
+        });
+        document.querySelectorAll('[data-bike-status-cell]').forEach(el => {
+            const id = el.dataset.bikeStatusCell;
+            const s = status[id] || 'متاح';
+            el.textContent = s;
+            el.className = 'status-pill ' + (s === 'متاح' ? 'status-ready' : s === 'مشغول' ? 'status-progress' : 'status-done');
+        });
+    }
+
+    updateFleetUI();
+
+    document.querySelectorAll('.fleet-request-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.bikeId;
+            const status = getFleetStatus();
+            if (status[id] === 'مشغول') {
+                alert('هذا الدباب مشغول حالياً، يرجى اختيار دباب آخر أو الانتظار.');
+                return;
+            }
+            status[id] = 'مشغول';
+            saveFleetStatus(status);
+            alert('✅ تم إرسال الدباب ' + id + ' لأقرب طلب جاهز.');
+        });
+    });
+
+    // ===== CONTACT FORM =====
+    const contactSendBtn = document.getElementById('contact-send-btn');
+    const contactStatus = document.getElementById('contact-message-status');
+
+    contactSendBtn.addEventListener('click', () => {
+        const name = document.getElementById('contact-name').value.trim();
+        const phone = document.getElementById('contact-phone').value.trim();
+        const msg = document.getElementById('contact-message').value.trim();
+        if (!name || !phone || !msg) {
+            contactStatus.textContent = '⚠️ يرجى تعبئة الاسم والجوال والرسالة.';
+            return;
+        }
+        contactStatus.textContent = '✅ تم استلام رسالتك، سنقوم بالتواصل معك على رقم الجوال قريباً.';
+    });
+
+    // ===== RATING & LOCALSTORAGE =====
+    const ratingSendBtn = document.getElementById('rating-send-btn');
+    const ratingStatus = document.getElementById('rating-status');
+    const ratingSummary = document.getElementById('rating-summary');
+
+    function getRatings() {
+        try {
+            return JSON.parse(localStorage.getItem('turboRatings') || '[]');
+        } catch (e) {
+            return [];
+        }
+    }
+    function saveRatings(ratings) {
+        localStorage.setItem('turboRatings', JSON.stringify(ratings));
+        updateRatingSummary();
+    }
+
+    function updateRatingSummary() {
+        const ratings = getRatings();
+        if (!ratings.length) {
+            ratingSummary.textContent = 'لم يتم تسجيل تقييمات بعد.';
+            return;
+        }
+        const avg = ratings.reduce((sum, r) => sum + r.value, 0) / ratings.length;
+        ratingSummary.textContent = `متوسط التقييم الحالي: ${avg.toFixed(1)} من 5 (${ratings.length} تقييمات مسجلة).`;
+        document.getElementById('stat-rating').textContent = avg.toFixed(1) + ' ⭐';
+    }
+
+    updateRatingSummary();
+
+    ratingSendBtn.addEventListener('click', () => {
+        const value = Number(document.getElementById('rating-value').value);
+        const comment = document.getElementById('rating-comment').value.trim();
+        const ratings = getRatings();
+        ratings.push({value, comment, time: new Date().toISOString()});
+        saveRatings(ratings);
+        ratingStatus.textContent = '✅ شكراً لتقييمك، تم حفظ رأيك ونقاط الولاء الخاصة بك.';
+    });
+
+    // ===== LOYALTY POINTS (simple) =====
+    function getLoyaltyPoints() {
+        return Number(localStorage.getItem('turboPoints') || '0');
+    }
+    function addLoyaltyPoints(points) {
+        const current = getLoyaltyPoints();
+        localStorage.setItem('turboPoints', String(current + points));
+    }
+
+    // Add points when booking confirmed
+    bookingConfirmBtn.addEventListener('click', () => {
+        const service = document.getElementById('booking-service').value;
+        let points = 10;
+        if (service.includes('شامل')) points = 15;
+        if (service.includes('اشتراك')) points = 25;
+        addLoyaltyPoints(points);
+    });
+
+    document.getElementById('hero-loyalty-btn').addEventListener('click', () => {
+        const pts = getLoyaltyPoints();
+        alert('نقاط الولاء الحالية: ' + pts + ' نقطة.\nكل 50 نقطة = غسلة خارجية مجانية.');
+    });
+
+    // ===== COUNTDOWN FOR OFFER =====
+    const countdownEl = document.getElementById('countdown-offer');
+    function updateCountdown() {
+        // Offer ends in 3 days from now (demo)
+        const end = new Date();
+        end.setDate(end.getDate() + 3);
+        const now = new Date();
+        const diff = end - now;
+        if (diff <= 0) {
+            countdownEl.textContent = 'انتهى العرض.';
+            return;
+        }
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+        countdownEl.textContent = `ينتهي خلال: ${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // ===== MAP (Leaflet) =====
+    let map;
+    function initMap() {
+        if (map) return;
+        map = L.map('map').setView([24.7136, 46.6753], 11); // Riyadh
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18
+        }).addTo(map);
+        const marker = L.marker([24.7136, 46.6753]).addTo(map);
+        marker.bindPopup('الرياض - موقع تقريبي لخدمة TurboWash Mobile').openPopup();
+
+        map.on('click', function(e) {
+            marker.setLatLng(e.latlng);
+        });
+    }
+    // Initialize map when booking page shown
+    document.getElementById('page-booking').addEventListener('transitionend', initMap);
+    // or simple: when first time show booking
+    document.getElementById('booking-confirm-btn').addEventListener('click', initMap);
+
+    // ===== BOT LOGIC =====
+    const botToggleBtn = document.getElementById('bot-toggle-btn');
+    const botPanel = document.getElementById('bot-panel');
+    const botBody = document.getElementById('bot-body');
+    const botInput = document.getElementById('bot-input');
+    const botSendBtn = document.getElementById('bot-send-btn');
+
+    botToggleBtn.addEventListener('click', () => {
+        botPanel.classList.toggle('open');
+    });
+
+    function addBotMessage(text, from = 'bot') {
+        const div = document.createElement('div');
+        div.className = 'bot-msg ' + (from === 'user' ? 'bot-msg-user' : 'bot-msg-bot');
+        div.innerHTML = text;
+        botBody.appendChild(div);
+        botBody.scrollTop = botBody.scrollHeight;
+    }
+
+    function botReply(question) {
+        const q = question.toLowerCase();
+        let answer = 'سؤال جميل، لكن لم أفهمه تماماً. حاول أن تسأل عن الأسعار، الخدمات، العروض، الحجز، الموقع، الأوقات، الاشتراك الشهري، أو التقييم.';
+
+        if (q.includes('سعر') || q.includes('الأسعار')) {
+            answer = 'الأسعار الحالية:\n- غسيل خارجي: 20 ريال\n- غسيل داخلي: 25 ريال\n- غسيل شامل: 40 ريال (عرض الأسبوع 35 ريال)\n- اشتراك شهري: 80 ريال (عرض مخفّض 70 ريال).';
+        } else if (q.includes('الخدمات')) {
+            answer = 'نقدم أربع خدمات رئيسية:\n1) غسيل خارجي\n2) غسيل داخلي\n3) غسيل شامل\n4) اشتراك شهري (4 غسلات).';
+        } else if (q.includes('العروض')) {
+            answer = 'عروضنا الحالية:\n- عرض الأسبوع: غسيل شامل بـ 35 ريال بدل 40.\n- اشتراك شهري مخفّض: 70 ريال بدل 80.\nيوجد أيضاً نظام نقاط ولاء لكل غسلة.';
+        } else if (q.includes('الحجز')) {
+            answer = 'للحجز، انتقل إلى صفحة الحجز من القائمة، ثم أدخل اسمك، رقم الجوال، موقعك في الرياض، نوع السيارة، واختر الخدمة والوقت المناسب.';
+        } else if (q.includes('الموقع')) {
+            answer = 'نحن نغطي جميع أحياء مدينة الرياض، السعودية. الخدمة متنقلة، نرسل دبابات الغسيل إلى موقعك مباشرة.';
+        } else if (q.includes('الأوقات') || q.includes('الوقت')) {
+            answer = 'أوقات العمل الرسمية: من 4 العصر إلى 11 الليل، طوال أيام الأسبوع ما عدا الحالات الخاصة.';
+        } else if (q.includes('الاشتراك') || q.includes('شهري')) {
+            answer = 'الاشتراك الشهري يشمل 4 غسلات في الشهر، بسعر 80 ريال (أو 70 ريال في العرض المخفّض)، ويمكنك توزيع الغسلات على الأيام التي تناسبك.';
+        } else if (q.includes('التقييم')) {
+            answer = 'يمكنك تقييم تجربتك من صفحة التقييم، واختيار عدد النجوم وكتابة تعليقك، وسيتم حفظه في النظام مع نقاط ولاء إضافية.';
+        } else if (q.includes('تواصل') || q.includes('رقم')) {
+            answer = 'رقم الجوال الرسمي: +966 50 007 9374\nواتساب: https://wa.me/966500079374\nيمكنك أيضاً استخدام نموذج التواصل داخل الموقع.';
+        }
+
+        addBotMessage(answer, 'bot');
+    }
+
+    botSendBtn.addEventListener('click', () => {
+        const text = botInput.value.trim();
+        if (!text) return;
+        addBotMessage(text, 'user');
+        botInput.value = '';
+        botReply(text);
+    });
+
+    botInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            botSendBtn.click();
+        }
+    });
+
+    document.querySelectorAll('.bot-quick').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const q = btn.dataset.botQ;
+            addBotMessage(q, 'user');
+            botReply(q);
+        });
+    });
+</script>
+</body>
+</html>
