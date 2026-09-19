@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="TurboWash Mobile — غسيل سيارات متنقل في جميع أحياء الرياض">
+<title>TurboWash Mobile | 10 تصاميم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  min-height:100vh;background:var(--bg);color:var(--text);
+  font-family:'Tajawal',sans-serif;transition:background .35s,color .35s;
+  padding-top:50px;overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.08;
+  background:radial-gradient(circle at 12% 10%,var(--accent),transparent 28%),
+             radial-gradient(circle at 90% 90%,var(--primary),transparent 32%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.18;
+  background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+  background-size:42px 42px;
+  -webkit-mask-image:linear-gradient(to bottom,black,transparent 70%);
+  mask-image:linear-gradient(to bottom,black,transparent 70%);
+}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:none;background:none}
+img,svg{max-width:100%}
+:root{--radius:22px;--radius-sm:14px;--shadow:0 18px 50px rgba(0,0,0,.12);--shadow-soft:0 10px 28px rgba(0,0,0,.08)}
+
+/* ============ 10 Designs ============ */
+.design-1{--bg:#06182b;--bg-soft:#0a2540;--surface:#fff;--surface-soft:#f4f7fb;--text:#10243a;--muted:#637387;--line:rgba(255,255,255,.12);--primary:#0b3d91;--primary-deep:#071a31;--accent:#d4af37;--success:#12855a;--danger:#c7434c;--header-bg:rgba(5,20,38,.9);--hero-bg:linear-gradient(135deg,#06182b 0%,#0b3d91 62%,#0a2540 100%)}
+.design-2{--bg:#042a23;--bg-soft:#073a30;--surface:#fff;--surface-soft:#eef8f3;--text:#0d2d27;--muted:#60756f;--line:rgba(255,255,255,.12);--primary:#12855a;--primary-deep:#03241e;--accent:#d4af37;--success:#12855a;--danger:#c7434c;--header-bg:rgba(3,32,27,.9);--hero-bg:linear-gradient(135deg,#03241e,#12855a 68%,#0b5c42)}
+.design-3{--bg:#12090d;--bg-soft:#210c11;--surface:#fffaf8;--surface-soft:#f9eeee;--text:#2b1115;--muted:#7b686b;--line:rgba(255,255,255,.12);--primary:#d92332;--primary-deep:#18060a;--accent:#ffcf4d;--success:#159465;--danger:#ff5362;--header-bg:rgba(20,6,10,.9);--hero-bg:linear-gradient(135deg,#18060a,#8f111f 58%,#d92332)}
+.design-4{--bg:#eefbff;--bg-soft:#dcf7fb;--surface:#fff;--surface-soft:#f2fdff;--text:#083444;--muted:#607d88;--line:rgba(8,52,68,.12);--primary:#087f8c;--primary-deep:#045665;--accent:#00b7c7;--success:#12855a;--danger:#d64b5d;--header-bg:rgba(255,255,255,.9);--hero-bg:linear-gradient(135deg,#045665,#087f8c 60%,#00b7c7)}
+.design-5{--bg:#f4eee2;--bg-soft:#e9dfcd;--surface:#fffdf7;--surface-soft:#faf5ea;--text:#18354d;--muted:#6d747b;--line:rgba(24,53,77,.13);--primary:#18354d;--primary-deep:#0b2538;--accent:#b9863b;--success:#12855a;--danger:#b84d55;--header-bg:rgba(255,253,247,.92);--hero-bg:linear-gradient(135deg,#0b2538,#18354d 58%,#315b72)}
+.design-6{--bg:#070812;--bg-soft:#10132a;--surface:#12152a;--surface-soft:#0c0f20;--text:#f4f5ff;--muted:#aeb5d2;--line:rgba(255,255,255,.12);--primary:#7c4dff;--primary-deep:#11132a;--accent:#00e5ff;--success:#22d3a4;--danger:#ff537a;--header-bg:rgba(7,8,18,.9);--hero-bg:linear-gradient(135deg,#11132a,#472bc2 58%,#7c4dff)}
+.design-7{--bg:#f8fafc;--bg-soft:#eef3f8;--surface:#fff;--surface-soft:#f7f9fc;--text:#111827;--muted:#64748b;--line:rgba(17,24,39,.12);--primary:#0b3d91;--primary-deep:#111827;--accent:#d4af37;--success:#12855a;--danger:#dc2626;--header-bg:rgba(255,255,255,.92);--hero-bg:linear-gradient(135deg,#f8fafc,#e8eef7 52%,#dfe9f6)}
+.design-8{--bg:#101315;--bg-soft:#181d1e;--surface:#1c2223;--surface-soft:#151a1b;--text:#f3f7f2;--muted:#9ca9a3;--line:rgba(255,255,255,.12);--primary:#93c11e;--primary-deep:#172022;--accent:#e7b64a;--success:#83c94f;--danger:#ff6b55;--header-bg:rgba(14,18,19,.9);--hero-bg:linear-gradient(135deg,#172022,#263436 56%,#93c11e 150%)}
+.design-9{--bg:#063f35;--bg-soft:#075145;--surface:#f7fbf7;--surface-soft:#eaf5ee;--text:#0d3029;--muted:#638078;--line:rgba(255,255,255,.14);--primary:#0d705c;--primary-deep:#042d28;--accent:#f1d68a;--success:#12855a;--danger:#c84d5c;--header-bg:rgba(4,45,40,.9);--hero-bg:linear-gradient(135deg,#042d28,#0d705c 62%,#12855a)}
+.design-10{--bg:#35131c;--bg-soft:#481926;--surface:#fff8ed;--surface-soft:#f8e9d8;--text:#2d1116;--muted:#815f63;--line:rgba(255,255,255,.13);--primary:#d16b37;--primary-deep:#2b1110;--accent:#f3c969;--success:#2e9b6b;--danger:#ff6b55;--header-bg:rgba(43,17,16,.9);--hero-bg:linear-gradient(135deg,#2b1110,#6d2535 55%,#d16b37)}
+
+/* ============ Design Lab (Top Switcher) ============ */
+.design-lab{position:fixed;inset:0 0 auto 0;z-index:200;background:rgba(5,13,25,.94);color:#fff;border-bottom:1px solid rgba(255,255,255,.13);backdrop-filter:blur(14px)}
+.design-lab-inner{max-width:1240px;margin:auto;min-height:50px;padding:7px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.lab-title{display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:.82rem}
+.lab-title small{color:#b8c6d8}
+.lab-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,#00e5ff,#12855a);box-shadow:0 0 0 5px rgba(0,229,255,.12)}
+.design-options{display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none}
+.design-options::-webkit-scrollbar{display:none}
+.design-options button{color:#dbe5f1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:5px 10px;white-space:nowrap;font-size:.76rem;display:inline-flex;align-items:center;gap:6px;transition:.2s}
+.design-options button i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.design-options button:hover,.design-options button.active{color:#fff;border-color:var(--accent);background:rgba(212,175,55,.15);transform:translateY(-1px)}
+
+/* ============ Topbar ============ */
+.topbar{background:var(--primary-deep);color:#fff;font-size:.86rem}
+.topbar-inner{max-width:1240px;margin:auto;padding:9px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.topbar-note{display:flex;align-items:center;gap:8px}
+.topbar-note::before{content:"✦";color:var(--accent)}
+.phone-link{display:inline-flex;align-items:center;gap:7px;font-weight:800;color:#fff}
+.phone-link:hover{color:var(--accent)}
+
+/* ============ Header ============ */
+.site-header{position:sticky;top:0;z-index:100;background:var(--header-bg);border-bottom:1px solid var(--line);backdrop-filter:blur(16px)}
+.header-inner{max-width:1240px;margin:auto;min-height:76px;padding:12px 20px;display:flex;align-items:center;gap:22px}
+.brand{display:inline-flex;align-items:center;gap:10px;padding:0;color:var(--text);text-align:right;flex:0 0 auto;background:none;border:none;cursor:pointer}
+.brand-mark{width:45px;height:45px;display:grid;place-items:center;border-radius:15px;color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary-deep));box-shadow:0 9px 24px rgba(0,0,0,.18)}
+.brand-mark svg{width:30px;height:30px}
+.brand-name{display:flex;flex-direction:column;line-height:1;font-weight:900;letter-spacing:-.5px}
+.brand-name b{font-size:1.05rem}
+.brand-name small{margin-top:5px;color:var(--primary);font-size:.68rem;letter-spacing:1.4px;font-weight:800}
+.nav-links{display:flex;align-items:center;gap:3px;margin-inline-start:auto;overflow-x:auto;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-link{color:var(--muted);background:transparent;border:0;padding:9px 10px;border-radius:10px;font-weight:800;font-size:.88rem;white-space:nowrap;transition:.2s;cursor:pointer}
+.nav-link:hover,.nav-link.active{color:var(--primary);background:var(--surface-soft)}
+.header-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.btn{border:0;border-radius:999px;padding:11px 18px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:900;font-size:.9rem;line-height:1;transition:transform .2s,box-shadow .2s,filter .2s;cursor:pointer;white-space:nowrap}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.04)}
+.btn-primary{color:#fff;background:var(--primary);box-shadow:0 10px 24px rgba(0,0,0,.15)}
+.btn-gold{color:#211804;background:linear-gradient(135deg,#f5d878,var(--accent));box-shadow:0 10px 24px rgba(212,175,55,.22)}
+.btn-whatsapp{color:#fff;background:#16a34a}
+.btn-ghost{color:var(--text);background:var(--surface);border:1px solid var(--line)}
+.btn-danger{color:#fff;background:var(--danger)}
+.btn-sm{padding:8px 14px;font-size:.82rem}
+.btn-block{width:100%}
+
+/* ============ Pages ============ */
+main{display:block}
+.page{display:none;animation:pageIn .35s ease both}
+.page.active{display:block}
+@keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ============ Hero ============ */
+.hero{position:relative;overflow:hidden;color:#fff;background:var(--hero-bg);padding:78px 20px 70px;isolation:isolate}
+.hero::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;inset:-220px auto auto -130px;background:rgba(255,255,255,.12)}
+.hero::after{content:"";position:absolute;width:260px;height:260px;border:1px solid rgba(255,255,255,.14);border-radius:50%;inset:20% auto auto 5%;box-shadow:0 0 0 35px rgba(255,255,255,.03),0 0 0 70px rgba(255,255,255,.02)}
+.hero-grid{position:relative;z-index:1;max-width:1240px;margin:auto;display:grid;grid-template-columns:1.04fr .96fr;align-items:center;gap:50px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(255,255,255,.18);border-radius:999px;color:#fff;background:rgba(255,255,255,.09);font-size:.78rem;font-weight:800}
+.eyebrow::before{content:"✦";color:var(--accent)}
+.hero h1{margin:20px 0 14px;max-width:650px;font-size:clamp(2.25rem,5vw,4.65rem);line-height:1.08;letter-spacing:-2.5px}
+.hero h1 span{color:var(--accent)}
+.hero-lead{max-width:600px;color:rgba(255,255,255,.78);font-size:clamp(1rem,2vw,1.22rem);line-height:1.9}
+.hero-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:27px}
+.hero-actions .btn-ghost{color:#fff;background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.22)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;max-width:620px;margin-top:31px}
+.stat{padding:13px 10px;border:1px solid rgba(255,255,255,.13);border-radius:15px;background:rgba(255,255,255,.08);backdrop-filter:blur(8px);text-align:center}
+.stat b{display:block;color:#fff;font-size:1.13rem;line-height:1.2}
+.stat span{display:block;margin-top:4px;color:rgba(255,255,255,.68);font-size:.72rem}
+.hero-art{position:relative;min-height:390px;display:grid;place-items:center}
+.truck-glow{position:absolute;width:78%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.2),transparent 67%)}
+.truck-svg{position:relative;z-index:2;width:min(100%,650px);filter:drop-shadow(0 24px 25px rgba(0,0,0,.22))}
+.floating-chip{position:absolute;z-index:3;padding:9px 12px;border-radius:12px;color:#10243a;background:#fff;box-shadow:var(--shadow-soft);font-size:.76rem;font-weight:900}
+.chip-one{top:16%;inset-inline-start:5%}
+.chip-two{bottom:17%;inset-inline-end:4%;color:#fff;background:var(--accent)}
+
+/* ============ Section Common ============ */
+.section{padding:84px 20px;background:var(--bg)}
+.section.alt{background:var(--surface-soft)}
+.container{max-width:1240px;margin:auto}
+.section-head{max-width:700px;margin:0 auto 34px;text-align:center}
+.kicker{display:inline-flex;align-items:center;gap:7px;color:var(--primary);font-size:.82rem;font-weight:900;letter-spacing:.4px}
+.kicker::before{content:"";width:22px;height:2px;background:var(--accent)}
+.section-title{margin:9px 0 10px;color:var(--text);font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.2;letter-spacing:-1px}
+.section-sub{margin:0;color:var(--muted);line-height:1.9}
+
+/* ============ Services ============ */
+.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:17px}
+.service-card{position:relative;overflow:hidden;padding:23px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-soft);transition:transform .25s,box-shadow .25s}
+.service-card:hover{transform:translateY(-7px);box-shadow:var(--shadow)}
+.service-card::after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;inset:-38px -28px auto auto;background:var(--surface-soft)}
+.service-card.featured{border-color:color-mix(in srgb,var(--accent) 70%,var(--line));box-shadow:0 16px 38px rgba(212,175,55,.14)}
+.service-card.featured::before{content:"الأكثر طلباً";position:absolute;z-index:2;top:15px;inset-inline-start:15px;padding:6px 10px;border-radius:999px;color:#211804;background:linear-gradient(135deg,#f4d678,var(--accent));font-size:.69rem;font-weight:900}
+.service-icon{position:relative;z-index:1;width:49px;height:49px;display:grid;place-items:center;margin-bottom:17px;border-radius:15px;color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary-deep));font-size:1.35rem}
+.service-card h3{margin:0;color:var(--text);font-size:1.1rem;position:relative;z-index:1}
+.price{color:var(--primary);font-size:1.15rem;font-weight:900;white-space:nowrap}
+.price small{color:var(--muted);font-size:.7rem;font-weight:700}
+.service-card p{position:relative;z-index:1;margin:12px 0 14px;color:var(--muted);line-height:1.8;font-size:.88rem}
+.checks{position:relative;z-index:1;display:grid;gap:7px;margin:0 0 18px;padding:0;list-style:none;color:var(--text);font-size:.82rem}
+.checks li::before{content:"✓";margin-inline-end:7px;color:var(--success);font-weight:900}
+
+/* ============ Offers ============ */
+.offers-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.offer-card{position:relative;overflow:hidden;display:flex;align-items:center;gap:20px;padding:25px;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-soft)}
+.offer-card::before{content:"";position:absolute;width:150px;height:150px;border-radius:50%;inset:-75px auto auto -40px;background:color-mix(in srgb,var(--accent) 18%,transparent)}
+.offer-icon{position:relative;z-index:1;width:66px;height:66px;display:grid;place-items:center;flex:0 0 auto;border-radius:20px;color:#fff;background:linear-gradient(135deg,var(--danger),var(--primary));font-size:1.8rem}
+.offer-content{position:relative;z-index:1}
+.offer-tag{color:var(--danger);font-size:.76rem;font-weight:900}
+.offer-card h3{margin:5px 0 6px;color:var(--text);font-size:1.25rem}
+.offer-card p{margin:0 0 10px;color:var(--muted);line-height:1.7;font-size:.88rem}
+.offer-price{color:var(--primary);font-size:1.15rem;font-weight:900}
+.offer-price s{margin-inline-end:7px;color:var(--muted);font-size:.82rem;font-weight:600}
+
+/* ============ Fleet ============ */
+.fleet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.fleet-card{overflow:hidden;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-soft);transition:transform .25s}
+.fleet-card:hover{transform:translateY(-6px)}
+.tank-visual{position:relative;height:205px;display:grid;place-items:center;overflow:hidden;background:linear-gradient(135deg,var(--bg-soft),var(--primary-deep))}
+.tank-visual::before{content:"";position:absolute;width:170px;height:170px;border-radius:50%;background:color-mix(in srgb,var(--accent) 18%,transparent)}
+.tank-visual svg{position:relative;z-index:1;width:92%}
+.status{position:absolute;z-index:3;top:12px;inset-inline-start:12px;padding:6px 10px;border-radius:999px;font-size:.7rem;font-weight:900}
+.status.available{color:#064e3b;background:#bbf7d0}
+.status.busy{color:#fff;background:var(--danger)}
+.fleet-body{padding:20px}
+.fleet-body h3{margin:0 0 5px;color:var(--text);font-size:1.08rem}
+.fleet-role{margin:0 0 12px;color:var(--primary);font-size:.8rem;font-weight:800}
+.fleet-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.fleet-meta span{padding:4px 9px;border-radius:999px;color:var(--primary);background:var(--surface-soft);font-size:.7rem;font-weight:800}
+.fleet-actions{display:flex;gap:7px;flex-wrap:wrap}
+
+/* ============ Steps ============ */
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.step-card{position:relative;padding:25px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-soft);text-align:center}
+.step-num{width:52px;height:52px;display:grid;place-items:center;margin:0 auto 14px;border-radius:50%;color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary-deep));font-size:1.3rem;font-weight:900}
+.step-card h3{margin:0 0 8px;color:var(--text);font-size:1rem}
+.step-card p{margin:0;color:var(--muted);line-height:1.7;font-size:.84rem}
+
+/* ============ CTA ============ */
+.cta-section{position:relative;overflow:hidden;padding:55px 30px;border-radius:var(--radius);background:var(--hero-bg);color:#fff;text-align:center}
+.cta-section h2{margin:0 0 10px;font-size:clamp(1.5rem,3vw,2.2rem)}
+.cta-section p{margin:0 0 22px;color:rgba(255,255,255,.75)}
+.cta-section .btn{margin:5px}
+
+/* ============ Footer ============ */
+.footer{background:var(--primary-deep);color:rgba(255,255,255,.75);padding:56px 20px 20px;margin-top:auto}
+.footer-grid{max-width:1240px;margin:auto;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:34px}
+.footer h4{margin:0 0 14px;color:#fff;font-size:1rem;font-weight:900}
+.footer p{margin:0;line-height:1.8;font-size:.86rem}
+.footer a{display:block;padding:4px 0;font-size:.86rem;color:rgba(255,255,255,.75)}
+.footer a:hover{color:var(--accent)}
+.footer-phone{margin-top:10px;color:var(--accent);font-weight:900;font-size:1.1rem}
+.footer-bottom{max-width:1240px;margin:36px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.82rem;opacity:.7}
+
+/* ============ Forms ============ */
+.form-card{max-width:640px;margin:0 auto;padding:30px;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow);border:1px solid var(--line)}
+.field{margin-bottom:16px}
+.field label{display:block;margin-bottom:6px;color:var(--text);font-weight:800;font-size:.84rem}
+.field label .req{color:var(--danger)}
+.field input,.field select,.field textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--radius-sm);background:var(--surface-soft);color:var(--text);font-size:.9rem;transition:.2s;font-family:inherit}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);background:var(--surface);box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 12%,transparent);outline:none}
+.field textarea{resize:vertical;min-height:100px}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-error{color:var(--danger);font-size:.75rem;margin-top:4px;display:none}
+.form-error.show{display:block}
+.alert{padding:14px 18px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:.88rem;line-height:1.7;font-weight:700}
+.alert-ok{background:#dcfce7;color:#0b5c3e;border:1px solid #86efac}
+.alert-info{background:var(--surface-soft);color:var(--primary);border:1px solid var(--line)}
+
+/* ============ Orders ============ */
+.order-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px}
+.order-stat{padding:18px;border-radius:var(--radius-sm);background:var(--surface);box-shadow:var(--shadow-soft);text-align:center}
+.order-stat .num{font-size:1.8rem;font-weight:900;color:var(--primary)}
+.order-stat .label{font-size:.78rem;color:var(--muted);margin-top:4px;font-weight:700}
+.order-item{position:relative;padding:18px;margin-bottom:14px;border-radius:var(--radius-sm);background:var(--surface);box-shadow:var(--shadow-soft);border-inline-end:4px solid var(--primary)}
+.order-item.ready{border-inline-end-color:var(--accent)}
+.order-item.progress{border-inline-end-color:var(--primary)}
+.order-item.done{border-inline-end-color:var(--success)}
+.order-item h4{margin:0 0 8px;color:var(--text);font-size:1rem}
+.order-item p{margin:3px 0;color:var(--muted);font-size:.84rem}
+.status-badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:.72rem;font-weight:900;color:#fff}
+.status-badge.ready{background:var(--accent);color:#211804}
+.status-badge.progress{background:var(--primary)}
+.status-badge.done{background:var(--success)}
+.order-actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+
+/* ============ Contact ============ */
+.contact-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-bottom:30px}
+.contact-card{padding:26px;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-soft);text-align:center;border:1px solid var(--line)}
+.contact-card .icon{font-size:2.5rem;margin-bottom:10px}
+.contact-card h3{margin:0 0 8px;color:var(--text);font-size:1.05rem}
+.contact-card a{color:var(--primary);font-weight:900;word-break:break-word;font-size:1rem}
+.contact-card p{margin:5px 0;color:var(--muted);font-size:.85rem}
+
+/* ============ Reviews ============ */
+.stars-row{display:flex;justify-content:center;gap:8px;margin:18px 0;flex-direction:row-reverse}
+.star{font-size:2.5rem;color:#d1d5db;cursor:pointer;transition:.2s;background:none;border:none;padding:0;line-height:1}
+.star:hover,.star.on{color:var(--accent);transform:scale(1.1)}
+.avg-rating{text-align:center;font-size:3rem;font-weight:900;color:var(--accent);line-height:1}
+.reviews-count{text-align:center;color:var(--muted);margin:8px 0 30px;font-size:.9rem}
+.review-item{padding:18px;margin-bottom:12px;border-radius:var(--radius-sm);background:var(--surface);box-shadow:var(--shadow-soft)}
+.review-item .rev-stars{color:var(--accent);font-size:1.1rem;margin-bottom:6px}
+.review-item h4{margin:0 0 4px;color:var(--text);font-size:.95rem}
+.review-item p{margin:0;color:var(--muted);font-size:.85rem}
+
+/* ============ Bot ============ */
+#botBtn{position:fixed;bottom:30px;left:30px;z-index:5000;width:60px;height:60px;display:grid;place-items:center;border-radius:50%;color:#fff;background:linear-gradient(135deg,var(--primary),var(--success));font-size:1.6rem;box-shadow:0 12px 32px rgba(0,0,0,.3);transition:transform .25s}
+#botBtn:hover{transform:scale(1.08) rotate(-4deg)}
+#botWindow{position:fixed;bottom:100px;left:30px;z-index:5001;width:min(370px,calc(100vw - 40px));max-height:min(560px,calc(100vh - 140px));display:none;flex-direction:column;border-radius:20px;overflow:hidden;background:var(--surface);box-shadow:0 30px 70px rgba(0,0,0,.35);border:1px solid var(--line)}
+#botWindow.open{display:flex;animation:botIn .3s ease}
+@keyframes botIn{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+.bot-head{padding:14px 16px;display:flex;align-items:center;gap:10px;color:#fff;background:linear-gradient(120deg,var(--primary),var(--primary-deep))}
+.bot-head .av{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.15);display:grid;place-items:center;font-size:1.2rem}
+.bot-head b{display:block;font-size:.94rem}
+.bot-head small{display:flex;align-items:center;gap:6px;font-size:.72rem;opacity:.85}
+.bot-head small::before{content:"";width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 3px rgba(74,222,128,.3)}
+.bot-head .close{margin-inline-start:auto;width:30px;height:30px;border-radius:9px;color:#fff;background:rgba(255,255,255,.14);font-size:1rem}
+.bot-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--surface-soft)}
+.msg{max-width:86%;padding:10px 14px;border-radius:14px;font-size:.86rem;line-height:1.7;white-space:pre-line}
+.msg.bot{align-self:flex-start;background:var(--surface);color:var(--text);border:1px solid var(--line);border-start-start-radius:4px}
+.msg.user{align-self:flex-end;background:var(--primary);color:#fff;border-start-end-radius:4px}
+.bot-quick{display:flex;gap:6px;flex-wrap:wrap;padding:10px;background:var(--surface);border-top:1px solid var(--line)}
+.chip{padding:6px 12px;border-radius:999px;font-size:.75rem;font-weight:700;color:var(--primary);background:var(--surface-soft);border:1px solid var(--line);transition:.2s}
+.chip:hover{background:var(--primary);color:#fff}
+.bot-input{display:flex;gap:8px;padding:10px;background:var(--surface);border-top:1px solid var(--line)}
+.bot-input input{flex:1;padding:10px 14px;border:1.5px solid var(--line);border-radius:999px;background:var(--surface-soft);font-size:.86rem}
+.bot-input input:focus{outline:none;border-color:var(--primary)}
+.bot-input button{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;color:#fff;background:var(--primary);font-size:1rem;flex-shrink:0}
+
+/* ============ Toast ============ */
+#toasts{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:92vw}
+.toast{padding:11px 22px;border-radius:999px;color:#fff;background:var(--primary-deep);font-size:.86rem;font-weight:800;box-shadow:0 14px 32px rgba(0,0,0,.28);animation:toastIn .3s ease;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92vw}
+.toast.ok{background:linear-gradient(135deg,#22c55e,#12855a)}
+.toast.err{background:linear-gradient(135deg,#f97316,#c2410c)}
+@keyframes toastIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+
+/* ============ Map ============ */
+.map-box{height:260px;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#90e0ef,#0077b6);color:#fff;display:grid;place-items:center;text-align:center;position:relative;border:1px solid var(--line)}
+.map-box::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(255,255,255,.25),transparent 40%),radial-gradient(circle at 70% 60%,rgba(255,255,255,.2),transparent 40%)}
+
+/* ============ Responsive ============ */
+@media(max-width:1024px){
+  .services-grid{grid-template-columns:repeat(2,1fr)}
+  .fleet-grid{grid-template-columns:repeat(2,1fr)}
+  .steps-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .hero-grid{grid-template-columns:1fr;text-align:center}
+  .hero-lead,.hero h1{margin-inline:auto}
+  .hero-actions,.stats{justify-content:center;margin-inline:auto}
+  .hero-art{order:-1}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .header-inner{flex-wrap:wrap}
+  .services-grid,.offers-grid,.fleet-grid,.steps-grid,.contact-grid,.order-stats,.row-2{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr}
+  .official-number{display:none}
+  #botBtn{left:16px;bottom:16px}
+  #botWindow{left:16px;right:16px;width:auto;bottom:88px}
+  .hero{padding:50px 16px 50px}
+  .section{padding:56px 16px}
+}
+</style>
+</head>
+<body class="design-1">
+
+<!-- ============ DESIGN LAB ============ -->
+<div class="design-lab">
+  <div class="design-lab-inner">
+    <div class="lab-title">
+      <span class="lab-dot"></span>
+      <b>10 تصاميم</b>
+      <small>— اضغط للتبديل</small>
+    </div>
+    <div class="design-options" id="designOptions"></div>
+  </div>
+</div>
+
+<!-- ============ TOPBAR ============ -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-note">نخدم جميع أحياء الرياض — من 4 العصر إلى 11 الليل</div>
+    <a class="phone-link" href="tel:+966500079374">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1 1 0 0 0-1.02.24l-2.2 2.2a15.05 15.05 0 0 1-6.59-6.59l2.2-2.2a1 1 0 0 0 .25-1.02A11.36 11.36 0 0 1 8.5 4c0-.55-.45-1-1-1H4a1 1 0 0 0-1 1 17 17 0 0 0 17 17 1 1 0 0 0 1-1v-3.5c0-.55-.45-1-1-1z"/></svg>
+      +966 50 007 9374
+    </a>
+  </div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="header-inner">
+    <button class="brand" onclick="showPage('home')">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h18"/><path d="M5 17l1.5-4.5A2 2 0 0 1 8.4 11h7.2a2 2 0 0 1 1.9 1.5L19 17"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg>
+      </span>
+      <span class="brand-name"><b>TurboWash</b><small>MOBILE · الرياض</small></span>
+    </button>
+    <nav class="nav-links">
+      <button class="nav-link active" data-nav="home">الرئيسية</button>
+      <button class="nav-link" data-nav="booking">الحجز</button>
+      <button class="nav-link" data-nav="fleet">الدبابات</button>
+      <button class="nav-link" data-nav="orders">الطلبات</button>
+      <button class="nav-link" data-nav="reviews">التقييم</button>
+      <button class="nav-link" data-nav="contact">تواصل</button>
+    </nav>
+    <div class="header-actions">
+      <span class="official-number" dir="ltr">📞 +966 50 007 9374</span>
+      <a class="btn btn-whatsapp btn-sm" href="https://wa.me/966500079374" target="_blank" rel="noopener">💬 واتساب</a>
+      <a class="btn btn-primary btn-sm" href="tel:+966500079374">📞 اتصال</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ MAIN ============ -->
+<main id="app"></main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <h4>🏎️ TurboWash Mobile</h4>
+      <p>خدمة غسيل سيارات متنقل فاخرة تصل إلى موقعك في جميع أحياء الرياض. دبابات مجهّزة بخزانات ماء ومضخات ضغط عالي، ومواد صديقة لطلاء سيارتك.</p>
+      <div class="footer-phone">📞 +966 50 007 9374</div>
+    </div>
+    <div>
+      <h4>روابط سريعة</h4>
+      <a href="#" onclick="showPage('home');return false">الرئيسية</a>
+      <a href="#" onclick="showPage('booking');return false">حجز موعد</a>
+      <a href="#" onclick="showPage('fleet');return false">أسطول الدبابات</a>
+      <a href="#" onclick="showPage('orders');return false">إدارة الطلبات</a>
+      <a href="#" onclick="showPage('reviews');return false">تقييم الخدمة</a>
+    </div>
+    <div>
+      <h4>تواصل معنا</h4>
+      <a href="tel:+966500079374" dir="ltr">+966 50 007 9374</a>
+      <a href="https://wa.me/966500079374" target="_blank">واتساب مباشر</a>
+      <a href="#" onclick="showPage('contact');return false">نموذج مراسلة</a>
+    </div>
+    <div>
+      <h4>أوقات العمل</h4>
+      <p>من 4 العصر إلى 11 الليل</p>
+      <p>طوال أيام الأسبوع</p>
+      <p style="margin-top:10px">الرياض، المملكة العربية السعودية 🇸🇦</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© <span id="year"></span> TurboWash Mobile — جميع الحقوق محفوظة.</span>
+    <span>صُنع بشغف في المملكة العربية السعودية</span>
+  </div>
+</footer>
+
+<!-- ============ BOT ============ -->
+<button id="botBtn" aria-label="المساعد الذكي">🤖</button>
+<div id="botWindow" role="dialog" aria-label="المساعد الذكي">
+  <div class="bot-head">
+    <span class="av">🤖</span>
+    <div><b>مساعد TurboWash</b><small>متصل · يرد فوراً</small></div>
+    <button class="close" onclick="toggleBot()">✕</button>
+  </div>
+  <div class="bot-msgs" id="botMsgs"></div>
+  <div class="bot-quick" id="botQuick"></div>
+  <form class="bot-input" id="botForm">
+    <input id="botText" type="text" placeholder="اكتب سؤالك..." autocomplete="off">
+    <button type="submit">➤</button>
+  </form>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+'use strict';
+
+/* ============================================
+   CONFIG
+   ============================================ */
+const CONFIG = {
+  phone: '+966 50 007 9374',
+  phoneRaw: '+966500079374',
+  whatsapp: 'https://wa.me/966500079374',
+  hours: 'من 4 العصر إلى 11 الليل',
+  location: 'الرياض، المملكة العربية السعودية'
+};
+
+const SERVICES = [
+  {id:'ext', name:'غسيل خارجي', price:20, icon:'🚗', desc:'غسيل الهيكل والزجاج والجنوط بضغط عالي مع تجفيف آمن.', checks:['شامبو فاخر','تجفيف يدوي','تلميع الجنوط']},
+  {id:'int', name:'غسيل داخلي', price:25, icon:'🧼', desc:'تنظيف المقاعد والفرش والتابلوه وتعطير داخلي.', checks:['تنظيف فرش','تعطير فاخر','تنظيف تابلوه']},
+  {id:'full', name:'غسيل شامل', price:40, icon:'✨', desc:'خارجي + داخلي + تلميع بسيط وإزالة البقع الخفيفة.', checks:['داخلي + خارجي','تلميع كامل','إزالة البقع'], featured:true},
+  {id:'sub', name:'اشتراك شهري', price:80, icon:'📅', desc:'4 غسلات شاملة خلال الشهر — وفّر أكثر من 50%.', checks:['4 غسلات شاملة','توفير 50%','أولوية حجز']}
+];
+
+const DEFAULT_BIKES = [
+  {id:1, name:'دباب 1 — محمد', role:'الغسيل الرئيسي', color:'yellow', status:'available', specs:['خزان 200 لتر','مضخة 130 بار','شمال الرياض']},
+  {id:2, name:'دباب 2 — أحمد', role:'الأحياء القريبة', color:'red', status:'available', specs:['خزان 150 لتر','مضخة 110 بار','وسط الرياض']},
+  {id:3, name:'دباب 3 — خالد', role:'الخدمة الليلية', color:'black', status:'busy', specs:['خزان 180 لتر','إضاءة LED','شرق الرياض']}
+];
+
+const DESIGNS = [
+  {id:1, name:'فخم',     accent:'#d4af37'},
+  {id:2, name:'زمردي',   accent:'#12855a'},
+  {id:3, name:'أحمر',    accent:'#d92332'},
+  {id:4, name:'سماوي',   accent:'#00b7c7'},
+  {id:5, name:'كريمي',   accent:'#b9863b'},
+  {id:6, name:'نيون',    accent:'#7c4dff'},
+  {id:7, name:'أبيض',    accent:'#0b3d91'},
+  {id:8, name:'زيتي',    accent:'#93c11e'},
+  {id:9, name:'أخضر',    accent:'#0d705c'},
+  {id:10,name:'برتقالي', accent:'#d16b37'}
+];
+
+/* ============================================
+   STORAGE
+   ============================================ */
+const store = {
+  get(k, fb){ try{ const v = localStorage.getItem('tw_'+k); return v ? JSON.parse(v) : fb; }catch(e){ return fb; } },
+  set(k, v){ try{ localStorage.setItem('tw_'+k, JSON.stringify(v)); }catch(e){} }
+};
+
+const state = {
+  design: store.get('design', 1),
+  page: 'home',
+  orders: store.get('orders', []),
+  bikes: store.get('bikes', DEFAULT_BIKES),
+  ratings: store.get('ratings', []),
+  messages: store.get('messages', []),
+  ratingValue: 0
+};
+
+const save = {
+  design(){ store.set('design', state.design); },
+  orders(){ store.set('orders', state.orders); },
+  bikes(){ store.set('bikes', state.bikes); },
+  ratings(){ store.set('ratings', state.ratings); },
+  messages(){ store.set('messages', state.messages); }
+};
+
+/* ============================================
+   UTILS
+   ============================================ */
+const $  = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const money = n => n + ' ريال';
+const uid = p => p + '-' + Date.now().toString(36).toUpperCase().slice(-5) + Math.random().toString(36).slice(2,4).toUpperCase();
+const todayStr = () => new Date().toLocaleDateString('ar-SA',{day:'numeric',month:'long'}) + ' · ' + new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function toast(msg, type=''){
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  $('#toasts').appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='.3s'; }, 2400);
+  setTimeout(() => el.remove(), 2800);
+}
+
+/* ============================================
+   SVG COMPONENTS
+   ============================================ */
+function truckSVG(color, id){
+  const c1 = color==='yellow'?'#f6c84b':color==='red'?'#e63946':'#2d343e';
+  const c2 = color==='yellow'?'#10233f':color==='red'?'#171717':'#080b10';
+  return `
+  <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" aria-label="دباب غسيل">
+    <ellipse cx="160" cy="185" rx="120" ry="9" fill="rgba(0,0,0,.18)"/>
+    <circle cx="72" cy="150" r="36" fill="#15181C"/><circle cx="72" cy="150" r="24" fill="#232A31"/><circle cx="72" cy="150" r="13" fill="#3a4654"/><circle cx="72" cy="150" r="5" fill="#0E1114"/>
+    <circle cx="240" cy="150" r="36" fill="#15181C"/><circle cx="240" cy="150" r="24" fill="#232A31"/><circle cx="240" cy="150" r="13" fill="#3a4654"/><circle cx="240" cy="150" r="5" fill="#0E1114"/>
+    <path d="M60 118 L72 150" stroke="#2C3742" stroke-width="9" stroke-linecap="round"/>
+    <path d="M86 118 L76 150" stroke="#2C3742" stroke-width="9" stroke-linecap="round"/>
+    <path d="M44 148 Q40 100 74 86 L96 86 Q104 112 104 148 Z" fill="${c1}"/>
+    <path d="M52 142 Q50 106 76 94 L88 94 Q92 116 92 142 Z" fill="rgba(255,255,255,.18)"/>
+    <circle cx="62" cy="76" r="10" fill="${c2}"/><circle cx="62" cy="76" r="4.5" fill="#FFF3C4"/>
+    <path d="M78 88 L62 60" stroke="#2C3742" stroke-width="8" stroke-linecap="round"/>
+    <path d="M40 58 L86 58" stroke="#15181C" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="40" cy="58" r="5.5" fill="${c2}"/><circle cx="86" cy="58" r="5.5" fill="${c2}"/>
+    <rect x="100" y="138" width="106" height="14" rx="3" fill="#2C3742"/>
+    <path d="M104 141 L202 141 L202 146 L104 146 Z" fill="${c2}" opacity=".55"/>
+    <path d="M176 140 Q176 106 206 100 L232 100 Q246 110 248 140 Z" fill="${c2}"/>
+    <path d="M180 136 Q182 112 208 106 L226 106 Q236 114 238 136 Z" fill="#1a1a1a"/>
+    <rect x="222" y="42" width="70" height="58" rx="13" fill="${c1}"/>
+    <rect x="222" y="64" width="70" height="12" fill="${c2}" opacity=".85"/>
+    <rect x="232" y="50" width="20" height="7" rx="3.5" fill="rgba(255,255,255,.5)"/>
+    <path d="M292 60 q14 4 14 16 t-14 14" fill="none" stroke="#2C3742" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="258" cy="118" r="11" fill="#2C3742"/><circle cx="258" cy="118" r="4" fill="${c1}"/>
+    <path d="M118 118 L134 118 L128 128 L142 128 L120 152 L126 136 L112 136 Z" fill="${c2}" opacity=".9"/>
+  </svg>`;
+}
+
+function skylineSVG(){
+  const b = (x,y,w,h,o) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" opacity="${o}"/>`;
+  return `
+  <svg viewBox="0 0 1440 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <g fill="rgba(255,255,255,.18)">
+      ${b(40,200,64,100,.8)}${b(112,170,48,130,.6)}${b(178,220,86,80,.5)}${b(430,190,58,110,.7)}
+      ${b(500,230,74,70,.5)}${b(590,206,52,94,.6)}${b(660,244,96,56,.4)}${b(790,196,60,104,.65)}
+      ${b(866,222,80,78,.5)}${b(1080,208,64,92,.6)}${b(1160,230,88,70,.45)}${b(1266,200,54,100,.6)}${b(1336,226,70,74,.5)}
+      <polygon points="300,300 300,58 332,58 347,122 377,122 392,58 424,58 424,300" opacity=".8"/>
+      <polygon points="995,300 1006,176 1038,176 1049,300" opacity=".75"/>
+    </g>
+    <g fill="rgba(212,175,55,.4)">
+      <circle cx="1022" cy="156" r="22"/>
+      <polygon points="1019,132 1025,132 1022,72"/>
+    </g>
+  </svg>`;
+}
+
+/* ============================================
+   PAGE TEMPLATES
+   ============================================ */
+function servicesHTML(){
+  return `
+  <div class="services-grid">
+    ${SERVICES.map(s => `
+      <div class="service-card ${s.featured?'featured':''}">
+        <div class="service-icon">${s.icon}</div>
+        <h3>${s.name}</h3>
+        <div class="price">${s.price} <small>ريال</small></div>
+        <p>${s.desc}</p>
+        <ul class="checks">${s.checks.map(c => `<li>${c}</li>`).join('')}</ul>
+        <button class="btn btn-primary btn-block btn-sm" onclick="showPage('booking');sessionStorage.setItem('tw_preselect','${s.id}')">احجز الآن</button>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function offersHTML(){
+  return `
+  <div class="offers-grid">
+    <div class="offer-card">
+      <div class="offer-icon">🔥</div>
+      <div class="offer-content">
+        <div class="offer-tag">عرض محدود</div>
+        <h3>عرض الأسبوع</h3>
+        <p>غسيل شامل كامل بسعر مخفّض طوال الأسبوع.</p>
+        <div class="offer-price"><s>40 ريال</s>35 ريال</div>
+      </div>
+    </div>
+    <div class="offer-card">
+      <div class="offer-icon">💎</div>
+      <div class="offer-content">
+        <div class="offer-tag">الأكثر توفيراً</div>
+        <h3>اشتراك شهري مخفّض</h3>
+        <p>4 غسلات شاملة خلال الشهر — وفّر أكثر.</p>
+        <div class="offer-price"><s>80 ريال</s>70 ريال</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function fleetHTML(){
+  return `
+  <div class="fleet-grid">
+    ${state.bikes.map(b => `
+      <div class="fleet-card">
+        <div class="tank-visual">
+          <span class="status ${b.status}">${b.status==='available'?'✅ متاح':'⏳ مشغول'}</span>
+          ${truckSVG(b.color, b.id)}
+        </div>
+        <div class="fleet-body">
+          <h3>${esc(b.name)}</h3>
+          <div class="fleet-role">${esc(b.role)}</div>
+          <div class="fleet-meta">${b.specs.map(s=>`<span>${esc(s)}</span>`).join('')}</div>
+          <div class="fleet-actions">
+            <button class="btn btn-primary btn-sm" onclick="sendBikeOrder(${b.id})">📤 إرسال الطلب</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleBike(${b.id})">${b.status==='available'?'تعيين كمشغول':'تعيين كمتاح'}</button>
+          </div>
+        </div>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function stepsHTML(){
+  const steps = [
+    ['1','اختر الخدمة','حدّد نوع الغسيل المناسب لسيارتك.'],
+    ['2','أدخل بياناتك','الاسم، الجوال، الموقع، الوقت.'],
+    ['3','نجيك بموقعك','نرسل أقرب دباب متاح إليك.'],
+    ['4','استلم سيارتك','غسيل احترافي وتسليم في الموعد.']
+  ];
+  return `<div class="steps-grid">${steps.map(([n,t,d])=>`
+    <div class="step-card">
+      <div class="step-num">${n}</div>
+      <h3>${t}</h3><p>${d}</p>
+    </div>`).join('')}</div>`;
+}
+
+function bookingFormHTML(){
+  return `
+  <div class="form-card">
+    <form id="bookingForm" novalidate>
+      <div class="field">
+        <label>الخدمة <span class="req">*</span></label>
+        <select name="service" required>
+          ${SERVICES.map(s=>`<option value="${s.id}">${s.name} — ${s.price} ريال</option>`).join('')}
+        </select>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>الاسم <span class="req">*</span></label>
+          <input name="name" type="text" placeholder="اسمك الكامل" required>
+        </div>
+        <div class="field">
+          <label>رقم الجوال <span class="req">*</span></label>
+          <input name="phone" type="tel" placeholder="05XXXXXXXX" dir="ltr" required>
+        </div>
+      </div>
+      <div class="field">
+        <label>الموقع / الحي <span class="req">*</span></label>
+        <input name="location" type="text" placeholder="مثال: حي العليا — بجانب برج المملكة" required>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>نوع السيارة <span class="req">*</span></label>
+          <input name="car" type="text" placeholder="كامري 2023" required>
+        </div>
+        <div class="field">
+          <label>الوقت <span class="req">*</span></label>
+          <input name="time" type="time" min="16:00" max="23:00" value="18:00" required>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" style="margin-top:10px">✅ تأكيد الحجز</button>
+    </form>
+  </div>
+  <div id="bookingResult"></div>`;
+}
+
+function ordersHTML(){
+  const stats = {
+    total: state.orders.length,
+    paid: state.orders.filter(o=>o.status==='paid').length,
+    washing: state.orders.filter(o=>o.status==='washing').length,
+    done: state.orders.filter(o=>o.status==='done').length
+  };
+  return `
+  <div class="order-stats">
+    <div class="order-stat"><div class="num">${stats.total}</div><div class="label">إجمالي</div></div>
+    <div class="order-stat"><div class="num" style="color:var(--accent)">${stats.paid}</div><div class="label">جاهز</div></div>
+    <div class="order-stat"><div class="num" style="color:var(--primary)">${stats.washing}</div><div class="label">قيد التنفيذ</div></div>
+    <div class="order-stat"><div class="num" style="color:var(--success)">${stats.done}</div><div class="label">تم التسليم</div></div>
+  </div>
+  ${state.orders.length===0 ? `
+    <div class="alert alert-info" style="text-align:center">📋 لا توجد طلبات بعد — ابدأ بحجز أول موعد.</div>
+  ` : state.orders.slice().reverse().map(o => {
+    const cls = o.status==='paid'?'ready':o.status==='washing'?'progress':'done';
+    const lbl = o.status==='paid'?'جاهز':o.status==='washing'?'قيد التنفيذ':'تم التسليم';
+    const bike = state.bikes.find(b=>b.id===o.bikeId);
+    return `
+    <div class="order-item ${cls}">
+      <h4>🆔 ${esc(o.code)} <span class="status-badge ${cls}">${lbl}</span></h4>
+      <p>👤 ${esc(o.name)} · 📱 <span dir="ltr">${esc(o.phone)}</span></p>
+      <p>🔧 ${esc(o.serviceName)} — ${money(o.price)}</p>
+      <p>📍 ${esc(o.location)} · 🚗 ${esc(o.car)} · 🕐 ${esc(o.time)}</p>
+      ${bike?`<p>🏍️ ${esc(bike.name)}</p>`:''}
+      <p style="font-size:.75rem;opacity:.7">${esc(o.createdAt)}</p>
+      <div class="order-actions">
+        ${o.status==='paid'?`<button class="btn btn-primary btn-sm" onclick="startOrder('${o.id}')">▶ بدء الغسيل</button>`:''}
+        ${o.status==='washing'?`<button class="btn btn-primary btn-sm" style="background:var(--success)" onclick="doneOrder('${o.id}')">✅ تم التسليم</button>`:''}
+      </div>
+    </div>`;
+  }).join('')}`;
+}
+
+function contactHTML(){
+  return `
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="icon">📞</div>
+      <h3>اتصال مباشر</h3>
+      <a href="tel:+966500079374" dir="ltr">+966 50 007 9374</a>
+    </div>
+    <div class="contact-card">
+      <div class="icon">💬</div>
+      <h3>واتساب</h3>
+      <a href="https://wa.me/966500079374" target="_blank" dir="ltr">+966500079374</a>
+    </div>
+    <div class="contact-card">
+      <div class="icon">🕐</div>
+      <h3>أوقات العمل</h3>
+      <p>من 4 العصر — 11 الليل</p>
+      <p>طوال أيام الأسبوع</p>
+    </div>
+    <div class="contact-card">
+      <div class="icon">📍</div>
+      <h3>الموقع</h3>
+      <p>الرياض — جميع الأحياء</p>
+    </div>
+  </div>
+  <div class="form-card" id="contactBox" style="margin-top:20px">
+    <h3 style="margin-bottom:14px;color:var(--text)">✉️ أرسل لنا رسالة</h3>
+    <form id="contactForm" novalidate>
+      <div class="row-2">
+        <div class="field"><label>الاسم <span class="req">*</span></label><input name="name" type="text" required></div>
+        <div class="field"><label>الجوال <span class="req">*</span></label><input name="phone" type="tel" dir="ltr" required></div>
+      </div>
+      <div class="field"><label>رسالتك <span class="req">*</span></label><textarea name="message" required></textarea></div>
+      <button class="btn btn-primary btn-block" type="submit">📤 إرسال</button>
+    </form>
+  </div>`;
+}
+
+function reviewsHTML(){
+  const avg = state.ratings.length ? (state.ratings.reduce((a,r)=>a+r.value,0)/state.ratings.length).toFixed(1) : '0.0';
+  return `
+  <div class="avg-rating">${avg}</div>
+  <div class="reviews-count">${state.ratings.length} تقييم${state.ratings.length===1?'':'ات'}</div>
+  <div class="form-card" id="ratingBox">
+    <p style="text-align:center;color:var(--muted);margin-bottom:10px">اختر تقييمك من 1 إلى 5 نجوم</p>
+    <div class="stars-row" id="starsRow">
+      ${[5,4,3,2,1].map(n=>`<button type="button" class="star" data-star="${n}">★</button>`).join('')}
+    </div>
+    <div id="ratingLabel" style="text-align:center;font-weight:900;color:var(--primary);margin-bottom:18px">لم يتم الاختيار</div>
+    <form id="ratingForm">
+      <div class="field"><label>الاسم (اختياري)</label><input name="name" type="text"></div>
+      <div class="field"><label>ملاحظة (اختياري)</label><textarea name="note"></textarea></div>
+      <button class="btn btn-primary btn-block" type="submit">⭐ إرسال التقييم</button>
+    </form>
+  </div>
+  <div style="margin-top:30px">
+    ${state.ratings.length===0?'':state.ratings.slice().reverse().map(r=>`
+      <div class="review-item">
+        <div class="rev-stars">${'★'.repeat(r.value)}${'☆'.repeat(5-r.value)}</div>
+        <h4>${esc(r.name)}</h4>
+        ${r.note?`<p>${esc(r.note)}</p>`:''}
+      </div>`).join('')}
+  </div>`;
+}
+
+function homeHTML(){
+  return `
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">خدمة غسيل متنقّل فاخرة · الرياض</div>
+        <h1>سيارتك نظيفة <span>بدون ما تتحرك</span> من مكانك</h1>
+        <p class="hero-lead">نجيك بموقعك في أي حي داخل الرياض بدبابات مجهّزة بالكامل. احجز بضغطة، وخلّنا نهتم بالباقي.</p>
+        <div class="hero-actions">
+          <button class="btn btn-gold" onclick="showPage('booking')">📝 احجز موعدك الآن</button>
+          <a class="btn btn-whatsapp" href="https://wa.me/966500079374" target="_blank">💬 تواصل واتساب</a>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>+1200</b><span>سيارة تم غسلها</span></div>
+          <div class="stat"><b>3</b><span>دبابات مجهّزة</span></div>
+          <div class="stat"><b>4.9</b><span>تقييم العملاء</span></div>
+          <div class="stat"><b>45د</b><span>وقت الوصول</span></div>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="truck-glow"></div>
+        <div class="floating-chip chip-one">⭐ 4.9 تقييم</div>
+        <div class="floating-chip chip-two">⏱️ وصول 45د</div>
+        <div class="truck-svg">${truckSVG('yellow', 'hero')}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">خدماتنا</div>
+        <h2 class="section-title">اختر الخدمة اللي تناسب سيارتك</h2>
+        <p class="section-sub">أسعار واضحة وشفافة — بدون أي رسوم مخفية.</p>
+      </div>
+      ${servicesHTML()}
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">العروض</div>
+        <h2 class="section-title">عروض الأسبوع 🔥</h2>
+        <p class="section-sub">وفّر أكثر مع عروضنا المحدودة.</p>
+      </div>
+      ${offersHTML()}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">الأسطول</div>
+        <h2 class="section-title">دبابات TurboWash</h2>
+        <p class="section-sub">كل دباب مجهّز بمعداته الخاصة.</p>
+      </div>
+      ${fleetHTML()}
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">كيف نعمل</div>
+        <h2 class="section-title">أربع خطوات فقط</h2>
+      </div>
+      ${stepsHTML()}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cta-section">
+        <h2>جاهز نغسل سيارتك اليوم؟</h2>
+        <p>اتصل بنا أو أرسل موقعك على واتساب ونوصلك خلال 45 دقيقة.</p>
+        <a class="btn btn-whatsapp" href="https://wa.me/966500079374" target="_blank">💬 واتساب مباشر</a>
+        <a class="btn btn-ghost" style="color:#fff;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)" href="tel:+966500079374">📞 +966 50 007 9374</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">موقعنا</div>
+        <h2 class="section-title">نخدم جميع أحياء الرياض</h2>
+      </div>
+      <div class="map-box">
+        <div style="position:relative;z-index:2">
+          <div style="font-size:3rem;margin-bottom:8px">🗺️</div>
+          <div style="font-weight:900;font-size:1.1rem">الرياض — جميع الأحياء</div>
+          <div style="opacity:.85;margin-top:4px">شمال · جنوب · شرق · غرب · وسط</div>
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+/* ============================================
+   RENDER PAGES
+   ============================================ */
+const PAGES = {
+  home: () => homeHTML(),
+  booking: () => `
+    <section class="section">
+      <div class="container" style="max-width:820px">
+        <div class="section-head">
+          <div class="kicker">الحجز</div>
+          <h2 class="section-title">احجز موعد غسيل سيارتك</h2>
+          <p class="section-sub">املأ البيانات وسيتم تأكيد حجزك فورًا.</p>
+        </div>
+        ${bookingFormHTML()}
+      </div>
+    </section>`,
+  fleet: () => `
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">الأسطول</div>
+          <h2 class="section-title">إدارة الدبابات</h2>
+          <p class="section-sub">يمكنك تغيير الحالة أو إرسال طلب مباشر.</p>
+        </div>
+        ${fleetHTML()}
+      </div>
+    </section>`,
+  orders: () => `
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">لوحة التحكم</div>
+          <h2 class="section-title">إدارة الطلبات</h2>
+          <p class="section-sub">تابع الطلبات وحدّث حالتها.</p>
+        </div>
+        ${ordersHTML()}
+      </div>
+    </section>`,
+  contact: () => `
+    <section class="section">
+      <div class="container" style="max-width:820px">
+        <div class="section-head">
+          <div class="kicker">تواصل</div>
+          <h2 class="section-title">نحن في خدمتك</h2>
+        </div>
+        ${contactHTML()}
+      </div>
+    </section>`,
+  reviews: () => `
+    <section class="section">
+      <div class="container" style="max-width:720px">
+        <div class="section-head">
+          <div class="kicker">التقييم</div>
+          <h2 class="section-title">قيّم تجربتك</h2>
+        </div>
+        ${reviewsHTML()}
+      </div>
+    </section>`
+};
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+function showPage(page){
+  state.page = PAGES[page] ? page : 'home';
+  $('#app').innerHTML = PAGES[state.page]();
+  $$('.nav-link').forEach(a => a.classList.toggle('active', a.dataset.nav === state.page));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (state.page === 'home') {
+    state.ratingValue = 0;
+  }
+}
+
+document.addEventListener('click', e => {
+  const nl = e.target.closest('.nav-link[data-nav]');
+  if (nl) { e.preventDefault(); showPage(nl.dataset.nav); }
+});
+
+/* ============================================
+   DESIGN SWITCHER
+   ============================================ */
+function applyDesign(n){
+  state.design = n;
+  document.body.className = 'design-' + n;
+  save.design();
+  $$('#designOptions button').forEach(b => b.classList.toggle('active', Number(b.dataset.design) === n));
+  const names = ['فخم','زمردي','أحمر','سماوي','كريمي','نيون','أبيض','زيتي','أخضر','برتقالي'];
+  toast('التصميم: ' + names[n-1], 'ok');
+}
+
+function buildDesignOptions(){
+  $('#designOptions').innerHTML = DESIGNS.map(d => `
+    <button data-design="${d.id}" class="${d.id===state.design?'active':''}">
+      <i style="background:${d.accent}"></i>${d.id}. ${d.name}
+    </button>
+  `).join('');
+}
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('#designOptions button');
+  if (b) applyDesign(Number(b.dataset.design));
+});
+
+/* ============================================
+   BOOKING
+   ============================================ */
+document.addEventListener('submit', e => {
+  const f = e.target;
+
+  if (f.id === 'bookingForm') {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(f).entries());
+    if (!d.name || !d.phone || !d.location || !d.car || !d.time) { toast('يرجى تعبئة الحقول', 'err'); return; }
+    if (!/^0?5\d{8}$/.test(d.phone.replace(/\s|-/g,''))) { toast('رقم الجوال غير صحيح', 'err'); return; }
+    const svc = SERVICES.find(s => s.id === d.service) || SERVICES[0];
+    let bike = state.bikes.find(b => b.status === 'available') || state.bikes[0];
+    const order = {
+      id: uid('ORD'), code: uid('TW'),
+      serviceId: svc.id, serviceName: svc.name, price: svc.price,
+      name: d.name.trim(), phone: d.phone.trim(), location: d.location.trim(),
+      car: d.car.trim(), time: d.time, bikeId: bike.id,
+      status: 'paid', createdAt: todayStr()
+    };
+    state.orders.push(order); save.orders();
+    const res = $('#bookingResult');
+    if (res) res.innerHTML = `
+      <div class="alert alert-ok" style="margin-top:20px">
+        <div style="font-size:1.05rem;font-weight:900;margin-bottom:6px">✅ تم تأكيد حجزك!</div>
+        <div>رقم الحجز: <b>${order.code}</b></div>
+        <div>${esc(order.serviceName)} — ${money(order.price)}</div>
+        <div>الموعد: <b>${order.time}</b> · ${esc(order.location)}</div>
+        <div>الدباب: <b>${esc(bike.name)}</b></div>
+        <a class="btn btn-whatsapp btn-sm" style="margin-top:12px" target="_blank" rel="noopener" href="https://wa.me/966500079374?text=${encodeURIComponent('مرحبًا، حجزي ' + order.code + ' — ' + order.serviceName)}">📤 إرسال اللوكيشن واتساب</a>
+      </div>`;
+    f.reset();
+    toast('تم تأكيد الحجز ✅', 'ok');
+    return;
+  }
+
+  if (f.id === 'contactForm') {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(f).entries());
+    if (!d.name || !d.phone || !d.message) { toast('يرجى تعبئة الحقول', 'err'); return; }
+    state.messages.push({ ...d, at: todayStr() }); save.messages();
+    f.reset();
+    const box = $('#contactBox');
+    if (box) {
+      const note = document.createElement('div');
+      note.className = 'alert alert-ok';
+      note.textContent = '✅ تم إرسال رسالتك بنجاح، سنعاود التواصل قريبًا.';
+      box.prepend(note);
+      setTimeout(() => note.remove(), 5000);
+    }
+    toast('تم إرسال رسالتك ✅', 'ok');
+    return;
+  }
+
+  if (f.id === 'ratingForm') {
+    e.preventDefault();
+    if (!state.ratingValue) { toast('اختر تقييمك', 'err'); return; }
+    const d = Object.fromEntries(new FormData(f).entries());
+    state.ratings.push({ value: state.ratingValue, name: d.name || 'عميل', note: d.note || '', at: todayStr() });
+    save.ratings();
+    toast('شكرًا لتقييمك ⭐', 'ok');
+    showPage('reviews');
+    return;
+  }
+});
+
+/* ============================================
+   ACTIONS
+   ============================================ */
+function toggleBike(id){
+  const b = state.bikes.find(x => x.id === id);
+  b.status = b.status === 'available' ? 'busy' : 'available';
+  save.bikes();
+  toast(`${b.name} → ${b.status === 'available' ? 'متاح' : 'مشغول'}`, 'ok');
+  showPage(state.page);
+}
+
+function sendBikeOrder(id){
+  sessionStorage.setItem('tw_preselect_bike', id);
+  toast('تم اختيار الدباب ✅', 'ok');
+  showPage('booking');
+}
+
+function startOrder(id){
+  const o = state.orders.find(x => x.id === id);
+  o.status = 'washing'; save.orders();
+  toast('بدأ التنفيذ 🚿', 'ok');
+  showPage('orders');
+}
+
+function doneOrder(id){
+  const o = state.orders.find(x => x.id === id);
+  o.status = 'done'; save.orders();
+  toast('تم التسليم ✅', 'ok');
+  showPage('orders');
+}
+
+/* ============================================
+   RATING
+   ============================================ */
+document.addEventListener('click', e => {
+  const s = e.target.closest('.star');
+  if (!s) return;
+  state.ratingValue = Number(s.dataset.star);
+  $$('#starsRow .star').forEach(x => x.classList.toggle('on', Number(x.dataset.star) <= state.ratingValue));
+  const labels = { 1:'ضعيف جدًا', 2:'ضعيف', 3:'مقبول', 4:'جيد جدًا', 5:'ممتاز ⭐' };
+  const lbl = $('#ratingLabel');
+  if (lbl) lbl.textContent = labels[state.ratingValue];
+});
+
+/* ============================================
+   BOT
+   ============================================ */
+const BOT = {
+  norm(s){
+    return String(s).replace(/[\u064B-\u0652\u0670\u0640]/g,'')
+      .replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').replace(/ة/g,'ه')
+      .replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
+  },
+  intents: [
+    { key:'sub', words:['اشتراك','شهري','شهريه'], reply:'📅 الاشتراك الشهري:\n4 غسلات بـ 80 ريال خلال الشهر — يشمل غسيل شامل (خارجي + داخلي).' },
+    { key:'offer', words:['عرض','عروض','خصم','تخفيض','اوفر'], reply:'🔥 عرض الأسبوع:\nغسيل شامل بـ 35 ريال بدل 40.\n\n+ اشتراك شهري: 4 غسلات بـ 70 ريال بدل 80.' },
+    { key:'book', words:['احجز','حجز','موعد','كيف احجز'], reply:'📝 الحجز يتم عبر الصفحة الرسمية:\n1) اختر الخدمة\n2) أدخل بياناتك\n3) اضغط تأكيد\n\nأو أرسل لنا: ' + CONFIG.phone },
+    { key:'sendLoc', words:['ارسل الموقع','اللوكيشن','لوكيشن','location'], reply:'📍 أرسل اللوكيشن عبر واتساب:\n' + CONFIG.whatsapp },
+    { key:'svc', words:['خدمات','خدمه','وش تسوون','انواع الغسيل'], reply:'🚿 خدماتنا:\n• غسيل خارجي — 20 ريال\n• غسيل داخلي — 25 ريال\n• غسيل شامل — 40 ريال\n• اشتراك شهري — 80 ريال\n• تلميع بسيط' },
+    { key:'hours', words:['وقت','اوقات','متى','تفتحون','دوام'], reply:'🕓 أوقات العمل:\nمن 4 العصر إلى 11 الليل — طوال الأسبوع.' },
+    { key:'loc', words:['موقع','وين انتم','وين موقعكم','مكان','احياء','أحياء'], reply:'🏙️ نخدم جميع أحياء الرياض — شمال، جنوب، شرق، غرب، ووسط.' },
+    { key:'contact', words:['تواصل','رقم','جوال','اتصال','واتساب'], reply:'📞 رقم التواصل الرسمي:\n' + CONFIG.phone + '\n\nواتساب:\n' + CONFIG.whatsapp },
+    { key:'rate', words:['تقييم','قيم','راي','نجوم'], reply:'⭐ أرسل تقييمك من 1 إلى 5 عبر صفحة «التقييم» في الموقع.' },
+    { key:'price', words:['سعر','اسعار','أسعار','كم','بكم','تكلفه'], reply:'💰 أسعارنا:\n• غسيل خارجي: 20 ريال\n• غسيل داخلي: 25 ريال\n• غسيل شامل: 40 ريال\n• اشتراك شهري: 80 ريال\n\n🔥 عرض الأسبوع: شامل بـ 35.' },
+    { key:'greet', words:['سلام','هلا','مرحبا','السلام','هاي','صباح','مساء','اهلا'], reply:'وعليكم السلام ورحمة الله 🌿\nأنا مساعد TurboWash. كيف أقدر أخدمك؟' }
+  ],
+  match(text){
+    const n = this.norm(text);
+    if (!n) return null;
+    for (const it of this.intents) {
+      for (const w of it.words) {
+        if (n.includes(this.norm(w))) return it;
+      }
+    }
+    return null;
+  },
+  fallback(){ return 'ما فهمت سؤالك تمامًا 🤔\nجرّب تسألني عن: الأسعار، الخدمات، العروض، الحجز، أوقات العمل.\n\nأو تواصل مباشرة: ' + CONFIG.phone; }
+};
+
+const QUICK = ['كم الأسعار؟','وش الخدمات؟','وش العروض؟','كيف أحجز؟','أوقات العمل','الاشتراك الشهري','تواصل معنا'];
+
+function botPush(text, who='bot'){
+  const el = document.createElement('div');
+  el.className = 'msg ' + who;
+  el.textContent = text;
+  $('#botMsgs').appendChild(el);
+  $('#botMsgs').scrollTop = $('#botMsgs').scrollHeight;
+}
+
+async function botReply(text){
+  const intent = BOT.match(text);
+  await new Promise(r => setTimeout(r, 400));
+  botPush(intent ? intent.reply : BOT.fallback(), 'bot');
+}
+
+function toggleBot(){
+  const w = $('#botWindow');
+  if (w.classList.contains('open')) {
+    w.classList.remove('open');
+    return;
+  }
+  w.classList.add('open');
+  if (!w.dataset.init) {
+    w.dataset.init = '1';
+    $('#botQuick').innerHTML = QUICK.map(q => `<button class="chip" data-q="${q}">${q}</button>`).join('');
+    botPush('أهلًا وسهلًا في TurboWash Mobile 🌿\nأنا مساعدك الذكي. اسألني عن الأسعار، الخدمات، العروض، أو الحجز.', 'bot');
+  }
+  setTimeout(() => $('#botText').focus(), 200);
+}
+
+document.addEventListener('click', e => {
+  if (e.target.id === 'botBtn') toggleBot();
+  const chip = e.target.closest('#botQuick .chip');
+  if (chip) {
+    botPush(chip.dataset.q, 'user');
+    botReply(chip.dataset.q);
+  }
+});
+
+document.addEventListener('submit', e => {
+  if (e.target.id === 'botForm') {
+    e.preventDefault();
+    const t = $('#botText').value.trim();
+    if (!t) return;
+    botPush(t, 'user');
+    $('#botText').value = '';
+    botReply(t);
+  }
+});
+
+/* ============================================
+   INIT
+   ============================================ */
+$('#year').textContent = new Date().getFullYear();
+buildDesignOptions();
+document.body.className = 'design-' + state.design;
+showPage('home');
+</script>
+</body>
+</html>
