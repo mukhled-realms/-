@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>TurboWash Mobile | غسيل سيارات متنقل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+:root{
+  --navy:#0A2540;
+  --navy-2:#0B3D91;
+  --blue:#1E6FD9;
+  --blue-soft:#E8F1FC;
+  --white:#FFFFFF;
+  --green:#12855A;
+  --green-2:#1FB574;
+  --gold:#D4AF37;
+  --ink:#0E1B2C;
+  --muted:#5B6B80;
+  --line:#DCE6F2;
+  --radius:20px;
+  --shadow:0 12px 30px rgba(10,37,64,.12);
+  --shadow-lg:0 24px 60px rgba(10,37,64,.22);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:'Tajawal',system-ui,sans-serif;
+  background:linear-gradient(135deg,#0A2540 0%,#061729 100%);
+  color:var(--ink);line-height:1.7;
+  display:flex;justify-content:center;align-items:center;
+  min-height:100vh;padding:0;
+  overflow-x:hidden;
+}
+img{display:block;max-width:100%}
+button,input,select,textarea{font-family:inherit;font-size:inherit;outline:none;border:none}
+a{color:inherit;text-decoration:none}
+
+/* ====== إطار الجوال ====== */
+.phone{
+  width:100%;max-width:430px;
+  height:100vh;max-height:920px;
+  background:#F4F7FC;
+  border-radius:0;overflow:hidden;
+  display:flex;flex-direction:column;
+  box-shadow:var(--shadow-lg);
+  position:relative;
+}
+@media(min-width:520px){
+  .phone{border-radius:38px;height:92vh;border:10px solid #0A1A2F;box-shadow:0 40px 100px rgba(0,0,0,.55)}
+}
+
+/* ====== الهيدر ====== */
+.app-header{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 70%,var(--blue) 120%);
+  color:#fff;padding:16px 18px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;flex-shrink:0;
+}
+.app-header::after{
+  content:"";position:absolute;left:-40px;top:-60px;width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(212,175,55,.25),transparent 70%);
+}
+.brand-mini{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+.brand-mini .logo{
+  width:38px;height:38px;border-radius:11px;
+  background:linear-gradient(135deg,var(--blue),var(--green));
+  display:grid;place-items:center;font-weight:900;font-size:18px;
+}
+.brand-mini b{font-size:16px;font-weight:900;line-height:1.1}
+.brand-mini span{display:block;font-size:10px;letter-spacing:1.5px;opacity:.85}
+.header-actions{display:flex;gap:8px;position:relative;z-index:1}
+.h-btn{
+  width:38px;height:38px;border-radius:11px;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.22);
+  display:grid;place-items:center;cursor:pointer;color:#fff;
+  transition:.2s;backdrop-filter:blur(8px);
+}
+.h-btn:hover{background:rgba(255,255,255,.28)}
+
+/* ====== شريط الموقع ====== */
+.location-bar{
+  background:#fff;padding:8px 18px;display:flex;align-items:center;gap:8px;
+  font-size:12.5px;color:var(--muted);border-bottom:1px solid var(--line);flex-shrink:0;
+}
+.location-bar .dot-live{width:8px;height:8px;border-radius:50%;background:var(--green-2);box-shadow:0 0 0 4px rgba(31,181,116,.18);animation:pulse2 2s infinite}
+@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ====== المحتوى ====== */
+.screen{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  padding-bottom:90px;
+  scrollbar-width:thin;scrollbar-color:#C6DBF5 transparent;
+}
+.screen::-webkit-scrollbar{width:6px}
+.screen::-webkit-scrollbar-thumb{background:#C6DBF5;border-radius:3px}
+.page{display:none;padding:18px 18px 20px;animation:fadeIn .35s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ====== العناوين ====== */
+.sec-title{font-size:18px;font-weight:900;color:var(--navy);margin:22px 0 12px;display:flex;align-items:center;justify-content:space-between}
+.sec-title:first-child{margin-top:0}
+.sec-title a{font-size:12.5px;color:var(--blue);font-weight:700}
+.sec-title .line{flex:1;height:1px;background:var(--line);margin:0 12px}
+
+/* ====== بطاقة الهيرو ====== */
+.hero-card{
+  position:relative;border-radius:var(--radius);overflow:hidden;
+  background:linear-gradient(135deg,#0B3D91 0%,#0A2540 100%);
+  color:#fff;padding:22px 20px 26px;margin-bottom:16px;
+  box-shadow:var(--shadow);
+}
+.hero-card::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 100% at 90% 0%,rgba(30,111,217,.6),transparent 55%);
+}
+.hero-card .content{position:relative;z-index:2}
+.hero-card h2{font-size:22px;font-weight:900;line-height:1.35}
+.hero-card h2 em{font-style:normal;color:#8CF0C0}
+.hero-card p{font-size:13.5px;opacity:.85;margin-top:8px;max-width:280px}
+.hero-card .badges{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.hero-card .badge-pill{
+  background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);
+  border-radius:999px;padding:5px 12px;font-size:11.5px;font-weight:600;
+  backdrop-filter:blur(6px);
+}
+.hero-card .bike-img{
+  position:absolute;left:0;bottom:0;width:60%;max-width:220px;
+  filter:drop-shadow(0 14px 24px rgba(0,0,0,.4));
+  z-index:1;
+}
+
+/* ====== بطاقات الخدمات ====== */
+.svc-list{display:flex;flex-direction:column;gap:11px}
+.svc{
+  background:#fff;border-radius:16px;padding:14px 16px;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:0 4px 14px rgba(10,37,64,.06);
+  border:1px solid var(--line);cursor:pointer;transition:.25s;
+  position:relative;overflow:hidden;
+}
+.svc:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#C6DBF5}
+.svc .icon-box{
+  width:52px;height:52px;border-radius:14px;flex-shrink:0;
+  display:grid;place-items:center;font-size:24px;
+  background:linear-gradient(135deg,var(--blue-soft),#D6E7FB);
+}
+.svc .info{flex:1;min-width:0}
+.svc .info b{display:block;font-size:15px;font-weight:900;color:var(--navy)}
+.svc .info span{font-size:12px;color:var(--muted)}
+.svc .price-tag{
+  font-size:17px;font-weight:900;color:var(--blue);
+  display:flex;align-items:baseline;gap:3px;flex-shrink:0;
+}
+.svc .price-tag small{font-size:11px;font-weight:500;color:var(--muted)}
+.svc .go-arrow{
+  width:28px;height:28px;border-radius:50%;background:var(--blue-soft);color:var(--blue);
+  display:grid;place-items:center;font-size:14px;flex-shrink:0;
+}
+
+/* ====== العروض ====== */
+.offer{
+  border-radius:18px;padding:18px;color:#fff;
+  background:linear-gradient(135deg,var(--navy-2) 0%,var(--navy) 100%);
+  position:relative;overflow:hidden;box-shadow:var(--shadow);
+}
+.offer.green{background:linear-gradient(135deg,var(--green) 0%,#0A2540 100%)}
+.offer::before{
+  content:"";position:absolute;top:-40px;left:-40px;width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(212,175,55,.3),transparent 70%);
+}
+.offer .tag{
+  position:relative;display:inline-block;background:rgba(255,255,255,.18);
+  font-size:10.5px;padding:3px 10px;border-radius:999px;font-weight:700;letter-spacing:.5px;
+}
+.offer h4{font-size:16px;font-weight:900;margin-top:8px;position:relative}
+.offer .prices{display:flex;align-items:baseline;gap:10px;margin-top:12px;position:relative}
+.offer .prices .old{text-decoration:line-through;opacity:.55;font-size:15px}
+.offer .prices .new{font-size:28px;font-weight:900;color:#8CF0C0}
+.offer .prices small{font-size:12px;opacity:.8}
+
+/* ====== النماذج ====== */
+.form-card{background:#fff;border-radius:18px;padding:20px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.field label .req{color:#E03131}
+.field input,.field select,.field textarea{
+  width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;
+  background:#FBFDFF;transition:.2s;color:var(--ink);font-size:14.5px;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(30,111,217,.1);
+}
+.field textarea{resize:vertical;min-height:90px}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hint{font-size:11.5px;color:var(--muted);margin-top:5px}
+
+/* ====== أزرار الدفع ====== */
+.pay-methods{display:flex;gap:8px;margin:6px 0 14px;justify-content:center}
+.pay-methods .pay{
+  flex:1;background:#fff;border:1.5px solid var(--line);border-radius:10px;
+  padding:10px 6px;display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--navy);
+  transition:.2s;cursor:pointer;
+}
+.pay-methods .pay.active{border-color:var(--blue);background:var(--blue-soft);box-shadow:0 0 0 3px rgba(30,111,217,.1)}
+.pay-methods .pay span{font-size:16px;font-weight:900}
+
+/* ====== الأزرار ====== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 20px;border-radius:14px;font-weight:700;font-size:14.5px;
+  cursor:pointer;transition:.22s;border:1.5px solid transparent;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,var(--blue),var(--navy-2));color:#fff;box-shadow:0 10px 22px rgba(30,111,217,.3)}
+.btn-primary:hover{box-shadow:0 14px 30px rgba(30,111,217,.42)}
+.btn-green{background:linear-gradient(135deg,var(--green-2),var(--green));color:#fff;box-shadow:0 10px 22px rgba(18,133,90,.3)}
+.btn-wa{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;box-shadow:0 10px 22px rgba(18,140,126,.3)}
+.btn-ghost{background:#fff;color:var(--navy);border-color:var(--line)}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
+.btn-block{width:100%}
+.btn-sm{padding:9px 14px;font-size:13px;border-radius:11px}
+
+/* ====== بطاقات الطلبات ====== */
+.order-card{
+  background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;
+  box-shadow:0 6px 18px rgba(10,37,64,.07);border:1px solid var(--line);
+  position:relative;overflow:hidden;
+}
+.order-card::before{
+  content:"";position:absolute;right:0;top:0;bottom:0;width:4px;
+}
+.order-card.paid::before{background:#F59E0B}
+.order-card.washing::before{background:var(--blue)}
+.order-card.done::before{background:var(--green-2)}
+.order-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.order-head .code{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px}
+.status-pill{font-size:11px;font-weight:700;padding:5px 12px;border-radius:999px}
+.status-pill.paid{background:#FEF3C7;color:#B45309}
+.status-pill.washing{background:#DBEAFE;color:#1D4ED8}
+.status-pill.done{background:#D1FAE5;color:#0B5C3E}
+.order-card h4{font-size:15px;font-weight:900;color:var(--navy);margin-bottom:8px}
+.order-meta{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);margin-bottom:12px}
+.order-meta span{display:flex;align-items:center;gap:6px}
+.order-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ====== بطاقات الدبابات ====== */
+.bike-card{
+  background:#fff;border-radius:18px;overflow:hidden;
+  box-shadow:0 8px 22px rgba(10,37,64,.08);border:1px solid var(--line);
+  margin-bottom:14px;transition:.28s;
+}
+.bike-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.bike-img-wrap{
+  position:relative;height:170px;
+  background:linear-gradient(135deg,#F4F8FE 0%,#E3EDF9 100%);
+  display:grid;place-items:center;overflow:hidden;
+}
+.bike-img-wrap .bike-photo{
+  width:88%;height:88%;object-fit:cover;border-radius:14px;
+  box-shadow:0 10px 24px rgba(10,37,64,.18);
+}
+.bike-status{
+  position:absolute;top:12px;right:12px;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(6px);
+  border-radius:999px;padding:5px 12px;font-size:11.5px;font-weight:700;
+  display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(10,37,64,.15);
+}
+.bike-status .p{width:8px;height:8px;border-radius:50%}
+.bike-status.available{color:var(--green)}
+.bike-status.available .p{background:var(--green-2);box-shadow:0 0 0 4px rgba(31,181,116,.2)}
+.bike-status.busy{color:#C2410C}
+.bike-status.busy .p{background:#E8590C;box-shadow:0 0 0 4px rgba(232,89,12,.18)}
+.bike-body{padding:16px}
+.bike-body h4{font-size:16px;font-weight:900;color:var(--navy);display:flex;align-items:center;gap:10px}
+.bike-body h4 .av{
+  width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--navy-2));
+  color:#fff;display:grid;place-items:center;font-size:14px;font-weight:900;
+}
+.bike-body p{font-size:12.5px;color:var(--muted);margin:6px 0 10px}
+.specs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.spec{font-size:11px;background:var(--blue-soft);color:var(--navy-2);padding:4px 10px;border-radius:8px;font-weight:600}
+
+/* ====== الخريطة ====== */
+.map-box{
+  border-radius:16px;overflow:hidden;height:220px;margin-bottom:16px;
+  box-shadow:var(--shadow);border:1px solid var(--line);position:relative;
+}
+.map-box::after{
+  content:"📍 موقعك الحالي";position:absolute;bottom:10px;right:10px;
+  background:rgba(255,255,255,.95);padding:5px 12px;border-radius:999px;
+  font-size:11.5px;font-weight:700;color:var(--navy);box-shadow:0 4px 12px rgba(10,37,64,.15);
+  z-index:500;
+}
+
+/* ====== التواصل ====== */
+.contact-grid{display:flex;flex-direction:column;gap:11px;margin-bottom:16px}
+.contact-card{
+  background:#fff;border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;
+  box-shadow:0 6px 18px rgba(10,37,64,.07);border:1px solid var(--line);transition:.25s;
+}
+.contact-card:hover{transform:translateX(-4px);border-color:var(--blue)}
+.contact-card .ico{
+  width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:22px;
+  background:linear-gradient(135deg,var(--blue-soft),#D6E7FB);flex-shrink:0;
+}
+.contact-card .info{flex:1;min-width:0}
+.contact-card .info b{display:block;font-size:14.5px;color:var(--navy);font-weight:900}
+.contact-card .info span{font-size:12.5px;color:var(--muted);direction:ltr;display:inline-block}
+
+/* ====== التقييم ====== */
+.stars-row{display:flex;gap:8px;justify-content:center;margin:16px 0 8px;flex-direction:row-reverse}
+.star{
+  font-size:38px;line-height:1;cursor:pointer;color:#D8E2EF;transition:.18s;
+  background:none;padding:0;
+}
+.star:hover,.star.on{color:var(--gold);transform:scale(1.15)}
+
+/* ====== الشريط السفلي ====== */
+.bottom-nav{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(255,255,255,.97);backdrop-filter:blur(20px);
+  border-top:1px solid var(--line);
+  display:flex;justify-content:space-around;align-items:center;
+  padding:8px 6px 12px;z-index:50;
+}
+.bnav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  flex:1;padding:6px 4px;border-radius:12px;cursor:pointer;transition:.2s;
+  color:var(--muted);background:none;font-size:10.5px;font-weight:700;
+}
+.bnav-item .bico{font-size:19px;line-height:1}
+.bnav-item.active{color:var(--blue)}
+.bnav-item.active .bico{transform:scale(1.12)}
+.bnav-item:hover{background:var(--blue-soft)}
+
+/* ====== البوت ====== */
+#botToggle{
+  position:fixed;bottom:96px;left:calc(50% - 195px);z-index:200;
+  width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;
+  display:grid;place-items:center;color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--navy-2) 60%,var(--green) 140%);
+  box-shadow:0 12px 30px rgba(11,61,145,.45);transition:.28s;
+}
+@media(max-width:520px){
+  #botToggle{left:18px;bottom:96px;width:56px;height:56px}
+}
+#botToggle:hover{transform:scale(1.08)}
+#botToggle::after{
+  content:"";position:absolute;inset:-4px;border-radius:50%;
+  border:2px solid rgba(30,111,217,.35);animation:pulseBot 2.4s infinite;
+}
+@keyframes pulseBot{0%{transform:scale(1);opacity:.9}70%{transform:scale(1.35);opacity:0}100%{opacity:0}}
+
+#botPanel{
+  position:fixed;bottom:160px;left:calc(50% - 215px);z-index:200;
+  width:min(400px,calc(100vw - 30px));height:min(560px,calc(100vh - 200px));
+  background:#fff;border-radius:22px;overflow:hidden;display:none;flex-direction:column;
+  box-shadow:0 30px 70px rgba(10,37,64,.5);border:1px solid var(--line);
+}
+@media(max-width:520px){
+  #botPanel{left:15px;right:15px;bottom:160px;width:auto;height:min(520px,calc(100vh - 220px))}
+}
+#botPanel.open{display:flex;animation:botIn .3s ease}
+@keyframes botIn{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+.bot-head{
+  background:linear-gradient(120deg,var(--navy),var(--navy-2) 60%,var(--green) 160%);
+  color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;position:relative;
+}
+.bot-head .av{
+  width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.16);
+  display:grid;place-items:center;border:1px solid rgba(255,255,255,.25);font-size:18px;
+}
+.bot-head b{display:block;font-size:14px}
+.bot-head small{font-size:10.5px;opacity:.85;display:flex;align-items:center;gap:5px}
+.bot-head small .on{width:6px;height:6px;border-radius:50%;background:#4ADE80;box-shadow:0 0 0 3px rgba(74,222,128,.3)}
+.bot-head .close{margin-inline-start:auto;background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:9px;cursor:pointer;font-size:14px}
+.bot-msgs{flex:1;overflow-y:auto;padding:14px;background:#F6FAFF;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:84%;padding:10px 14px;border-radius:14px;font-size:13.5px;line-height:1.7;white-space:pre-line;animation:msgIn .25s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.bot{background:#fff;border:1px solid var(--line);color:var(--ink);border-start-start-radius:4px;align-self:flex-start;box-shadow:0 3px 10px rgba(10,37,64,.05)}
+.msg.user{background:linear-gradient(135deg,var(--blue),var(--navy-2));color:#fff;border-start-end-radius:4px;align-self:flex-end}
+.msg.typing{display:flex;gap:4px;align-items:center;padding:13px 16px}
+.msg.typing i{width:6px;height:6px;border-radius:50%;background:#A9BED6;animation:bounce 1.2s infinite}
+.msg.typing i:nth-child(2){animation-delay:.15s}
+.msg.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
+.bot-quick{display:flex;gap:6px;flex-wrap:wrap;padding:8px 12px;background:#fff;border-top:1px solid var(--line);max-height:80px;overflow-y:auto}
+.chip{
+  background:var(--blue-soft);color:var(--navy-2);border:1px solid #C6DBF5;border-radius:999px;
+  padding:5px 11px;font-size:11.5px;cursor:pointer;font-weight:600;transition:.2s;white-space:nowrap;
+}
+.chip:hover{background:var(--navy-2);color:#fff;border-color:var(--navy-2)}
+.bot-input{display:flex;gap:6px;padding:10px 12px;background:#fff;border-top:1px solid var(--line)}
+.bot-input input{flex:1;padding:10px 14px;border:1.5px solid var(--line);border-radius:999px;background:#FBFDFF;font-size:13.5px}
+.bot-input input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(30,111,217,.1)}
+.bot-input button{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--navy-2));color:#fff;display:grid;place-items:center;cursor:pointer;flex-shrink:0}
+
+/* ====== تنبيهات ====== */
+#toasts{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:400;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--navy);color:#fff;padding:11px 20px;border-radius:999px;font-size:13.5px;font-weight:700;box-shadow:0 12px 30px rgba(10,37,64,.35);animation:tIn .3s ease;white-space:nowrap}
+.toast.ok{background:linear-gradient(135deg,var(--green-2),var(--green))}
+.toast.err{background:linear-gradient(135deg,#F97316,#C2410C)}
+@keyframes tIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+
+/* ====== رسائل ====== */
+.alert{border-radius:13px;padding:12px 15px;font-size:13.5px;font-weight:500;display:flex;gap:9px;align-items:flex-start;margin-bottom:14px;line-height:1.6}
+.alert-ok{background:#E6F7EF;color:#0B5C3E;border:1px solid #B7E7CE}
+.alert-info{background:var(--blue-soft);color:var(--navy-2);border:1px solid #C6DBF5}
+.empty{text-align:center;padding:44px 20px;color:var(--muted);background:#fff;border:1.5px dashed var(--line);border-radius:18px}
+.empty .big{font-size:44px;margin-bottom:8px;opacity:.6}
+
+/* ====== Star rating ====== */
+.rating-card{background:#fff;border-radius:18px;padding:22px;box-shadow:var(--shadow);border:1px solid var(--line);text-align:center}
+.rating-card .avg{font-size:36px;font-weight:900;color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- ============ الهيدر ============ -->
+  <header class="app-header">
+    <div class="brand-mini">
+      <div class="logo">T</div>
+      <div>
+        <b>TurboWash</b>
+        <span>MOBILE · الرياض</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a class="h-btn" href="tel:+966500079374" title="اتصال">📞</a>
+      <a class="h-btn" href="https://wa.me/966500079374" target="_blank" title="واتساب">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-1-.3-2.4-1-3.7-2.3-1.3-1.3-2-2.7-2.3-3.7-.2-.7-.2-1.2-.1-1.7 0-.5.6-1.6 1.2-1.8.3-.1.6-.1.8 0 .2 0 .4.1.5.4l.7 1.6c.1.2 0 .4-.1.6l-.4.5c-.2.2-.3.4-.1.7.3.5.7 1 1.2 1.5.5.5 1 .9 1.5 1.2.3.2.5.1.7-.1l.5-.4c.2-.2.4-.2.6-.1l1.6.7c.3.1.4.3.4.5.1.2.1.5 0 .8Z"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- ============ شريط الموقع ============ -->
+  <div class="location-bar">
+    <span class="dot-live"></span>
+    <span>📍 نخدم جميع أحياء الرياض · من 4 العصر إلى 11 الليل</span>
+  </div>
+
+  <!-- ============ الشاشات ============ -->
+  <main class="screen" id="screen">
+
+    <!-- ====== الرئيسية ====== -->
+    <section class="page active" id="page-home">
+      <div class="hero-card">
+        <div class="content">
+          <h2>سيارتك نظيفة <em>بدون ما تتحرك</em> من مكانك</h2>
+          <p>نجيك بموقعك في أي حي داخل الرياض بدبابات مجهّزة بالكامل.</p>
+          <div class="badges">
+            <span class="badge-pill">⭐ 4.9 تقييم</span>
+            <span class="badge-pill">⏱️ وصول 45د</span>
+            <span class="badge-pill">🚿 +1200 سيارة</span>
+          </div>
+        </div>
+        <svg class="bike-img" viewBox="0 0 220 130" fill="none">
+          <ellipse cx="110" cy="120" rx="90" ry="5" fill="rgba(0,0,0,.2)"/>
+          <circle cx="50" cy="100" r="22" fill="#15181C"/><circle cx="50" cy="100" r="13" fill="#232A31"/><circle cx="50" cy="100" r="5" fill="#0E1114"/>
+          <circle cx="170" cy="100" r="22" fill="#15181C"/><circle cx="170" cy="100" r="13" fill="#232A31"/><circle cx="170" cy="100" r="5" fill="#0E1114"/>
+          <path d="M44 80 Q40 55 68 48 L86 48 Q94 68 92 80 Z" fill="#F5B301"/>
+          <path d="M50 50 L40 32 M40 32 L78 32" stroke="#232A31" stroke-width="5" stroke-linecap="round"/>
+          <path d="M64 76 L160 76 L160 88 L64 88 Z" fill="#2C3742"/>
+          <path d="M140 80 Q140 55 168 52 L186 52 Q196 62 196 80 Z" fill="#141414"/>
+          <rect x="160" y="20" width="52" height="42" rx="9" fill="#0B3D91"/>
+          <rect x="160" y="36" width="52" height="8" fill="#F5B301"/>
+          <path d="M92 68 L104 68 L100 75 L110 75 L92 92 L96 82 L86 82 Z" fill="#F5B301"/>
+        </svg>
+      </div>
+
+      <div class="sec-title">🛎️ خدماتنا <a href="#" data-nav="booking">احجز الآن ←</a></div>
+      <div class="svc-list" id="homeServices"></div>
+
+      <div class="sec-title">🔥 عروض الأسبوع <span class="line"></span></div>
+      <div style="display:flex;flex-direction:column;gap:11px" id="homeOffers"></div>
+
+      <div class="sec-title">🏍️ أسطول الدبابات <a href="#" data-nav="bikes">إدارة ←</a></div>
+      <div id="homeBikes"></div>
+    </section>
+
+    <!-- ====== الحجز ====== -->
+    <section class="page" id="page-booking">
+      <h3 style="font-size:19px;font-weight:900;color:var(--navy);margin-bottom:14px">📝 احجز موعدك</h3>
+      <div id="bookingResult"></div>
+      <div class="form-card">
+        <form id="bookingForm">
+          <div class="field">
+            <label>الخدمة <span class="req">*</span></label>
+            <select id="bService" required></select>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>الاسم <span class="req">*</span></label>
+              <input id="bName" type="text" placeholder="اسمك الكامل" required>
+            </div>
+            <div class="field">
+              <label>الجوال <span class="req">*</span></label>
+              <input id="bPhone" type="tel" placeholder="05XXXXXXXX" dir="ltr" required>
+            </div>
+          </div>
+          <div class="field">
+            <label>الموقع / الحي <span class="req">*</span></label>
+            <input id="bLocation" type="text" placeholder="مثال: حي العليا - بجانب برج المملكة" required>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>نوع السيارة <span class="req">*</span></label>
+              <input id="bCar" type="text" placeholder="كامري 2023" required>
+            </div>
+            <div class="field">
+              <label>الوقت <span class="req">*</span></label>
+              <input id="bTime" type="time" min="16:00" max="23:00" value="18:00" required>
+            </div>
+          </div>
+          <div class="field">
+            <label>طريقة الدفع</label>
+            <div class="pay-methods">
+              <div class="pay active" data-pay="mada"><span>💳</span>مدى</div>
+              <div class="pay" data-pay="visa"><span>VISA</span></div>
+              <div class="pay" data-pay="apple"><span></span>Apple Pay</div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">✅ تأكيد الحجز</button>
+        </form>
+      </div>
+
+      <div class="sec-title">📍 موقعك الحالي <span class="line"></span></div>
+      <div class="map-box" id="map"></div>
+    </section>
+
+    <!-- ====== الطلبات ====== -->
+    <section class="page" id="page-orders">
+      <h3 style="font-size:19px;font-weight:900;color:var(--navy);margin-bottom:14px">📋 إدارة الطلبات</h3>
+      <div id="ordersStats" class="row-2" style="margin-bottom:14px"></div>
+      <div id="ordersList"></div>
+    </section>
+
+    <!-- ====== الدبابات ====== -->
+    <section class="page" id="page-bikes">
+      <h3 style="font-size:19px;font-weight:900;color:var(--navy);margin-bottom:14px">🏍️ إدارة الدبابات</h3>
+      <div class="map-box" id="bikeMap"></div>
+      <div id="bikesList"></div>
+    </section>
+
+    <!-- ====== التواصل ====== -->
+    <section class="page" id="page-contact">
+      <h3 style="font-size:19px;font-weight:900;color:var(--navy);margin-bottom:14px">📞 تواصل معنا</h3>
+      <div class="contact-grid">
+        <a class="contact-card" href="tel:+966500079374">
+          <div class="ico">📞</div>
+          <div class="info"><b>اتصال مباشر</b><span>+966 50 007 9374</span></div>
+        </a>
+        <a class="contact-card" href="https://wa.me/966500079374" target="_blank">
+          <div class="ico" style="background:linear-gradient(135deg,#DCFCE7,#86EFAC)">💬</div>
+          <div class="info"><b>واتساب</b><span>+966500079374</span></div>
+        </a>
+        <div class="contact-card">
+          <div class="ico" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A)">🕐</div>
+          <div class="info"><b>أوقات العمل</b><span>4 العصر — 11 الليل</span></div>
+        </div>
+      </div>
+
+      <div class="form-card" id="contactBox">
+        <h4 style="font-size:16px;font-weight:900;color:var(--navy);margin-bottom:12px">✉️ أرسل لنا رسالة</h4>
+        <form id="contactForm">
+          <div class="field">
+            <label>الاسم <span class="req">*</span></label>
+            <input id="cName" type="text" placeholder="اسمك" required>
+          </div>
+          <div class="field">
+            <label>الجوال <span class="req">*</span></label>
+            <input id="cPhone" type="tel" placeholder="05XXXXXXXX" dir="ltr" required>
+          </div>
+          <div class="field">
+            <label>رسالتك <span class="req">*</span></label>
+            <textarea id="cMsg" placeholder="اكتب رسالتك هنا..." required></textarea>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">📤 إرسال</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ====== التقييم ====== -->
+    <section class="page" id="page-rating">
+      <h3 style="font-size:19px;font-weight:900;color:var(--navy);margin-bottom:14px">⭐ قيّم تجربتك</h3>
+      <div class="rating-card" id="ratingBox">
+        <p style="color:var(--muted);font-size:13.5px">اختر تقييمك من 1 إلى 5 نجوم</p>
+        <div class="stars-row" id="stars">
+          <button type="button" class="star" data-star="5">★</button>
+          <button type="button" class="star" data-star="4">★</button>
+          <button type="button" class="star" data-star="3">★</button>
+          <button type="button" class="star" data-star="2">★</button>
+          <button type="button" class="star" data-star="1">★</button>
+        </div>
+        <div id="ratingLabel" style="font-weight:900;color:var(--navy-2);font-size:16px">لم يتم الاختيار</div>
+        <form id="ratingForm" style="margin-top:18px;text-align:right">
+          <div class="field">
+            <label>الاسم (اختياري)</label>
+            <input id="rName" type="text" placeholder="اسمك">
+          </div>
+          <div class="field">
+            <label>ملاحظة (اختياري)</label>
+            <textarea id="rNote" placeholder="شاركنا رأيك..."></textarea>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">إرسال التقييم</button>
+        </form>
+      </div>
+      <div class="row-2" style="margin-top:14px">
+        <div class="rating-card"><div class="avg" id="avgRating">—</div><div style="font-size:12px;color:var(--muted);font-weight:700">متوسط</div></div>
+        <div class="rating-card"><div class="avg" style="color:var(--navy-2)" id="cntRating">0</div><div style="font-size:12px;color:var(--muted);font-weight:700">تقييمات</div></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ الشريط السفلي ============ -->
+  <nav class="bottom-nav">
+    <button class="bnav-item active" data-nav="home">
+      <span class="bico">🏠</span><span>الرئيسية</span>
+    </button>
+    <button class="bnav-item" data-nav="booking">
+      <span class="bico">📅</span><span>الحجز</span>
+    </button>
+    <button class="bnav-item" data-nav="orders">
+      <span class="bico">📋</span><span>الطلبات</span>
+    </button>
+    <button class="bnav-item" data-nav="bikes">
+      <span class="bico">🏍️</span><span>الدبابات</span>
+    </button>
+    <button class="bnav-item" data-nav="contact">
+      <span class="bico">📞</span><span>تواصل</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- ============ البوت ============ -->
+<button id="botToggle" aria-label="المساعد الذكي">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round">
+    <rect x="4" y="8" width="16" height="12" rx="4"/><path d="M12 8V4M9 4h6"/>
+    <circle cx="9" cy="14" r="1.2" fill="#fff" stroke="none"/><circle cx="15" cy="14" r="1.2" fill="#fff" stroke="none"/>
+  </svg>
+</button>
+
+<div id="botPanel">
+  <div class="bot-head">
+    <div class="av">🤖</div>
+    <div>
+      <b>مساعد TurboWash</b>
+      <small><i class="on"></i> متصل · يرد فوراً</small>
+    </div>
+    <button class="close" id="botClose">✕</button>
+  </div>
+  <div class="bot-msgs" id="botMsgs"></div>
+  <div class="bot-quick" id="botQuick"></div>
+  <form class="bot-input" id="botForm">
+    <input id="botText" type="text" placeholder="اكتب سؤالك..." autocomplete="off">
+    <button type="submit">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12 2-12 2z"/></svg>
+    </button>
+  </form>
+</div>
+
+<div id="toasts"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+'use strict';
+
+/* ================================================================
+   إعدادات
+   ================================================================ */
+const OFFICIAL_PHONE = '+966 50 007 9374';
+const OFFICIAL_PHONE_RAW = '+966500079374';
+const WHATSAPP = 'https://wa.me/966500079374';
+
+const SERVICES = [
+  { id:'ext',  name:'غسيل خارجي',  price:20, icon:'🚿', desc:'هيكل + زجاج + جنوط' },
+  { id:'int',  name:'غسيل داخلي',  price:25, icon:'🧼', desc:'مقاعد + فرش + تعطير' },
+  { id:'full', name:'غسيل شامل',   price:40, icon:'✨', desc:'خارجي + داخلي + تلميع' },
+  { id:'sub',  name:'اشتراك شهري', price:80, icon:'📅', desc:'4 غسلات خلال الشهر' }
+];
+
+const OFFERS = [
+  { title:'عرض الأسبوع', old:40, now:35, text:'غسيل شامل بسعر مخفّض', green:false },
+  { title:'اشتراك شهري مخفّض', old:80, now:70, text:'4 غسلات شاملة', green:true }
+];
+
+const DEFAULT_BIKES = [
+  { id:1, name:'دباب 1 — محمد', c1:'#F5B301', c2:'#141414', status:'available',
+    photo:'https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600&q=80',
+    specs:['خزان 200 لتر','مضخة 130 بار','شمال الرياض'] },
+  { id:2, name:'دباب 2 — أحمد', c1:'#D62828', c2:'#141414', status:'busy',
+    photo:'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600&q=80',
+    specs:['خزان 150 لتر','مضخة 110 بار','وسط الرياض'] },
+  { id:3, name:'دباب 3 — خالد', c1:'#1A1A1A', c2:'#D4AF37', status:'available',
+    photo:'https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?w=600&q=80',
+    specs:['خزان 180 لتر','إضاءة LED','شرق الرياض'] }
+];
+
+const STATUS_LABEL = { paid:'جاهز', washing:'قيد التنفيذ', done:'تم التسليم' };
+
+/* ================================================================
+   أدوات
+   ================================================================ */
+const $  = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const store = {
+  get(k, fb){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; }catch(e){ return fb; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+const money = n => n + ' ريال';
+const uid = (p='TW') => p + '-' + Date.now().toString(36).toUpperCase().slice(-5) + Math.random().toString(36).slice(2,4).toUpperCase();
+const todayStr = () => new Date().toLocaleDateString('ar-SA',{day:'numeric',month:'long'}) + ' · ' + new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function toast(msg, type=''){
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  $('#toasts').appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='.3s'; }, 2400);
+  setTimeout(() => el.remove(), 2800);
+}
+
+/* ================================================================
+   الحالة
+   ================================================================ */
+const state = {
+  orders: store.get('tw_orders', []),
+  bikes:  store.get('tw_bikes', DEFAULT_BIKES),
+  ratings: store.get('tw_ratings', []),
+  messages: store.get('tw_messages', []),
+  ratingValue: 0
+};
+const save = {
+  orders(){ store.set('tw_orders', state.orders); },
+  bikes(){ store.set('tw_bikes', state.bikes); },
+  ratings(){ store.set('tw_ratings', state.ratings); },
+  messages(){ store.set('tw_messages', state.messages); }
+};
+
+/* ================================================================
+   الرسم
+   ================================================================ */
+function renderHome(){
+  $('#homeServices').innerHTML = SERVICES.map(s => `
+    <div class="svc" data-service="${s.id}">
+      <div class="icon-box">${s.icon}</div>
+      <div class="info">
+        <b>${s.name}</b>
+        <span>${s.desc}</span>
+      </div>
+      <div class="price-tag">${s.price}<small>ريال</small></div>
+      <div class="go-arrow">←</div>
+    </div>
+  `).join('');
+
+  $('#homeOffers').innerHTML = OFFERS.map(o => `
+    <div class="offer ${o.green?'green':''}">
+      <span class="tag">🔥 عرض محدود</span>
+      <h4>${o.title}</h4>
+      <div class="prices">
+        <span class="old">${o.old} ريال</span>
+        <span class="new">${o.now}</span><small>ريال</small>
+      </div>
+    </div>
+  `).join('');
+
+  $('#homeBikes').innerHTML = state.bikes.slice(0,2).map(b => bikeCardHtml(b, false)).join('');
+}
+
+function bikeCardHtml(b, withToggle){
+  const available = b.status === 'available';
+  return `
+  <div class="bike-card">
+    <div class="bike-img-wrap">
+      <div class="bike-status ${available?'available':'busy'}">
+        <span class="p"></span>${available?'متاح':'مشغول'}
+      </div>
+      <img class="bike-photo" src="${b.photo}" alt="${esc(b.name)}" onerror="this.style.display='none'">
+    </div>
+    <div class="bike-body">
+      <h4><span class="av">${esc(b.name.split('—')[1]?.trim() || 'T')}</span>${esc(b.name)}</h4>
+      <div class="specs">${(b.specs||[]).map(s => `<span class="spec">${esc(s)}</span>`).join('')}</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary btn-sm" style="flex:1" data-send="${b.id}">📤 إرسال الطلب</button>
+        ${withToggle ? `<button class="btn btn-ghost btn-sm" data-toggle="${b.id}">${available?'تعيين كمشغول':'تعيين كمتاح'}</button>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderBooking(){
+  $('#bService').innerHTML = SERVICES.map(s => `<option value="${s.id}">${s.name} — ${s.price} ريال</option>`).join('');
+  if(!window._mapInit){
+    window._mapInit = true;
+    setTimeout(() => {
+      try{
+        const map = L.map('map', { zoomControl:false, attributionControl:false }).setView([24.7136, 46.6753], 11);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        L.circle([24.7136, 46.6753], { radius:9000, color:'#1E6FD9', fillColor:'#1E6FD9', fillOpacity:.12, weight:2 }).addTo(map);
+      }catch(e){}
+    }, 100);
+  }
+}
+
+function renderOrders(){
+  const s = {
+    total: state.orders.length,
+    paid: state.orders.filter(o => o.status==='paid').length,
+    washing: state.orders.filter(o => o.status==='washing').length,
+    done: state.orders.filter(o => o.status==='done').length
+  };
+  $('#ordersStats').innerHTML = `
+    <div class="rating-card" style="padding:12px"><div style="font-size:22px;font-weight:900;color:var(--navy-2)">${s.total}</div><div style="font-size:11px;color:var(--muted);font-weight:700">إجمالي</div></div>
+    <div class="rating-card" style="padding:12px"><div style="font-size:22px;font-weight:900;color:#B45309">${s.paid}</div><div style="font-size:11px;color:var(--muted);font-weight:700">جاهز</div></div>
+    <div class="rating-card" style="padding:12px"><div style="font-size:22px;font-weight:900;color:#1D4ED8">${s.washing}</div><div style="font-size:11px;color:var(--muted);font-weight:700">قيد التنفيذ</div></div>
+    <div class="rating-card" style="padding:12px"><div style="font-size:22px;font-weight:900;color:#0B5C3E">${s.done}</div><div style="font-size:11px;color:var(--muted);font-weight:700">تم التسليم</div></div>
+  `;
+
+  if(state.orders.length === 0){
+    $('#ordersList').innerHTML = `
+      <div class="empty">
+        <div class="big">📋</div>
+        <h4 style="color:var(--navy);font-weight:900">لا توجد طلبات بعد</h4>
+        <p style="margin:6px 0 16px;font-size:13px">ابدأ بحجز أول موعد</p>
+        <button class="btn btn-primary btn-sm" data-nav="booking">حجز جديد</button>
+      </div>`;
+    return;
+  }
+
+  $('#ordersList').innerHTML = state.orders.slice().reverse().map(o => {
+    const bike = state.bikes.find(b => b.id === o.bikeId);
+    return `
+    <div class="order-card ${o.status}">
+      <div class="order-head">
+        <span class="code">${esc(o.code)}</span>
+        <span class="status-pill ${o.status}">${STATUS_LABEL[o.status]}</span>
+      </div>
+      <h4>${esc(o.serviceName)} — ${money(o.price)}</h4>
+      <div class="order-meta">
+        <span>👤 ${esc(o.name)}</span>
+        <span dir="ltr">📱 ${esc(o.phone)}</span>
+        <span>🚗 ${esc(o.car)}</span>
+        <span>📍 ${esc(o.location)}</span>
+        <span>🕐 ${esc(o.time)}${bike ? ' · 🏍️ ' + esc(bike.name) : ''}</span>
+      </div>
+      <div class="order-actions">
+        ${o.status==='paid' ? `<button class="btn btn-primary btn-sm" data-start="${o.id}">▶ بدء الغسيل</button>` : ''}
+        ${o.status==='washing' ? `<button class="btn btn-green btn-sm" data-done="${o.id}">✅ تم التسليم</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderBikes(){
+  $('#bikesList').innerHTML = state.bikes.map(b => bikeCardHtml(b, true)).join('');
+  if(!window._bikeMapInit){
+    window._bikeMapInit = true;
+    setTimeout(() => {
+      try{
+        const map = L.map('bikeMap', { zoomControl:false, attributionControl:false }).setView([24.7136, 46.6753], 11);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        const positions = [[24.80,46.64],[24.71,46.67],[24.66,46.72]];
+        state.bikes.forEach((b, i) => {
+          L.marker(positions[i] || positions[0]).addTo(map).bindPopup(b.name);
+        });
+      }catch(e){}
+    }, 100);
+  }
+}
+
+function renderRating(){
+  const r = state.ratings;
+  $('#avgRating').textContent = r.length ? (r.reduce((a,x)=>a+x.value,0)/r.length).toFixed(1) : '—';
+  $('#cntRating').textContent = r.length;
+}
+
+/* ================================================================
+   التنقل
+   ================================================================ */
+function go(page){
+  $$('.page').forEach(p => p.classList.remove('active'));
+  const el = $('#page-' + page);
+  if(el) el.classList.add('active');
+  $$('.bnav-item').forEach(b => b.classList.toggle('active', b.dataset.nav === page));
+  $('#screen').scrollTop = 0;
+
+  if(page === 'home') renderHome();
+  if(page === 'booking') renderBooking();
+  if(page === 'orders') renderOrders();
+  if(page === 'bikes') renderBikes();
+  if(page === 'rating') renderRating();
+
+  // تحديث الشاشة الحالية في الحالة
+  state.page = page;
+}
+
+/* ================================================================
+   الأحداث
+   ================================================================ */
+document.addEventListener('click', e => {
+  const nav = e.target.closest('[data-nav]');
+  if(nav){ e.preventDefault(); go(nav.dataset.nav); return; }
+
+  const svc = e.target.closest('[data-service]');
+  if(svc){
+    sessionStorage.setItem('tw_preselect', svc.dataset.service);
+    go('booking');
+    setTimeout(() => { const s = $('#bService'); if(s) s.value = svc.dataset.service; }, 50);
+    return;
+  }
+
+  const send = e.target.closest('[data-send]');
+  if(send){
+    toast('تم اختيار الدباب ✅ أكمل الحجز', 'ok');
+    go('booking');
+    return;
+  }
+
+  const tog = e.target.closest('[data-toggle]');
+  if(tog){
+    const b = state.bikes.find(x => x.id === Number(tog.dataset.toggle));
+    b.status = b.status === 'available' ? 'busy' : 'available';
+    save.bikes(); renderBikes();
+    toast(`${b.name} → ${b.status==='available'?'متاح':'مشغول'}`, 'ok');
+    return;
+  }
+
+  const st = e.target.closest('[data-start]');
+  if(st){
+    const o = state.orders.find(x => x.id === st.dataset.start);
+    o.status = 'washing'; save.orders(); renderOrders();
+    toast('بدأ تنفيذ الطلب 🚿', 'ok');
+    return;
+  }
+
+  const dn = e.target.closest('[data-done]');
+  if(dn){
+    const o = state.orders.find(x => x.id === dn.dataset.done);
+    o.status = 'done'; save.orders(); renderOrders();
+    toast('تم تسليم السيارة ✅', 'ok');
+    return;
+  }
+
+  const pay = e.target.closest('[data-pay]');
+  if(pay){
+    $$('.pay').forEach(p => p.classList.remove('active'));
+    pay.classList.add('active');
+    return;
+  }
+
+  const star = e.target.closest('[data-star]');
+  if(star){
+    state.ratingValue = Number(star.dataset.star);
+    $$('#stars .star').forEach(s => s.classList.toggle('on', Number(s.dataset.star) <= state.ratingValue));
+    const labels = { 1:'ضعيف جداً', 2:'ضعيف', 3:'مقبول', 4:'جيد جداً', 5:'ممتاز ⭐' };
+    $('#ratingLabel').textContent = labels[state.ratingValue];
+    return;
+  }
+});
+
+/* ================================================================
+   النماذج
+   ================================================================ */
+document.addEventListener('submit', e => {
+  const f = e.target;
+
+  if(f.id === 'bookingForm'){
+    e.preventDefault();
+    const name = $('#bName').value.trim();
+    const phone = $('#bPhone').value.trim();
+    const location = $('#bLocation').value.trim();
+    const car = $('#bCar').value.trim();
+    const time = $('#bTime').value;
+    const svcId = $('#bService').value;
+
+    if(!name || !phone || !location || !car || !time){ toast('يرجى تعبئة جميع الحقول', 'err'); return; }
+    if(!/^0?5\d{8}$/.test(phone.replace(/\s|-/g,''))){ toast('رقم الجوال غير صحيح', 'err'); return; }
+
+    const svc = SERVICES.find(s => s.id === svcId) || SERVICES[0];
+    const availableBike = state.bikes.find(b => b.status === 'available') || state.bikes[0];
+
+    const order = {
+      id: uid('ORD'), code: uid('TW'),
+      serviceId: svc.id, serviceName: svc.name, price: svc.price,
+      name, phone, location, car, time,
+      bikeId: availableBike.id, status: 'paid', createdAt: todayStr()
+    };
+    state.orders.push(order); save.orders();
+
+    $('#bookingResult').innerHTML = `
+      <div class="alert alert-ok" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <div style="font-size:15px;font-weight:900">✅ تم تأكيد الحجز!</div>
+        <div style="font-size:12.5px">رقم الحجز: <b>${order.code}</b></div>
+        <div style="font-size:12.5px">${esc(order.serviceName)} — ${money(order.price)}</div>
+        <div style="font-size:12.5px">الموعد: <b>${order.time}</b> · ${esc(order.location)}</div>
+        <div style="font-size:12.5px">الدباب: <b>${esc(availableBike.name)}</b></div>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+          <a class="btn btn-wa btn-sm" target="_blank" rel="noopener"
+             href="${WHATSAPP}?text=${encodeURIComponent('مرحباً TurboWash، حجزي ' + order.code + ' — ' + order.serviceName)}">
+            📤 إرسال اللوكيشن واتساب
+          </a>
+          <button class="btn btn-ghost btn-sm" type="button" data-nav="orders">📋 متابعة الطلب</button>
+        </div>
+      </div>`;
+    f.reset();
+    toast('تم تأكيد الحجز بنجاح ✅', 'ok');
+    $('#screen').scrollTop = 0;
+    return;
+  }
+
+  if(f.id === 'contactForm'){
+    e.preventDefault();
+    const name = $('#cName').value.trim();
+    const phone = $('#cPhone').value.trim();
+    const message = $('#cMsg').value.trim();
+    if(!name || !phone || !message){ toast('يرجى تعبئة جميع الحقول', 'err'); return; }
+    state.messages.push({ name, phone, message, at: todayStr() }); save.messages();
+    f.reset();
+    toast('تم إرسال رسالتك ✅', 'ok');
+    const box = $('#contactBox');
+    const n = document.createElement('div');
+    n.className = 'alert alert-ok';
+    n.innerHTML = '✅ تم إرسال رسالتك بنجاح، سنعاود التواصل قريباً.';
+    box.prepend(n);
+    setTimeout(() => n.remove(), 5000);
+    return;
+  }
+
+  if(f.id === 'ratingForm'){
+    e.preventDefault();
+    if(!state.ratingValue){ toast('اختر تقييمك من 1 إلى 5', 'err'); return; }
+    state.ratings.push({ value: state.ratingValue, name: $('#rName').value.trim() || 'عميل', note: $('#rNote').value.trim(), at: todayStr() });
+    save.ratings();
+    $('#ratingBox').innerHTML = `
+      <div style="text-align:center;padding:24px 8px">
+        <div style="font-size:52px">🎉</div>
+        <h4 style="font-size:20px;font-weight:900;color:var(--green);margin:8px 0">شكراً لك!</h4>
+        <p style="font-size:13.5px;color:var(--muted)">قيّمتنا بـ <b style="color:var(--gold);font-size:18px">${state.ratingValue}/5</b></p>
+        <button class="btn btn-primary btn-sm" style="margin-top:16px" data-nav="home">العودة للرئيسية</button>
+      </div>`;
+    toast('شكراً لتقييمك ⭐', 'ok');
+    return;
+  }
+});
+
+/* ================================================================
+   البوت الذكي
+   ================================================================ */
+const BOT = {
+  norm(s){
+    return String(s).replace(/[\u064B-\u0652\u0670\u0640]/g,'')
+      .replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي')
+      .replace(/ة/g,'ه').replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g,' ')
+      .replace(/\s+/g,' ').trim().toLowerCase();
+  },
+  intents: [
+    { key:'sub', words:['اشتراك','شهري','شهريه'], reply:'📅 الاشتراك الشهري:\n4 غسلات بـ 80 ريال فقط خلال الشهر — يشمل غسيل شامل ويوفّر أكثر من 50%.' },
+    { key:'offer', words:['عرض','عروض','خصم','تخفيض','اوفر','offer'], reply:'🔥 عرض الأسبوع:\nغسيل شامل بـ 35 ريال بدل 40 ريال.\n\n+ عرض الاشتراك الشهري: 4 غسلات بـ 70 ريال.' },
+    { key:'book', words:['احجز','حجز','موعد','كيف احجز','book'], reply:'📝 الحجز:\n1) اختر الخدمة\n2) أدخل اسمك وجوالك\n3) حدّد الموقع والوقت\n4) اضغط تأكيد\n\nأو أرسل لنا: ' + OFFICIAL_PHONE },
+    { key:'sendLoc', words:['ارسل الموقع','ارسل لي الموقع','اللوكيشن','لوكيشن','location'], reply:'📍 أرسل اللوكيشن عبر واتساب:\n' + WHATSAPP + '\nأو: ' + OFFICIAL_PHONE },
+    { key:'svc', words:['خدمات','خدمه','وش تسوون','ايش تسوون','انواع الغسيل'], reply:'🚿 خدماتنا:\n• خارجي — 20 ريال\n• داخلي — 25 ريال\n• شامل — 40 ريال\n• اشتراك شهري — 80 ريال\n• تلميع بسيط' },
+    { key:'hours', words:['وقت','اوقات','متى','تفتحون','دوام','ساعات'], reply:'🕓 أوقات العمل:\nمن 4 العصر إلى 11 الليل — طوال الأسبوع.' },
+    { key:'loc', words:['موقع','وين انتم','وين موقعكم','مكان','احياء','تغطيه'], reply:'🏙️ نخدم جميع أحياء الرياض:\nشمال، جنوب، شرق، غرب، ووسط.' },
+    { key:'contact', words:['تواصل','رقم','جوال','اتصال','واتساب','كلمني'], reply:'📞 رقم التواصل الرسمي:\n' + OFFICIAL_PHONE + '\n\nواتساب:\n' + WHATSAPP },
+    { key:'rate', words:['تقييم','قيم','راي','نجوم'], reply:'⭐ يسعدنا تقييمك!\nأرسل من 1 إلى 5 عبر صفحة التقييم، أو اكتبه هنا.' },
+    { key:'price', words:['سعر','اسعار','كم','بكم','تكلفه','ريال','price'], reply:'💰 أسعارنا:\n• خارجي: 20 ريال\n• داخلي: 25 ريال\n• شامل: 40 ريال\n• اشتراك شهري: 80 ريال\n\n🔥 عرض الأسبوع: شامل بـ 35.' },
+    { key:'greet', words:['سلام','هلا','مرحبا','السلام','هاي','صباح','مساء','اهلا','hello','hi'], reply:'وعليكم السلام ورحمة الله 🌿\nأنا مساعد TurboWash. كيف أقدر أخدمك؟\nاسألني عن: الأسعار، الخدمات، العروض، الحجز، الموقع، أوقات العمل.' }
+  ],
+  match(text){
+    const n = this.norm(text);
+    if(!n) return null;
+    for(const it of this.intents){
+      for(const w of it.words){
+        if(n.includes(this.norm(w))) return it;
+      }
+    }
+    return null;
+  },
+  fallback(){
+    return 'ما فهمت سؤالك تماماً 🤔\nجرّب تسأل عن:\n• الأسعار\n• الخدمات\n• العروض\n• الحجز\n• أوقات العمل\n\nأو تواصل: ' + OFFICIAL_PHONE;
+  }
+};
+
+const botPanel = $('#botPanel');
+const botMsgs = $('#botMsgs');
+const QUICK = ['كم الأسعار؟','وش الخدمات؟','وش العروض؟','كيف أحجز؟','وين موقعكم؟','أوقات العمل','الاشتراك الشهري','تواصل معنا'];
+
+function renderQuick(){
+  $('#botQuick').innerHTML = QUICK.map(q => `<button class="chip" data-q="${q}">${q}</button>`).join('');
+}
+function botPush(text, who='bot'){
+  const el = document.createElement('div');
+  el.className = 'msg ' + who;
+  el.textContent = text;
+  botMsgs.appendChild(el);
+  botMsgs.scrollTop = botMsgs.scrollHeight;
+}
+function botTyping(on){
+  let el = $('#botTyping');
+  if(on){
+    if(el) return;
+    el = document.createElement('div');
+    el.id = 'botTyping';
+    el.className = 'msg bot typing';
+    el.innerHTML = '<i></i><i></i><i></i>';
+    botMsgs.appendChild(el);
+    botMsgs.scrollTop = botMsgs.scrollHeight;
+  } else if(el) el.remove();
+}
+async function botReply(text){
+  const intent = BOT.match(text);
+  botTyping(true);
+  await new Promise(r => setTimeout(r, 450));
+  botTyping(false);
+  botPush(intent ? intent.reply : BOT.fallback(), 'bot');
+}
+function botOpen(){
+  botPanel.classList.add('open');
+  if(!botMsgs.dataset.init){
+    botMsgs.dataset.init = '1';
+    renderQuick();
+    botPush('أهلاً وسهلاً في TurboWash Mobile 🌿\nأنا مساعدك الذكي. اسألني عن الأسعار، الخدمات، العروض، أو الحجز.', 'bot');
+  }
+  setTimeout(() => $('#botText').focus(), 220);
+}
+
+$('#botToggle').addEventListener('click', () => botPanel.classList.contains('open') ? botPanel.classList.remove('open') : botOpen());
+$('#botClose').addEventListener('click', () => botPanel.classList.remove('open'));
+$('#botQuick').addEventListener('click', e => {
+  const c = e.target.closest('[data-q]');
+  if(!c) return;
+  botPush(c.dataset.q, 'user');
+  botReply(c.dataset.q);
+});
+$('#botForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const t = $('#botText').value.trim();
+  if(!t) return;
+  botPush(t, 'user');
+  $('#botText').value = '';
+  botReply(t);
+});
+
+/* ================================================================
+   الإقلاع
+   ================================================================ */
+renderHome();
+go('home');
+
+// خدمة مختارة مسبقاً
+const pre = sessionStorage.getItem('tw_preselect');
+if(pre){
+  sessionStorage.removeItem('tw_preselect');
+  setTimeout(() => { const s = $('#bService'); if(s) s.value = pre; }, 200);
+}
+</script>
+</body>
+</html>
