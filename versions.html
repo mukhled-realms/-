@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>TurboWash Mobile — 4 تصاميم في رابط واحد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<!-- ============================================================
+     أنماط مشتركة (تُستخدم في كل التصاميم)
+     ============================================================ -->
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:'Tajawal',system-ui,sans-serif;
+  min-height:100vh;line-height:1.7;overflow-x:hidden;color:#0E1B2C;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font-family:inherit;font-size:inherit;outline:none;border:none}
+input,select,textarea{color:inherit}
+
+/* الأزرار الموحدة */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:14px;font-weight:700;font-size:14.5px;cursor:pointer;transition:.22s;border:1.5px solid transparent;text-align:center}
+.btn:active{transform:scale(.97)}
+.btn-block{width:100%}
+.btn-sm{padding:9px 15px;font-size:13px;border-radius:11px}
+.btn-primary{background:linear-gradient(135deg,#1E6FD9,#0B3D91);color:#fff;box-shadow:0 10px 22px rgba(30,111,217,.3)}
+.btn-primary:hover{box-shadow:0 14px 30px rgba(30,111,217,.42)}
+.btn-green{background:linear-gradient(135deg,#1FB574,#12855A);color:#fff;box-shadow:0 10px 22px rgba(18,133,90,.3)}
+.btn-wa{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;box-shadow:0 10px 22px rgba(18,140,126,.3)}
+.btn-ghost{background:#fff;color:#0A2540;border-color:#DCE6F2}
+.btn-ghost:hover{border-color:#1E6FD9;color:#1E6FD9}
+.btn-orange{background:linear-gradient(135deg,#F97316,#C2410C);color:#fff;box-shadow:0 10px 22px rgba(249,115,22,.3)}
+
+/* الحقول الموحدة */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.field label .req{color:#E03131}
+.field input,.field select,.field textarea{
+  width:100%;padding:12px 15px;border:1.5px solid #DCE6F2;border-radius:12px;
+  background:#FBFDFF;transition:.2s;font-size:14.5px;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:#1E6FD9;background:#fff;box-shadow:0 0 0 4px rgba(30,111,217,.12);
+}
+.field textarea{resize:vertical;min-height:90px}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* التنبيهات */
+#toasts{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:92vw}
+.toast{background:#0A2540;color:#fff;padding:11px 22px;border-radius:999px;font-size:13.5px;font-weight:700;box-shadow:0 12px 30px rgba(10,37,64,.35);animation:tIn .3s ease;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+.toast.ok{background:linear-gradient(135deg,#1FB574,#12855A)}
+.toast.err{background:linear-gradient(135deg,#F97316,#C2410C)}
+@keyframes tIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+
+/* ============================================================
+   زر التبديل بين التصاميم (عائم في كل الصفحات)
+   ============================================================ */
+#versionSwitcher{
+  position:fixed;top:14px;right:14px;z-index:9998;
+  background:rgba(255,255,255,.98);backdrop-filter:blur(20px);
+  border-radius:999px;padding:6px;box-shadow:0 14px 40px rgba(10,37,64,.25);
+  display:flex;align-items:center;gap:4px;border:1px solid rgba(10,37,64,.08);
+  transition:.3s;
+}
+#versionSwitcher:hover{transform:scale(1.02)}
+#versionSwitcher .v-label{
+  font-size:11px;font-weight:900;color:#5B6B80;padding:0 8px;letter-spacing:.5px;
+}
+#versionSwitcher .v-num{
+  background:#0A2540;color:#fff;font-weight:900;font-size:12px;
+  min-width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  box-shadow:0 6px 14px rgba(10,37,64,.3);
+}
+#versionSwitcher button{
+  width:34px;height:34px;border-radius:50%;background:transparent;
+  display:grid;place-items:center;cursor:pointer;color:#0A2540;transition:.22s;
+}
+#versionSwitcher button:hover{background:#E8F1FC;color:#1E6FD9}
+#versionSwitcher .v-dot{
+  width:8px;height:8px;border-radius:50%;background:#1E6FD9;transition:.3s;
+}
+#versionSwitcher.v2 .v-dot{background:#D4AF37}
+#versionSwitcher.v3 .v-dot{background:#06B6D4}
+#versionSwitcher.v4 .v-dot{background:#F97316}
+#versionSwitcher.v2 .v-num{background:linear-gradient(135deg,#0B3D91,#D4AF37)}
+#versionSwitcher.v3 .v-num{background:linear-gradient(135deg,#06B6D4,#8B5CF6)}
+#versionSwitcher.v4 .v-num{background:linear-gradient(135deg,#F97316,#C2410C)}
+
+/* إشعار التصميم الحالي */
+#vIndicator{
+  position:fixed;top:14px;left:14px;z-index:9997;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(14px);
+  padding:8px 14px;border-radius:999px;font-size:11.5px;font-weight:900;
+  box-shadow:0 8px 22px rgba(10,37,64,.15);border:1px solid rgba(10,37,64,.06);
+  display:flex;align-items:center;gap:7px;color:#0A2540;
+}
+#vIndicator .ic{font-size:14px}
+
+/* ============================================================
+   التصميم 1: التطبيقي (App Style)
+   ============================================================ */
+.v1-root{
+  background:linear-gradient(135deg,#0A2540 0%,#061729 100%);
+  min-height:100vh;display:flex;justify-content:center;align-items:center;padding:0;
+}
+.v1-phone{
+  width:100%;max-width:430px;height:100vh;max-height:920px;
+  background:#F4F7FC;border-radius:0;overflow:hidden;
+  display:flex;flex-direction:column;box-shadow:0 40px 100px rgba(0,0,0,.55);
+  position:relative;
+}
+@media(min-width:520px){
+  .v1-phone{border-radius:38px;height:92vh;border:10px solid #0A1A2F}
+}
+.v1-header{
+  background:linear-gradient(135deg,#0A2540,#0B3D91 70%,#1E6FD9 120%);
+  color:#fff;padding:16px 18px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;flex-shrink:0;
+}
+.v1-header::after{
+  content:"";position:absolute;left:-40px;top:-60px;width:180px;height:180px;
+  border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.25),transparent 70%);
+}
+.v1-brand{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+.v1-brand .lg{
+  width:38px;height:38px;border-radius:11px;
+  background:linear-gradient(135deg,#1E6FD9,#12855A);
+  display:grid;place-items:center;font-weight:900;font-size:18px;
+}
+.v1-brand b{font-size:16px;font-weight:900;line-height:1.1}
+.v1-brand span{display:block;font-size:10px;letter-spacing:1.5px;opacity:.85}
+.v1-h-actions{display:flex;gap:6px;position:relative;z-index:1}
+.v1-h-btn{
+  width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.22);display:grid;place-items:center;
+  cursor:pointer;color:#fff;transition:.2s;backdrop-filter:blur(8px);
+}
+.v1-h-btn:hover{background:rgba(255,255,255,.28)}
+.v1-loc-bar{
+  background:#fff;padding:8px 18px;display:flex;align-items:center;gap:8px;
+  font-size:12.5px;color:#5B6B80;border-bottom:1px solid #DCE6F2;flex-shrink:0;
+}
+.v1-loc-bar .pulse{width:8px;height:8px;border-radius:50%;background:#1FB574;box-shadow:0 0 0 4px rgba(31,181,116,.18);animation:v1pulse 2s infinite}
+@keyframes v1pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.v1-screen{flex:1;overflow-y:auto;padding-bottom:90px}
+.v1-page{display:none;padding:18px 18px 20px;animation:v1fade .35s ease}
+.v1-page.active{display:block}
+@keyframes v1fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.v1-hero{
+  position:relative;border-radius:20px;overflow:hidden;
+  background:linear-gradient(135deg,#0B3D91 0%,#0A2540 100%);
+  color:#fff;padding:22px 20px 26px;margin-bottom:16px;box-shadow:0 12px 30px rgba(10,37,64,.12);
+}
+.v1-hero::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 100% at 90% 0%,rgba(30,111,217,.6),transparent 55%);
+}
+.v1-hero .c{position:relative;z-index:2}
+.v1-hero h2{font-size:21px;font-weight:900;line-height:1.35}
+.v1-hero h2 em{font-style:normal;color:#8CF0C0}
+.v1-hero p{font-size:13.5px;opacity:.85;margin-top:8px;max-width:280px}
+.v1-badges{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.v1-badge{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:11.5px;font-weight:600;backdrop-filter:blur(6px)}
+.v1-sec-title{font-size:17px;font-weight:900;color:#0A2540;margin:22px 0 12px;display:flex;align-items:center;justify-content:space-between}
+.v1-sec-title:first-child{margin-top:0}
+.v1-sec-title a{font-size:12.5px;color:#1E6FD9;font-weight:700}
+.v1-svc-list{display:flex;flex-direction:column;gap:11px}
+.v1-svc{background:#fff;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 14px rgba(10,37,64,.06);border:1px solid #DCE6F2;cursor:pointer;transition:.25s}
+.v1-svc:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(10,37,64,.12);border-color:#C6DBF5}
+.v1-svc .icon-box{width:52px;height:52px;border-radius:14px;flex-shrink:0;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg,#E8F1FC,#D6E7FB)}
+.v1-svc .info{flex:1;min-width:0}
+.v1-svc .info b{display:block;font-size:15px;font-weight:900;color:#0A2540}
+.v1-svc .info span{font-size:12px;color:#5B6B80}
+.v1-svc .price-tag{font-size:17px;font-weight:900;color:#1E6FD9;display:flex;align-items:baseline;gap:3px;flex-shrink:0}
+.v1-svc .price-tag small{font-size:11px;font-weight:500;color:#5B6B80}
+.v1-offer{border-radius:18px;padding:18px;color:#fff;background:linear-gradient(135deg,#0B3D91,#0A2540);position:relative;overflow:hidden;box-shadow:0 12px 30px rgba(10,37,64,.12);margin-bottom:11px}
+.v1-offer.green{background:linear-gradient(135deg,#12855A,#0A2540)}
+.v1-offer::before{content:"";position:absolute;top:-40px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.3),transparent 70%)}
+.v1-offer h4{font-size:16px;font-weight:900;position:relative}
+.v1-offer .prices{display:flex;align-items:baseline;gap:10px;margin-top:10px;position:relative}
+.v1-offer .old{text-decoration:line-through;opacity:.55;font-size:15px}
+.v1-offer .new{font-size:26px;font-weight:900;color:#8CF0C0}
+.v1-bottom-nav{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(255,255,255,.97);backdrop-filter:blur(20px);
+  border-top:1px solid #DCE6F2;display:flex;justify-content:space-around;
+  align-items:center;padding:8px 6px 12px;z-index:50;
+}
+.v1-bnav{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;padding:6px 4px;border-radius:12px;cursor:pointer;transition:.2s;color:#5B6B80;background:none;font-size:10.5px;font-weight:700}
+.v1-bnav .bico{font-size:19px;line-height:1}
+.v1-bnav.active{color:#1E6FD9}
+.v1-bnav:hover{background:#E8F1FC}
+.v1-form-card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 12px 30px rgba(10,37,64,.12);border:1px solid #DCE6F2}
+.v1-pay-methods{display:flex;gap:8px;margin:6px 0 14px}
+.v1-pay{flex:1;background:#fff;border:1.5px solid #DCE6F2;border-radius:10px;padding:10px 6px;display:grid;place-items:center;font-size:11px;font-weight:700;color:#0A2540;transition:.2s;cursor:pointer}
+.v1-pay.active{border-color:#1E6FD9;background:#E8F1FC;box-shadow:0 0 0 3px rgba(30,111,217,.1)}
+.v1-order-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 6px 18px rgba(10,37,64,.07);border:1px solid #DCE6F2;position:relative;overflow:hidden}
+.v1-order-card::before{content:"";position:absolute;right:0;top:0;bottom:0;width:4px}
+.v1-order-card.paid::before{background:#F59E0B}
+.v1-order-card.washing::before{background:#1E6FD9}
+.v1-order-card.done::before{background:#1FB574}
+.v1-order-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.v1-status-pill{font-size:11px;font-weight:700;padding:5px 12px;border-radius:999px}
+.v1-status-pill.paid{background:#FEF3C7;color:#B45309}
+.v1-status-pill.washing{background:#DBEAFE;color:#1D4ED8}
+.v1-status-pill.done{background:#D1FAE5;color:#0B5C3E}
+.v1-map-box{border-radius:16px;overflow:hidden;height:220px;margin-bottom:16px;box-shadow:0 12px 30px rgba(10,37,64,.12);border:1px solid #DCE6F2;position:relative}
+
+/* ============================================================
+   التصميم 2: الفخم الوطني (Luxury)
+   ============================================================ */
+.v2-root{background:#F4F7FC;min-height:100vh;font-family:'Tajawal',sans-serif}
+.v2-topbar{background:linear-gradient(90deg,#0A2540,#0B3D91 55%,#12855A 130%);color:#fff;font-size:13.5px}
+.v2-topbar .wrap{width:min(1180px,92%);margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:7px 0;flex-wrap:wrap}
+.v2-topbar .tb{display:flex;align-items:center;gap:7px;opacity:.95}
+.v2-topbar .dot{width:7px;height:7px;border-radius:50%;background:#1FB574;box-shadow:0 0 0 4px rgba(31,181,116,.22)}
+.v2-header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid #DCE6F2}
+.v2-nav{width:min(1180px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 0}
+.v2-brand{display:flex;align-items:center;gap:12px}
+.v2-brand svg{width:46px;height:46px}
+.v2-brand-text b{display:block;font-weight:900;font-size:19px;color:#0A2540;line-height:1.2}
+.v2-brand-text span{display:block;font-size:11.5px;color:#5B6B80;letter-spacing:1.4px}
+.v2-menu{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.v2-menu a{padding:8px 14px;border-radius:999px;font-weight:500;font-size:14.5px;color:#28405c;transition:.22s}
+.v2-menu a:hover,.v2-menu a.active{background:#0A2540;color:#fff}
+.v2-actions{display:flex;gap:8px}
+.v2-hero{
+  position:relative;overflow:hidden;color:#fff;padding:64px 0 150px;
+  background:radial-gradient(130% 130% at 82% 0%,#1A5BB5 0%,#0B3D91 35%,#0A2540 70%,#061729 100%);
+}
+.v2-hero::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.09) 1px,transparent 1px);background-size:26px 26px;opacity:.55}
+.v2-skyline{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:270px;z-index:1;pointer-events:none}
+.v2-hero .wrap{position:relative;z-index:3;width:min(1180px,92%);margin:auto}
+.v2-hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+.v2-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);padding:6px 15px;border-radius:999px;font-size:13px;margin-bottom:18px;backdrop-filter:blur(8px)}
+.v2-eyebrow .star{color:#D4AF37}
+.v2-hero h1{font-size:clamp(30px,4.6vw,52px);font-weight:900;line-height:1.25}
+.v2-hero h1 em{font-style:normal;background:linear-gradient(90deg,#6FE3B0,#1FB574);-webkit-background-clip:text;background-clip:text;color:transparent}
+.v2-hero p.lead{margin-top:16px;font-size:17px;color:rgba(255,255,255,.82);max-width:560px}
+.v2-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.v2-stats{display:flex;gap:28px;margin-top:34px;flex-wrap:wrap}
+.v2-stats .st b{display:block;font-size:26px;font-weight:900;color:#fff}
+.v2-stats .st span{font-size:13px;color:rgba(255,255,255,.66)}
+.v2-block{padding:70px 0}
+.v2-wrap{width:min(1180px,92%);margin:auto}
+.v2-sec-head{text-align:center;max-width:660px;margin:0 auto 44px}
+.v2-tag{display:inline-block;background:#E8F1FC;color:#0B3D91;font-size:12.5px;font-weight:700;letter-spacing:1px;padding:5px 14px;border-radius:999px;margin-bottom:14px}
+.v2-sec-head h2{font-size:clamp(24px,3.4vw,36px);font-weight:900;color:#0A2540;line-height:1.35}
+.v2-sec-head p{color:#5B6B80;margin-top:10px;font-size:15.5px}
+.v2-grid{display:grid;gap:22px}
+.v2-g4{grid-template-columns:repeat(4,1fr)}
+.v2-g3{grid-template-columns:repeat(3,1fr)}
+.v2-g2{grid-template-columns:repeat(2,1fr)}
+.v2-card{background:#fff;border:1px solid #DCE6F2;border-radius:18px;padding:26px;box-shadow:0 18px 40px rgba(10,37,64,.12);transition:.28s;position:relative}
+.v2-card:hover{transform:translateY(-6px);box-shadow:0 30px 70px rgba(10,37,64,.22)}
+.v2-card .ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#E8F1FC,#D6E7FB);font-size:24px;margin-bottom:16px}
+.v2-card h3{font-size:18px;font-weight:900;color:#0A2540;margin-bottom:6px}
+.v2-card p{color:#5B6B80;font-size:14.5px}
+.v2-price{font-size:30px;font-weight:900;color:#0B3D91;margin-top:14px;display:flex;align-items:baseline;gap:6px}
+.v2-price small{font-size:14px;font-weight:500;color:#5B6B80}
+.v2-offer{border-radius:22px;padding:30px;color:#fff;background:linear-gradient(135deg,#0B3D91,#0A2540);position:relative;overflow:hidden;box-shadow:0 30px 70px rgba(10,37,64,.22)}
+.v2-offer.green{background:linear-gradient(135deg,#12855A,#0A2540)}
+.v2-offer h3{font-size:22px;font-weight:900;position:relative}
+.v2-offer p{color:rgba(255,255,255,.78);margin-top:8px;font-size:14.5px;position:relative}
+.v2-offer .prices{display:flex;align-items:baseline;gap:12px;margin-top:18px;position:relative}
+.v2-offer .old{text-decoration:line-through;color:rgba(255,255,255,.5);font-size:18px}
+.v2-offer .new{font-size:38px;font-weight:900;color:#8CF0C0}
+.v2-footer{background:linear-gradient(180deg,#0A2540,#061729);color:rgba(255,255,255,.75);padding:56px 0 26px}
+.v2-foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:34px}
+.v2-footer h4{color:#fff;font-size:16px;font-weight:900;margin-bottom:14px}
+.v2-footer a{display:block;padding:4px 0;font-size:14px;transition:.2s}
+.v2-footer a:hover{color:#8CF0C0}
+
+/* ============================================================
+   التصميم 3: العصري الداكن (Dark Neon)
+   ============================================================ */
+.v3-root{
+  background:#050810;min-height:100vh;color:#E2E8F0;
+  position:relative;overflow-x:hidden;
+}
+.v3-root::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(50% 40% at 15% 20%,rgba(6,182,212,.18),transparent 60%),
+    radial-gradient(50% 40% at 85% 80%,rgba(139,92,246,.18),transparent 60%);
+}
+.v3-ticker{
+  position:relative;z-index:2;
+  background:linear-gradient(90deg,#06B6D4,#8B5CF6,#06B6D4);
+  background-size:200% 100%;
+  color:#fff;font-weight:700;font-size:13.5px;padding:9px 0;overflow:hidden;
+  animation:v3slide 6s linear infinite;
+}
+@keyframes v3slide{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+.v3-ticker-inner{display:flex;gap:60px;white-space:nowrap;animation:v3scroll 25s linear infinite;padding-left:100%}
+@keyframes v3scroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+.v3-ticker span{display:inline-flex;align-items:center;gap:8px}
+.v3-header{
+  position:sticky;top:0;z-index:60;
+  background:rgba(5,8,16,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(6,182,212,.2);
+  position:relative;z-index:2;
+}
+.v3-nav{width:min(1180px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 0}
+.v3-brand{display:flex;align-items:center;gap:12px}
+.v3-brand .logo{
+  width:44px;height:44px;border-radius:12px;
+  background:linear-gradient(135deg,#06B6D4,#8B5CF6);
+  display:grid;place-items:center;font-weight:900;font-size:20px;color:#fff;
+  box-shadow:0 0 20px rgba(6,182,212,.5);
+}
+.v3-brand b{font-size:18px;font-weight:900;color:#fff;display:block;line-height:1.1}
+.v3-brand span{font-size:11px;color:#06B6D4;letter-spacing:2px;display:block}
+.v3-menu{display:flex;gap:4px;flex-wrap:wrap}
+.v3-menu a{padding:8px 14px;border-radius:999px;font-weight:600;font-size:14px;color:#94A3B8;transition:.22s}
+.v3-menu a:hover,.v3-menu a.active{background:rgba(6,182,212,.12);color:#06B6D4;border:1px solid rgba(6,182,212,.4)}
+.v3-actions{display:flex;gap:8px}
+.v3-hero{
+  position:relative;z-index:2;padding:80px 0 60px;
+  background:radial-gradient(80% 60% at 50% 0%,rgba(6,182,212,.15),transparent 70%);
+}
+.v3-hero-grid{width:min(1180px,92%);margin:auto;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.v3-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.4);
+  padding:6px 14px;border-radius:999px;font-size:12.5px;color:#06B6D4;font-weight:700;
+  margin-bottom:20px;
+}
+.v3-badge .dot-live{width:8px;height:8px;border-radius:50%;background:#22C55E;box-shadow:0 0 0 4px rgba(34,197,94,.25);animation:v3pulse 1.6s infinite}
+@keyframes v3pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.v3-hero h1{font-size:clamp(30px,4.6vw,52px);font-weight:900;line-height:1.25;color:#fff}
+.v3-hero h1 em{font-style:normal;background:linear-gradient(90deg,#06B6D4,#8B5CF6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.v3-hero p.lead{margin-top:16px;font-size:17px;color:#94A3B8;max-width:560px}
+.v3-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.v3-btn-primary{
+  background:linear-gradient(135deg,#06B6D4,#8B5CF6);color:#fff;
+  box-shadow:0 0 30px rgba(6,182,212,.4);border:none;
+}
+.v3-btn-primary:hover{box-shadow:0 0 40px rgba(6,182,212,.6)}
+.v3-stats{display:flex;gap:28px;margin-top:34px;flex-wrap:wrap}
+.v3-stats .st b{display:block;font-size:26px;font-weight:900;background:linear-gradient(90deg,#06B6D4,#8B5CF6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.v3-stats .st span{font-size:13px;color:#64748B}
+.v3-hero-art{
+  position:relative;border-radius:24px;overflow:hidden;padding:30px;
+  background:linear-gradient(135deg,rgba(6,182,212,.1),rgba(139,92,246,.1));
+  border:1px solid rgba(6,182,212,.25);
+  box-shadow:0 0 60px rgba(6,182,212,.2),inset 0 0 60px rgba(139,92,246,.1);
+}
+.v3-hero-art::before{
+  content:"";position:absolute;top:-2px;left:-2px;right:-2px;height:2px;
+  background:linear-gradient(90deg,transparent,#06B6D4,transparent);
+  animation:v3scan 3s linear infinite;
+}
+@keyframes v3scan{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.v3-block{padding:70px 0;position:relative;z-index:2}
+.v3-wrap{width:min(1180px,92%);margin:auto}
+.v3-sec-head{text-align:center;max-width:660px;margin:0 auto 44px}
+.v3-sec-head h2{font-size:clamp(24px,3.4vw,36px);font-weight:900;color:#fff;line-height:1.35}
+.v3-sec-head p{color:#94A3B8;margin-top:10px;font-size:15.5px}
+.v3-grid{display:grid;gap:20px}
+.v3-g4{grid-template-columns:repeat(4,1fr)}
+.v3-g3{grid-template-columns:repeat(3,1fr)}
+.v3-g2{grid-template-columns:repeat(2,1fr)}
+.v3-card{
+  background:linear-gradient(135deg,rgba(15,23,42,.9),rgba(5,8,16,.9));
+  border:1px solid rgba(6,182,212,.2);border-radius:18px;padding:26px;
+  transition:.3s;position:relative;overflow:hidden;
+}
+.v3-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,#06B6D4,transparent);
+  opacity:0;transition:.3s;
+}
+.v3-card:hover{border-color:rgba(6,182,212,.6);transform:translateY(-6px);box-shadow:0 20px 50px rgba(6,182,212,.2)}
+.v3-card:hover::before{opacity:1}
+.v3-card .ico{
+  width:52px;height:52px;border-radius:14px;display:grid;place-items:center;
+  background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(139,92,246,.15));
+  border:1px solid rgba(6,182,212,.3);font-size:24px;margin-bottom:16px;
+}
+.v3-card h3{font-size:18px;font-weight:900;color:#fff;margin-bottom:6px}
+.v3-card p{color:#94A3B8;font-size:14px}
+.v3-price{font-size:28px;font-weight:900;background:linear-gradient(90deg,#06B6D4,#8B5CF6);-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:14px;display:flex;align-items:baseline;gap:6px}
+.v3-price small{font-size:13px;color:#64748B;-webkit-text-fill-color:#64748B}
+.v3-offer{
+  border-radius:22px;padding:30px;color:#fff;
+  background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(139,92,246,.15));
+  border:1px solid rgba(6,182,212,.4);position:relative;overflow:hidden;
+  box-shadow:0 0 40px rgba(6,182,212,.15);
+}
+.v3-offer .prices{display:flex;align-items:baseline;gap:12px;margin-top:18px}
+.v3-offer .old{text-decoration:line-through;color:#64748B;font-size:18px}
+.v3-offer .new{font-size:38px;font-weight:900;background:linear-gradient(90deg,#06B6D4,#8B5CF6);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ============================================================
+   التصميم 4: الإعلاني المميز (Promo Focus)
+   ============================================================ */
+.v4-root{background:#FFF8F0;min-height:100vh}
+.v4-banner{
+  background:linear-gradient(90deg,#F97316,#C2410C);color:#fff;
+  padding:10px 0;text-align:center;font-size:13px;font-weight:700;position:relative;overflow:hidden;
+}
+.v4-banner::before{
+  content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(255,255,255,.08) 10px,rgba(255,255,255,.08) 20px);
+}
+.v4-countdown{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(0,0,0,.2);padding:3px 12px;border-radius:999px;margin-right:10px;
+}
+.v4-countdown b{font-family:monospace;font-size:14px}
+.v4-header{
+  position:sticky;top:0;z-index:60;background:rgba(255,255,255,.96);
+  backdrop-filter:blur(16px);border-bottom:2px solid #F97316;
+}
+.v4-nav{width:min(1180px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 0}
+.v4-brand{display:flex;align-items:center;gap:12px}
+.v4-brand .logo{
+  width:44px;height:44px;border-radius:12px;
+  background:linear-gradient(135deg,#F97316,#C2410C);
+  display:grid;place-items:center;font-weight:900;font-size:20px;color:#fff;
+  box-shadow:0 8px 20px rgba(249,115,22,.4);
+}
+.v4-brand b{font-size:18px;font-weight:900;color:#0A2540;display:block;line-height:1.1}
+.v4-brand span{font-size:11px;color:#F97316;letter-spacing:2px;display:block;font-weight:700}
+.v4-menu{display:flex;gap:4px;flex-wrap:wrap}
+.v4-menu a{padding:8px 14px;border-radius:999px;font-weight:600;font-size:14px;color:#475569;transition:.22s}
+.v4-menu a:hover,.v4-menu a.active{background:#FFF1E6;color:#F97316}
+.v4-actions{display:flex;gap:8px}
+.v4-hero-promo{
+  background:linear-gradient(135deg,#FFF1E6,#FFE4CC);
+  padding:60px 0 50px;position:relative;overflow:hidden;
+}
+.v4-hero-promo::before{
+  content:"🔥";position:absolute;font-size:280px;right:-30px;top:-40px;opacity:.08;
+}
+.v4-hero-grid{width:min(1180px,92%);margin:auto;display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center}
+.v4-hero-promo h1{font-size:clamp(30px,4.6vw,52px);font-weight:900;line-height:1.25;color:#0A2540}
+.v4-hero-promo h1 em{font-style:normal;color:#F97316}
+.v4-hero-promo p.lead{margin-top:16px;font-size:17px;color:#475569;max-width:520px}
+.v4-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.v4-big-price{
+  background:#fff;border-radius:24px;padding:30px;box-shadow:0 20px 50px rgba(249,115,22,.15);
+  border:2px dashed #F97316;text-align:center;position:relative;
+}
+.v4-big-price .lbl{font-size:13px;font-weight:700;color:#F97316;letter-spacing:1px}
+.v4-big-price .num{font-size:64px;font-weight:900;color:#0A2540;line-height:1;margin:6px 0}
+.v4-big-price .num small{font-size:20px;font-weight:700;color:#64748B}
+.v4-big-price .old{font-size:20px;text-decoration:line-through;color:#94A3B8;margin-top:6px}
+.v4-big-price .save{
+  display:inline-block;background:#F97316;color:#fff;padding:5px 14px;border-radius:999px;
+  font-size:12px;font-weight:900;margin-top:14px;
+}
+.v4-slider{
+  background:#0A2540;color:#fff;padding:20px 0;overflow:hidden;
+  border-top:1px solid rgba(255,255,255,.1);
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.v4-slider-inner{
+  display:flex;gap:60px;white-space:nowrap;
+  animation:v4scroll 20s linear infinite;
+}
+@keyframes v4scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.v4-slide{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:15px}
+.v4-slide .dot-sl{width:8px;height:8px;border-radius:50%;background:#F97316}
+.v4-block{padding:70px 0}
+.v4-wrap{width:min(1180px,92%);margin:auto}
+.v4-sec-head{text-align:center;max-width:660px;margin:0 auto 44px}
+.v4-sec-head .tag{display:inline-block;background:#FFE4CC;color:#C2410C;font-size:12.5px;font-weight:700;letter-spacing:1px;padding:5px 14px;border-radius:999px;margin-bottom:14px}
+.v4-sec-head h2{font-size:clamp(24px,3.4vw,36px);font-weight:900;color:#0A2540;line-height:1.35}
+.v4-sec-head p{color:#64748B;margin-top:10px;font-size:15.5px}
+.v4-grid{display:grid;gap:20px}
+.v4-g4{grid-template-columns:repeat(4,1fr)}
+.v4-g3{grid-template-columns:repeat(3,1fr)}
+.v4-g2{grid-template-columns:repeat(2,1fr)}
+.v4-card{background:#fff;border:1px solid #FFE4CC;border-radius:18px;padding:26px;box-shadow:0 12px 30px rgba(249,115,22,.08);transition:.28s;position:relative}
+.v4-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(249,115,22,.18)}
+.v4-card.hot::before{
+  content:"🔥 الأكثر طلباً";position:absolute;top:-10px;right:20px;
+  background:#F97316;color:#fff;font-size:10.5px;font-weight:900;
+  padding:4px 12px;border-radius:999px;letter-spacing:.5px;
+}
+.v4-card .ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#FFF1E6,#FFE4CC);font-size:24px;margin-bottom:16px}
+.v4-card h3{font-size:18px;font-weight:900;color:#0A2540;margin-bottom:6px}
+.v4-card p{color:#64748B;font-size:14px}
+.v4-price{font-size:30px;font-weight:900;color:#F97316;margin-top:14px;display:flex;align-items:baseline;gap:6px}
+.v4-price small{font-size:14px;font-weight:500;color:#64748B}
+.v4-loyalty{
+  background:linear-gradient(135deg,#0A2540,#1E293B);color:#fff;
+  border-radius:24px;padding:34px;display:grid;grid-template-columns:1fr 1fr;
+  gap:30px;align-items:center;box-shadow:0 20px 50px rgba(10,37,64,.25);
+}
+.v4-loyalty h3{font-size:24px;font-weight:900;margin-bottom:10px}
+.v4-loyalty p{color:#94A3B8;font-size:14.5px;line-height:1.8}
+.v4-points{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.v4-point{
+  flex:1;min-width:100px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(249,115,22,.3);border-radius:14px;padding:14px 12px;text-align:center;
+}
+.v4-point .n{font-size:24px;font-weight:900;color:#F97316}
+.v4-point .l{font-size:11.5px;color:#94A3B8;margin-top:2px}
+.v4-form-card{background:#fff;border-radius:18px;padding:22px;box-shadow:0 12px 30px rgba(249,115,22,.12);border:1px solid #FFE4CC}
+.v4-progress{
+  height:6px;background:#FFE4CC;border-radius:999px;overflow:hidden;margin-bottom:18px;
+}
+.v4-progress-bar{
+  height:100%;background:linear-gradient(90deg,#F97316,#C2410C);border-radius:999px;
+  transition:width .5s ease;width:25%;
+}
+
+/* ============================================================
+   أنماط البوت (مشتركة لكل التصاميم)
+   ============================================================ */
+#botToggle{
+  position:fixed;left:22px;bottom:22px;z-index:9998;width:62px;height:62px;border-radius:50%;
+  border:none;cursor:pointer;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(135deg,#1E6FD9,#0B3D91 60%,#12855A 140%);
+  box-shadow:0 16px 38px rgba(11,61,145,.45);transition:.28s;
+}
+#botToggle:hover{transform:scale(1.08) rotate(-4deg)}
+#botToggle::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(30,111,217,.35);animation:pulseBot 2.4s infinite}
+@keyframes pulseBot{0%{transform:scale(1);opacity:.9}70%{transform:scale(1.35);opacity:0}100%{opacity:0}}
+#botPanel{
+  position:fixed;left:22px;bottom:96px;z-index:9998;
+  width:min(390px,calc(100vw - 44px));height:min(600px,calc(100vh - 140px));
+  background:#fff;border-radius:24px;overflow:hidden;display:none;flex-direction:column;
+  box-shadow:0 40px 90px rgba(10,37,64,.4);border:1px solid #DCE6F2;
+}
+#botPanel.open{display:flex;animation:botIn .3s ease}
+@keyframes botIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.bot-head{background:linear-gradient(120deg,#0A2540,#0B3D91 60%,#12855A 160%);color:#fff;padding:16px 18px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden}
+.bot-head::after{content:"";position:absolute;left:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.35),transparent 70%)}
+.bot-head .av{width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.15);display:grid;place-items:center;border:1px solid rgba(255,255,255,.28);position:relative;z-index:1;font-size:20px}
+.bot-head b{display:block;font-size:15px;position:relative;z-index:1}
+.bot-head span{font-size:11.5px;opacity:.8;position:relative;z-index:1;display:flex;align-items:center;gap:6px}
+.bot-head .on{width:7px;height:7px;border-radius:50%;background:#4ADE80;box-shadow:0 0 0 3px rgba(74,222,128,.3)}
+.bot-head .close{margin-inline-start:auto;background:rgba(255,255,255,.14);border:none;color:#fff;width:30px;height:30px;border-radius:9px;cursor:pointer;font-size:16px;position:relative;z-index:1}
+.bot-msgs{flex:1;overflow-y:auto;padding:18px;background:#F6FAFF;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:84%;padding:11px 15px;border-radius:16px;font-size:14px;line-height:1.75;white-space:pre-line;animation:msgIn .25s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.msg.bot{background:#fff;border:1px solid #DCE6F2;color:#0E1B2C;border-start-start-radius:5px;align-self:flex-start;box-shadow:0 4px 14px rgba(10,37,64,.06)}
+.msg.user{background:linear-gradient(135deg,#1E6FD9,#0B3D91);color:#fff;border-start-end-radius:5px;align-self:flex-end}
+.msg.typing{display:flex;gap:5px;align-items:center;padding:14px 18px}
+.msg.typing i{width:7px;height:7px;border-radius:50%;background:#A9BED6;animation:bounce 1.2s infinite}
+.msg.typing i:nth-child(2){animation-delay:.15s}
+.msg.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-6px);opacity:1}}
+.bot-quick{display:flex;gap:7px;flex-wrap:wrap;padding:10px 16px;background:#fff;border-top:1px solid #DCE6F2}
+.chip{background:#E8F1FC;color:#0B3D91;border:1px solid #C6DBF5;border-radius:999px;padding:6px 13px;font-size:12.5px;cursor:pointer;font-weight:600;transition:.2s}
+.chip:hover{background:#0B3D91;color:#fff;border-color:#0B3D91}
+.bot-input{display:flex;gap:8px;padding:12px 14px;background:#fff;border-top:1px solid #DCE6F2}
+.bot-input input{flex:1;padding:11px 15px;border:1.5px solid #DCE6F2;border-radius:999px;background:#FBFDFF;transition:.2s;font-size:14px}
+.bot-input input:focus{border-color:#1E6FD9;box-shadow:0 0 0 4px rgba(30,111,217,.12)}
+.bot-input button{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;background:linear-gradient(135deg,#1E6FD9,#0B3D91);color:#fff;display:grid;place-items:center;transition:.2s}
+.bot-input button:hover{transform:scale(1.07)}
+
+/* استجابة الجوال */
+@media(max-width:980px){
+  .v2-hero-grid,.v3-hero-grid,.v4-hero-grid{grid-template-columns:1fr;text-align:center}
+  .v2-hero p.lead,.v3-hero p.lead,.v4-hero-promo p.lead{margin-inline:auto}
+  .v2-cta,.v2-stats,.v3-cta,.v3-stats,.v4-cta{justify-content:center}
+  .v2-g4,.v3-g4,.v4-g4{grid-template-columns:repeat(2,1fr)}
+  .v2-g3,.v3-g3,.v4-g3,.v2-g2,.v3-g2,.v4-g2{grid-template-columns:1fr}
+  .v2-menu,.v3-menu,.v4-menu{display:none}
+  .v4-loyalty{grid-template-columns:1fr;gap:20px}
+}
+@media(max-width:760px){
+  .row-2{grid-template-columns:1fr}
+  .v2-g4,.v3-g4,.v4-g4{grid-template-columns:1fr}
+  #versionSwitcher{top:auto;bottom:96px;right:14px;left:auto}
+  #vIndicator{top:auto;bottom:96px;left:14px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     زر التبديل بين التصاميم (ثابت في كل الصفحات)
+     ============================================================ -->
+<div id="vIndicator">
+  <span class="ic">📱</span>
+  <span>التصميم <span id="vCurrent">1</span> من 4</span>
+</div>
+
+<div id="versionSwitcher" class="v1">
+  <button id="vPrev" aria-label="التصميم السابق">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <span class="v-num" id="vNum">1</span>
+  <button id="vNext" aria-label="التصميم التالي">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<!-- ============================================================
+     الحاوية الرئيسية (يُبنى فيها التصميم النشط)
+     ============================================================ -->
+<div id="appRoot"></div>
+
+<!-- ============================================================
+     البوت الذكي (يعمل في كل التصاميم)
+     ============================================================ -->
+<button id="botToggle" aria-label="المساعد الذكي">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round">
+    <rect x="4" y="8" width="16" height="12" rx="4"/><path d="M12 8V4M9 4h6"/>
+    <circle cx="9" cy="14" r="1.2" fill="#fff" stroke="none"/><circle cx="15" cy="14" r="1.2" fill="#fff" stroke="none"/>
+  </svg>
+</button>
+
+<div id="botPanel" role="dialog" aria-label="المساعد الذكي">
+  <div class="bot-head">
+    <div class="av">🤖</div>
+    <div>
+      <b>مساعد TurboWash</b>
+      <span><i class="on"></i> متصل · يرد فوراً</span>
+    </div>
+    <button class="close" id="botClose" aria-label="إغلاق">✕</button>
+  </div>
+  <div class="bot-msgs" id="botMsgs"></div>
+  <div class="bot-quick" id="botQuick"></div>
+  <form class="bot-input" id="botForm">
+    <input id="botText" type="text" placeholder="اكتب سؤالك..." autocomplete="off">
+    <button type="submit" aria-label="إرسال">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12 2-12 2z"/></svg>
+    </button>
+  </form>
+</div>
+
+<div id="toasts"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+'use strict';
+
+/* ================================================================
+   إعدادات عامة
+   ================================================================ */
+const OFFICIAL_PHONE = '+966 50 007 9374';
+const OFFICIAL_PHONE_RAW = '+966500079374';
+const WHATSAPP = 'https://wa.me/966500079374';
+
+const SERVICES = [
+  { id:'ext',  name:'غسيل خارجي',  price:20, icon:'🚿', desc:'هيكل + زجاج + جنوط' },
+  { id:'int',  name:'غسيل داخلي',  price:25, icon:'🧼', desc:'مقاعد + فرش + تعطير' },
+  { id:'full', name:'غسيل شامل',   price:40, icon:'✨', desc:'خارجي + داخلي + تلميع' },
+  { id:'sub',  name:'اشتراك شهري', price:80, icon:'📅', desc:'4 غسلات خلال الشهر' }
+];
+
+const DEFAULT_BIKES = [
+  { id:1, name:'دباب 1 — محمد', c1:'#F5B301', c2:'#141414', status:'available', specs:['خزان 200 لتر','مضخة 130 بار','شمال الرياض'] },
+  { id:2, name:'دباب 2 — أحمد', c1:'#D62828', c2:'#141414', status:'busy',      specs:['خزان 150 لتر','مضخة 110 بار','وسط الرياض'] },
+  { id:3, name:'دباب 3 — خالد', c1:'#1A1A1A', c2:'#D4AF37', status:'available', specs:['خزان 180 لتر','إضاءة LED','شرق الرياض'] }
+];
+
+const OFFERS = [
+  { title:'عرض الأسبوع', old:40, now:35, text:'غسيل شامل بسعر مخفّض', green:false },
+  { title:'اشتراك شهري مخفّض', old:80, now:70, text:'4 غسلات شاملة', green:true }
+];
+
+const STATUS_LABEL = { paid:'جاهز', washing:'قيد التنفيذ', done:'تم التسليم' };
+
+/* ================================================================
+   أدوات
+   ================================================================ */
+const $  = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const store = {
+  get(k, fb){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; }catch(e){ return fb; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+const money = n => n + ' ريال';
+const uid = (p='TW') => p + '-' + Date.now().toString(36).toUpperCase().slice(-5) + Math.random().toString(36).slice(2,4).toUpperCase();
+const todayStr = () => new Date().toLocaleDateString('ar-SA',{day:'numeric',month:'long'}) + ' · ' + new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function toast(msg, type=''){
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  $('#toasts').appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='.3s'; }, 2400);
+  setTimeout(() => el.remove(), 2800);
+}
+
+/* ================================================================
+   الحالة
+   ================================================================ */
+const state = {
+  version: store.get('tw_version', 1),
+  orders: store.get('tw_orders', []),
+  bikes:  store.get('tw_bikes', DEFAULT_BIKES),
+  ratings: store.get('tw_ratings', []),
+  messages: store.get('tw_messages', []),
+  page: 'home',
+  selectedBike: null,
+  ratingValue: 0,
+  countdownEnd: Date.now() + 3 * 60 * 60 * 1000 // عرض ينتهي بعد 3 ساعات
+};
+const save = {
+  orders(){ store.set('tw_orders', state.orders); },
+  bikes(){ store.set('tw_bikes', state.bikes); },
+  ratings(){ store.set('tw_ratings', state.ratings); },
+  messages(){ store.set('tw_messages', state.messages); },
+  version(){ store.set('tw_version', state.version); }
+};
+
+/* ================================================================
+   مكونات مشتركة (دباب SVG، أفق الرياض)
+   ================================================================ */
+function shade(hex, pct){
+  let n = hex.replace('#','');
+  if(n.length === 3) n = n.split('').map(c=>c+c).join('');
+  let r = parseInt(n.slice(0,2),16), g = parseInt(n.slice(2,4),16), b = parseInt(n.slice(4,6),16);
+  const f = pct/100;
+  r = Math.max(0, Math.min(255, Math.round(r + 255*f)));
+  g = Math.max(0, Math.min(255, Math.round(g + 255*f)));
+  b = Math.max(0, Math.min(255, Math.round(b + 255*f)));
+  return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
+}
+
+function bikeSVG(c1, c2, id, scale=1){
+  const dark = shade(c1, -32);
+  return `
+  <svg viewBox="0 0 320 200" role="img" aria-label="دباب" style="transform:scale(${scale})">
+    <defs>
+      <linearGradient id="bg${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${dark}"/></linearGradient>
+      <linearGradient id="mt${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5C6B7A"/><stop offset="1" stop-color="#2C3742"/></linearGradient>
+    </defs>
+    <ellipse cx="160" cy="184" rx="118" ry="9" fill="rgba(0,0,0,.2)"/>
+    <circle cx="72" cy="148" r="37" fill="#15181C"/><circle cx="72" cy="148" r="25" fill="#232A31"/><circle cx="72" cy="148" r="15" fill="url(#mt${id})"/><circle cx="72" cy="148" r="5"  fill="#0E1114"/>
+    <circle cx="240" cy="148" r="37" fill="#15181C"/><circle cx="240" cy="148" r="25" fill="#232A31"/><circle cx="240" cy="148" r="15" fill="url(#mt${id})"/><circle cx="240" cy="148" r="5"  fill="#0E1114"/>
+    <path d="M62 116 L72 148" stroke="url(#mt${id})" stroke-width="9" stroke-linecap="round"/>
+    <path d="M86 116 L76 148" stroke="url(#mt${id})" stroke-width="9" stroke-linecap="round"/>
+    <path d="M44 146 Q40 100 74 86 L96 86 Q104 112 104 146 Z" fill="url(#bg${id})"/>
+    <path d="M52 140 Q50 106 76 94 L88 94 Q92 116 92 140 Z" fill="rgba(255,255,255,.16)"/>
+    <circle cx="62" cy="76" r="10" fill="${c2}" opacity=".92"/><circle cx="62" cy="76" r="4.5" fill="#FFF3C4"/>
+    <path d="M78 88 L62 60" stroke="url(#mt${id})" stroke-width="8" stroke-linecap="round"/>
+    <path d="M40 58 L86 58" stroke="#15181C" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="40" cy="58" r="5.5" fill="${c2}"/><circle cx="86" cy="58" r="5.5" fill="${c2}"/>
+    <path d="M100 138 L206 138 L206 152 L100 152 Z" fill="#2C3742"/>
+    <path d="M104 141 L202 141 L202 146 L104 146 Z" fill="${c2}" opacity=".55"/>
+    <path d="M176 140 Q176 106 206 100 L232 100 Q246 110 248 140 Z" fill="${c2}"/>
+    <path d="M180 136 Q182 112 208 106 L226 106 Q236 114 238 136 Z" fill="${shade(c2, 18)}"/>
+    <rect x="222" y="42" width="70" height="58" rx="13" fill="url(#bg${id})"/>
+    <rect x="222" y="64" width="70" height="12" fill="${c2}" opacity=".85"/>
+    <rect x="232" y="50" width="20" height="7" rx="3.5" fill="rgba(255,255,255,.45)"/>
+    <path d="M292 60 q14 4 14 16 t-14 14" fill="none" stroke="#2C3742" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="258" cy="118" r="11" fill="#2C3742"/><circle cx="258" cy="118" r="4"  fill="${c2}"/>
+    <path d="M118 118 L134 118 L128 128 L142 128 L120 152 L126 136 L112 136 Z" fill="${c2}" opacity=".9"/>
+  </svg>`;
+}
+
+function skyline(){
+  const b = (x,y,w,h,o) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" opacity="${o}"/>`;
+  return `
+  <svg class="v2-skyline" viewBox="0 0 1440 340" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FC0FF" stop-opacity=".38"/><stop offset="1" stop-color="#8FC0FF" stop-opacity=".02"/></linearGradient>
+      <linearGradient id="goldG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0D98A" stop-opacity=".55"/><stop offset="1" stop-color="#F0D98A" stop-opacity=".08"/></linearGradient>
+    </defs>
+    <g fill="url(#skyG)">
+      ${b(40,238,64,102,.8)}${b(112,206,48,134,.6)}${b(178,258,86,82,.5)}${b(430,224,58,116,.7)}
+      ${b(500,268,74,72,.5)}${b(590,244,52,96,.6)}${b(660,286,96,54,.4)}${b(790,232,60,108,.65)}
+      ${b(866,262,80,78,.5)}${b(1080,246,64,94,.6)}${b(1160,272,88,68,.45)}${b(1266,236,54,104,.6)}${b(1336,266,70,74,.5)}
+      <polygon points="300,340 300,58 332,58 347,122 377,122 392,58 424,58 424,340" opacity=".85"/>
+      <polygon points="995,340 1006,176 1038,176 1049,340" opacity=".8"/>
+    </g>
+    <g fill="url(#goldG)"><circle cx="1022" cy="156" r="24"/><polygon points="1019,132 1025,132 1022,72"/></g>
+  </svg>`;
+}
+
+/* ================================================================
+   مكونات ديناميكية للتصاميم (تُستخدم من كل التصاميم)
+   ================================================================ */
+function servicesHTML(){
+  return SERVICES.map(s => `
+    <div class="v1-svc" data-service="${s.id}">
+      <div class="icon-box">${s.icon}</div>
+      <div class="info"><b>${s.name}</b><span>${s.desc}</span></div>
+      <div class="price-tag">${s.price}<small>ريال</small></div>
+    </div>
+  `).join('');
+}
+
+function ordersHTML(){
+  if(state.orders.length === 0){
+    return `<div style="text-align:center;padding:44px 20px;color:#5B6B80;background:#fff;border:1.5px dashed #DCE6F2;border-radius:18px">
+      <div style="font-size:44px;margin-bottom:8px;opacity:.6">📋</div>
+      <h4 style="font-weight:900;color:#0A2540">لا توجد طلبات</h4>
+      <p style="margin-top:6px;font-size:13px">ابدأ بحجز أول موعد</p>
+    </div>`;
+  }
+  return state.orders.slice().reverse().map(o => {
+    const bike = state.bikes.find(b => b.id === o.bikeId);
+    const cls = o.status;
+    return `
+    <div class="v1-order-card ${cls}">
+      <div class="v1-order-head">
+        <span style="font-size:11px;color:#5B6B80;font-weight:700">${esc(o.code)}</span>
+        <span class="v1-status-pill ${cls}">${STATUS_LABEL[o.status]}</span>
+      </div>
+      <h4 style="font-size:15px;font-weight:900;color:#0A2540;margin-bottom:8px">${esc(o.serviceName)} — ${money(o.price)}</h4>
+      <div style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:#5B6B80;margin-bottom:10px">
+        <span>👤 ${esc(o.name)}</span>
+        <span dir="ltr">📱 ${esc(o.phone)}</span>
+        <span>📍 ${esc(o.location)}</span>
+        <span>🕐 ${esc(o.time)}${bike ? ' · 🏍️ ' + esc(bike.name) : ''}</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${o.status==='paid' ? `<button class="btn btn-primary btn-sm" data-start="${o.id}">▶ بدء الغسيل</button>` : ''}
+        ${o.status==='washing' ? `<button class="btn btn-green btn-sm" data-done="${o.id}">✅ تم التسليم</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function bikesHTML(){
+  return state.bikes.map(b => {
+    const avail = b.status === 'available';
+    return `
+    <div style="background:#fff;border-radius:18px;overflow:hidden;margin-bottom:14px;box-shadow:0 8px 22px rgba(10,37,64,.08);border:1px solid #DCE6F2">
+      <div style="position:relative;padding:16px;background:linear-gradient(135deg,#F4F8FE,#E3EDF9)">
+        <div style="position:absolute;top:12px;right:12px;background:#fff;border-radius:999px;padding:5px 12px;font-size:11.5px;font-weight:700;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(10,37,64,.15);color:${avail?'#12855A':'#C2410C'}">
+          <span style="width:8px;height:8px;border-radius:50%;background:${avail?'#1FB574':'#E8590C'};box-shadow:0 0 0 4px ${avail?'rgba(31,181,116,.2)':'rgba(232,89,12,.18)'}"></span>${avail?'متاح':'مشغول'}
+        </div>
+        ${bikeSVG(b.c1, b.c2, 'bb'+b.id)}
+      </div>
+      <div style="padding:16px">
+        <h4 style="font-size:16px;font-weight:900;color:#0A2540">${esc(b.name)}</h4>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px">
+          ${b.specs.map(s => `<span style="font-size:11px;background:#E8F1FC;color:#0B3D91;padding:4px 10px;border-radius:8px;font-weight:600">${esc(s)}</span>`).join('')}
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" style="flex:1" data-send="${b.id}">📤 إرسال الطلب</button>
+          <button class="btn btn-ghost btn-sm" data-toggle="${b.id}">${avail?'مشغول':'متاح'}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function bookingFormHTML(idPrefix='b'){
+  return `
+  <form class="v1-form-card" data-booking-form>
+    <div class="field">
+      <label>الخدمة <span class="req">*</span></label>
+      <select name="service" required>
+        ${SERVICES.map(s => `<option value="${s.id}">${s.name} — ${s.price} ريال</option>`).join('')}
+      </select>
+    </div>
+    <div class="row-2">
+      <div class="field"><label>الاسم <span class="req">*</span></label><input name="name" type="text" placeholder="اسمك" required></div>
+      <div class="field"><label>الجوال <span class="req">*</span></label><input name="phone" type="tel" placeholder="05XXXXXXXX" dir="ltr" required></div>
+    </div>
+    <div class="field"><label>الموقع <span class="req">*</span></label><input name="location" type="text" placeholder="حي العليا - بجانب برج المملكة" required></div>
+    <div class="row-2">
+      <div class="field"><label>نوع السيارة <span class="req">*</span></label><input name="car" type="text" placeholder="كامري 2023" required></div>
+      <div class="field"><label>الوقت <span class="req">*</span></label><input name="time" type="time" min="16:00" max="23:00" value="18:00" required></div>
+    </div>
+    <button class="btn btn-primary btn-block" type="submit">✅ تأكيد الحجز</button>
+  </form>`;
+}
+
+function contactFormHTML(){
+  return `
+  <form class="v1-form-card" data-contact-form>
+    <h4 style="font-size:16px;font-weight:900;color:#0A2540;margin-bottom:12px">✉️ أرسل لنا رسالة</h4>
+    <div class="row-2">
+      <div class="field"><label>الاسم <span class="req">*</span></label><input name="name" type="text" placeholder="اسمك" required></div>
+      <div class="field"><label>الجوال <span class="req">*</span></label><input name="phone" type="tel" placeholder="05XXXXXXXX" dir="ltr" required></div>
+    </div>
+    <div class="field"><label>رسالتك <span class="req">*</span></label><textarea name="message" placeholder="اكتب رسالتك..." required></textarea></div>
+    <button class="btn btn-primary btn-block" type="submit">📤 إرسال</button>
+  </form>`;
+}
+
+function ratingHTML(){
+  return `
+  <div class="v1-form-card" style="text-align:center" data-rating-box>
+    <p style="color:#5B6B80;font-size:13.5px">اختر تقييمك من 1 إلى 5</p>
+    <div style="display:flex;gap:8px;justify-content:center;margin:16px 0 8px;flex-direction:row-reverse" data-stars>
+      ${[5,4,3,2,1].map(n => `<button type="button" class="star-btn" data-star="${n}" style="font-size:38px;background:none;color:#D8E2EF;cursor:pointer;transition:.18s;line-height:1;padding:0">★</button>`).join('')}
+    </div>
+    <div data-rating-label style="font-weight:900;color:#0B3D91;font-size:16px">لم يتم الاختيار</div>
+    <form data-rating-form style="margin-top:18px;text-align:right">
+      <div class="field"><label>الاسم (اختياري)</label><input name="name" type="text" placeholder="اسمك"></div>
+      <div class="field"><label>ملاحظة</label><textarea name="note" placeholder="شاركنا رأيك..."></textarea></div>
+      <button class="btn btn-primary btn-block" type="submit">إرسال التقييم</button>
+    </form>
+  </div>`;
+}
+
+/* ================================================================
+   التصميم 1: التطبيقي
+   ================================================================ */
+function renderV1(){
+  return `
+  <div class="v1-root">
+    <div class="v1-phone">
+      <header class="v1-header">
+        <div class="v1-brand">
+          <div class="lg">T</div>
+          <div><b>TurboWash</b><span>MOBILE · الرياض</span></div>
+        </div>
+        <div class="v1-h-actions">
+          <a class="v1-h-btn" href="tel:${OFFICIAL_PHONE_RAW}">📞</a>
+          <a class="v1-h-btn" href="${WHATSAPP}" target="_blank">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/></svg>
+          </a>
+        </div>
+      </header>
+      <div class="v1-loc-bar">
+        <span class="pulse"></span>
+        <span>📍 نخدم جميع أحياء الرياض · 4 العصر — 11 الليل</span>
+      </div>
+      <main class="v1-screen">
+        <section class="v1-page active" data-v1-page="home">
+          <div class="v1-hero">
+            <div class="c">
+              <h2>سيارتك نظيفة <em>بدون ما تتحرك</em></h2>
+              <p>نجيك بموقعك في أي حي داخل الرياض بدبابات مجهّزة.</p>
+              <div class="v1-badges">
+                <span class="v1-badge">⭐ 4.9</span>
+                <span class="v1-badge">⏱️ 45د</span>
+                <span class="v1-badge">🚿 +1200 سيارة</span>
+              </div>
+            </div>
+          </div>
+          <div class="v1-sec-title">🛎️ خدماتنا <a data-v1-go="booking">احجز ←</a></div>
+          <div class="v1-svc-list">${servicesHTML()}</div>
+          <div class="v1-sec-title" style="margin-top:24px">🔥 عروض الأسبوع</div>
+          ${OFFERS.map(o => `
+            <div class="v1-offer ${o.green?'green':''}">
+              <h4>${o.title}</h4>
+              <div class="prices"><span class="old">${o.old} ريال</span><span class="new">${o.now}</span><small style="font-size:12px;opacity:.8;margin-right:6px">ريال</small></div>
+            </div>
+          `).join('')}
+        </section>
+        <section class="v1-page" data-v1-page="booking">
+          <h3 style="font-size:19px;font-weight:900;color:#0A2540;margin-bottom:14px">📝 احجز موعدك</h3>
+          <div data-booking-result></div>
+          ${bookingFormHTML()}
+          <div class="v1-sec-title" style="margin-top:22px">📍 موقعك الحالي</div>
+          <div class="v1-map-box" id="v1-map"></div>
+        </section>
+        <section class="v1-page" data-v1-page="orders">
+          <h3 style="font-size:19px;font-weight:900;color:#0A2540;margin-bottom:14px">📋 إدارة الطلبات</h3>
+          <div>${ordersHTML()}</div>
+        </section>
+        <section class="v1-page" data-v1-page="bikes">
+          <h3 style="font-size:19px;font-weight:900;color:#0A2540;margin-bottom:14px">🏍️ إدارة الدبابات</h3>
+          <div>${bikesHTML()}</div>
+        </section>
+        <section class="v1-page" data-v1-page="contact">
+          <h3 style="font-size:19px;font-weight:900;color:#0A2540;margin-bottom:14px">📞 تواصل معنا</h3>
+          <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:16px">
+            <a href="tel:${OFFICIAL_PHONE_RAW}" class="v1-svc"><div class="icon-box">📞</div><div class="info"><b>اتصال مباشر</b><span dir="ltr">${OFFICIAL_PHONE}</span></div></a>
+            <a href="${WHATSAPP}" target="_blank" class="v1-svc"><div class="icon-box">💬</div><div class="info"><b>واتساب</b><span dir="ltr">+966500079374</span></div></a>
+          </div>
+          ${contactFormHTML()}
+        </section>
+        <section class="v1-page" data-v1-page="rating">
+          <h3 style="font-size:19px;font-weight:900;color:#0A2540;margin-bottom:14px">⭐ قيّم تجربتك</h3>
+          ${ratingHTML()}
+        </section>
+      </main>
+      <nav class="v1-bottom-nav">
+        <button class="v1-bnav active" data-v1-go="home"><span class="bico">🏠</span>الرئيسية</button>
+        <button class="v1-bnav" data-v1-go="booking"><span class="bico">📅</span>الحجز</button>
+        <button class="v1-bnav" data-v1-go="orders"><span class="bico">📋</span>الطلبات</button>
+        <button class="v1-bnav" data-v1-go="bikes"><span class="bico">🏍️</span>الدبابات</button>
+        <button class="v1-bnav" data-v1-go="contact"><span class="bico">📞</span>تواصل</button>
+      </nav>
+    </div>
+  </div>`;
+}
+
+/* ================================================================
+   التصميم 2: الفخم الوطني
+   ================================================================ */
+function renderV2(){
+  return `
+  <div class="v2-root">
+    <div class="v2-topbar">
+      <div class="wrap">
+        <div class="tb"><span class="dot"></span> نخدم جميع أحياء الرياض — 4 العصر إلى 11 الليل</div>
+        <div class="tb">📞 <a href="tel:${OFFICIAL_PHONE_RAW}" dir="ltr">${OFFICIAL_PHONE}</a></div>
+      </div>
+    </div>
+    <header class="v2-header">
+      <div class="v2-nav">
+        <div class="v2-brand">
+          <svg viewBox="0 0 48 48"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1E6FD9"/><stop offset=".6" stop-color="#0B3D91"/><stop offset="1" stop-color="#12855A"/></linearGradient></defs><circle cx="24" cy="24" r="23" fill="url(#lg2)"/><path d="M24 9c0 0 8.5 10.6 8.5 16.6A8.5 8.5 0 0 1 15.5 25.6C15.5 19.6 24 9 24 9Z" fill="#fff"/><path d="M20.6 25.4h6.8l-1.5 4.4h2.3l-5.4 6.4 1.2-4.4h-2.2z" fill="#0B3D91"/></svg>
+          <div class="v2-brand-text"><b>TurboWash</b><span>MOBILE · الرياض</span></div>
+        </div>
+        <nav class="v2-menu">
+          <a data-v2-go="home" class="active">الرئيسية</a>
+          <a data-v2-go="booking">الحجز</a>
+          <a data-v2-go="orders">الطلبات</a>
+          <a data-v2-go="bikes">الدبابات</a>
+          <a data-v2-go="rating">التقييم</a>
+          <a data-v2-go="contact">تواصل</a>
+        </nav>
+        <div class="v2-actions">
+          <a class="btn btn-wa btn-sm" href="${WHATSAPP}" target="_blank">واتساب</a>
+          <a class="btn btn-primary btn-sm" href="tel:${OFFICIAL_PHONE_RAW}">📞 اتصال</a>
+        </div>
+      </div>
+    </header>
+    <main data-v2-content></main>
+    <footer class="v2-footer">
+      <div class="v2-wrap">
+        <div class="v2-foot-grid">
+          <div>
+            <h4>TurboWash Mobile</h4>
+            <p style="font-size:14px">خدمة غسيل سيارات متنقّل فاخرة تصل إلى موقعك في جميع أحياء الرياض.</p>
+          </div>
+          <div><h4>روابط</h4><a data-v2-go="home">الرئيسية</a><a data-v2-go="booking">الحجز</a><a data-v2-go="bikes">الدبابات</a></div>
+          <div><h4>تواصل</h4><a href="tel:${OFFICIAL_PHONE_RAW}" dir="ltr">${OFFICIAL_PHONE}</a><a href="${WHATSAPP}" target="_blank">واتساب</a></div>
+        </div>
+        <div style="margin-top:30px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);text-align:center;font-size:13px">© 2026 TurboWash — صُنع في السعودية 🇸🇦</div>
+      </div>
+    </footer>
+  </div>`;
+}
+
+function v2Home(){
+  return `
+  <section class="v2-hero">
+    ${skyline()}
+    <div class="wrap">
+      <div class="v2-hero-grid">
+        <div>
+          <div class="v2-eyebrow"><span class="star">★</span> خدمة غسيل متنقّل فاخرة · الرياض</div>
+          <h1>سيارتك نظيفة <em>بدون ما تتحرك</em></h1>
+          <p class="lead">نجيك بموقعك في أي حي داخل الرياض بدبابات مجهّزة بالكامل.</p>
+          <div class="v2-cta">
+            <a class="btn btn-primary" data-v2-go="booking">احجز الآن</a>
+            <a class="btn btn-wa" href="${WHATSAPP}" target="_blank">واتساب</a>
+          </div>
+          <div class="v2-stats">
+            <div class="st"><b>+1200</b><span>سيارة</span></div>
+            <div class="st"><b>3</b><span>دبابات</span></div>
+            <div class="st"><b>4.9</b><span>تقييم</span></div>
+            <div class="st"><b>45د</b><span>وصول</span></div>
+          </div>
+        </div>
+        <div style="position:relative;display:flex;justify-content:center">
+          <div style="position:absolute;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(31,181,116,.35),transparent 68%);filter:blur(12px)"></div>
+          <div style="position:relative;z-index:2;filter:drop-shadow(0 26px 44px rgba(0,0,0,.45))">${bikeSVG('#F5B301','#141414','v2hero',1.05)}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="v2-block" style="background:#fff">
+    <div class="v2-wrap">
+      <div class="v2-sec-head"><span class="v2-tag">خدماتنا</span><h2>اختر الخدمة المناسبة</h2><p>أسعار واضحة وشفافة.</p></div>
+      <div class="v2-grid v2-g4">
+        ${SERVICES.map(s => `
+          <div class="v2-card">
+            <div class="ico">${s.icon}</div>
+            <h3>${s.name}</h3>
+            <p>${s.desc}</p>
+            <div class="v2-price">${s.price}<small>ريال</small></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  </section>
+  <section class="v2-block">
+    <div class="v2-wrap">
+      <div class="v2-sec-head"><span class="v2-tag">العروض</span><h2>عروض الأسبوع 🔥</h2></div>
+      <div class="v2-grid v2-g2">
+        ${OFFERS.map(o => `
+          <div class="v2-offer ${o.green?'green':''}">
+            <h3>${o.title}</h3>
+            <p>${o.text}</p>
+            <div class="prices"><span class="old">${o.old} ريال</span><span class="new">${o.now} ريال</span></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  </section>
+  <section class="v2-block" style="background:#fff">
+    <div class="v2-wrap">
+      <div class="v2-sec-head"><span class="v2-tag">الأسطول</span><h2>دباباتنا الثلاث</h2></div>
+      <div class="v2-grid v2-g3">${bikesHTML()}</div>
+    </div>
+  </section>`;
+}
+
+function v2Booking(){
+  return `
+  <section class="v2-block">
+    <div class="v2-wrap" style="max-width:880px">
+      <div class="v2-sec-head"><span class="v2-tag">الحجز</span><h2>احجز موعدك</h2></div>
+      <div data-booking-result></div>
+      <div style="background:#fff;border-radius:18px;padding:30px;box-shadow:0 18px 40px rgba(10,37,64,.12);border:1px solid #DCE6F2">
+        ${bookingFormHTML().replace('class="v1-form-card"','style="background:transparent;padding:0;box-shadow:none;border:none"')}
+      </div>
+    </div>
+  </section>`;
+}
+
+function v2Orders(){
+  return `
+  <section class="v2-block">
+    <div class="v2-wrap">
+      <div class="v2-sec-head"><span class="v2-tag">لوحة التحكم</span><h2>إدارة الطلبات</h2></div>
+      <div>${ordersHTML()}</div>
+    </div>
+  </section>`;
+}
+
+function v2Bikes(){
+  return `
+  <section class="v2-block">
+    <div class="v2-wrap">
+      <div class="v2-sec-head"><span class="v2-tag">الأسطول</span><h2>إدارة الدبابات</h2></div>
+      <div>${bikesHTML()}</div>
+    </div>
+  </section>`;
+}
+
+function v2Contact(){
+  return `
+  <section class="v2-block">
+    <div class="v2-wrap" style="max-width:980px">
+      <div class="v2-sec-head"><span class="v2-tag">تواصل</span><h2>نحن في خدمتك</h2></div>
+      <div class="v2-grid v2-g3" style="margin-bottom:30px">
+        <div class="v2-card" style="text-align:center">
+          <div class="ico" style="margin-inline:auto">📞</div><h3>اتصال</h3>
+          <p dir="ltr" style="font-weight:700;color:#0B3D91">${OFFICIAL_PHONE}</p>
+          <a class="btn btn-primary btn-sm btn-block" style="margin-top:14px" href="tel:${OFFICIAL_PHONE_RAW}">اتصل</a>
+        </div>
+        <div class="v2-card" style="text-align:center">
+          <div class="ico" style="margin-inline:auto">💬</div><h3>واتساب</h3>
+          <p dir="ltr" style="font-weight:700;color:#12855A">+966500079374</p>
+          <a class="btn btn-wa btn-sm btn-block" style="margin-top:14px" href="${WHATSAPP}" target="_blank">افتح</a>
+        </div>
+        <div class="v2-card" style="text-align:center">
+          <div class="ico" style="margin-inline:auto">🕐</div><h3>الأوقات</h3>
+          <p style="font-weight:700;color:#0B3D91">4 العصر — 11 الليل</p>
+        </div>
+      </div>
+      <div style="background:#fff;border-radius:18px;padding:30px;box-shadow:0 18px 40px rgba(10,37,64,.12);border:1px solid #DCE6F2">
+        ${contactFormHTML().replace('class="v1-form-card"','style="background:transparent;padding:0;box-shadow:none;border:none"')}
+      </div>
+    </div>
+  </section>`;
+}
+
+function v2Rating(){
+  return `
+  <section class="v2-block">
+    <div class="v2-wrap" style="max-width:760px">
+      <div class="v2-sec-head"><span class="v2-tag">التقييم</span><h2>قيّم تجربتك</h2></div>
+      ${ratingHTML().replace('class="v1-form-card"','style="background:#fff;border-radius:18px;padding:30px;box-shadow:0 18px 40px rgba(10,37,64,.12);border:1px solid #DCE6F2"')}
+    </div>
+  </section>`;
+}
+
+/* ================================================================
+   التصميم 3: العصري الداكن
+   ================================================================ */
+function renderV3(){
+  return `
+  <div class="v3-root">
+    <div class="v3-ticker">
+      <div class="v3-ticker-inner">
+        <span>⚡ غسيل سيارات في موقعك</span>
+        <span>🔥 عرض الأسبوع: شامل 35 ريال</span>
+        <span>🚿 وصول خلال 45 دقيقة</span>
+        <span>💎 +1200 سيارة تم غسلها</span>
+        <span>⚡ غسيل سيارات في موقعك</span>
+        <span>🔥 عرض الأسبوع: شامل 35 ريال</span>
+        <span>🚿 وصول خلال 45 دقيقة</span>
+        <span>💎 +1200 سيارة تم غسلها</span>
+      </div>
+    </div>
+    <header class="v3-header">
+      <div class="v3-nav">
+        <div class="v3-brand">
+          <div class="logo">T</div>
+          <div><b>TurboWash</b><span>MOBILE · الرياض</span></div>
+        </div>
+        <nav class="v3-menu">
+          <a data-v3-go="home" class="active">الرئيسية</a>
+          <a data-v3-go="booking">الحجز</a>
+          <a data-v3-go="orders">الطلبات</a>
+          <a data-v3-go="bikes">الدبابات</a>
+          <a data-v3-go="contact">تواصل</a>
+        </nav>
+        <div class="v3-actions">
+          <a class="btn btn-sm v3-btn-primary" href="${WHATSAPP}" target="_blank">واتساب</a>
+        </div>
+      </div>
+    </header>
+    <main data-v3-content></main>
+  </div>`;
+}
+
+function v3Home(){
+  return `
+  <section class="v3-hero">
+    <div class="v3-hero-grid">
+      <div>
+        <div class="v3-badge"><span class="dot-live"></span> متاح الآن — 3 دبابات</div>
+        <h1>غسيل <em>احترافي</em> يوصلك في مكانك</h1>
+        <p class="lead">تجربة عصرية لخدمة غسيل السيارات في الرياض. تتبع مباشر، دفع إلكتروني، ونتائج مبهرة.</p>
+        <div class="v3-cta">
+          <a class="btn v3-btn-primary" data-v3-go="booking">🚀 احجز الآن</a>
+          <a class="btn btn-ghost" style="background:transparent;color:#E2E8F0;border-color:rgba(6,182,212,.4)" href="${WHATSAPP}" target="_blank">💬 واتساب</a>
+        </div>
+        <div class="v3-stats">
+          <div class="st"><b>+1200</b><span>سيارة</span></div>
+          <div class="st"><b>4.9</b><span>تقييم</span></div>
+          <div class="st"><b>45د</b><span>وصول</span></div>
+        </div>
+      </div>
+      <div class="v3-hero-art">
+        ${bikeSVG('#06B6D4','#8B5CF6','v3hero',1)}
+      </div>
+    </div>
+  </section>
+  <section class="v3-block">
+    <div class="v3-wrap">
+      <div class="v3-sec-head"><h2>خدماتنا</h2><p>أسعار شفافة بدون رسوم خفية</p></div>
+      <div class="v3-grid v3-g4">
+        ${SERVICES.map(s => `
+          <div class="v3-card">
+            <div class="ico">${s.icon}</div>
+            <h3>${s.name}</h3>
+            <p>${s.desc}</p>
+            <div class="v3-price">${s.price}<small>ريال</small></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  </section>
+  <section class="v3-block">
+    <div class="v3-wrap">
+      <div class="v3-sec-head"><h2>عروض الأسبوع 🔥</h2></div>
+      <div class="v3-grid v3-g2">
+        ${OFFERS.map(o => `
+          <div class="v3-offer">
+            <h3 style="font-size:22px;font-weight:900;position:relative">${o.title}</h3>
+            <p style="margin-top:8px;color:#94A3B8;position:relative">${o.text}</p>
+            <div class="prices"><span class="old">${o.old} ريال</span><span class="new">${o.now}</span><small style="color:#64748B;font-size:13px;margin-right:6px">ريال</small></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  </section>
+  <section class="v3-block">
+    <div class="v3-wrap">
+      <div class="v3-sec-head"><h2>أسطول الدبابات</h2></div>
+      <div class="v3-grid v3-g3">${bikesHTML()}</div>
+    </div>
+  </section>`;
+}
+
+function v3Booking(){
+  return `
+  <section class="v3-block">
+    <div class="v3-wrap" style="max-width:880px">
+      <div class="v3-sec-head"><h2>احجز موعدك</h2></div>
+      <div data-booking-result></div>
+      <div style="background:rgba(15,23,42,.7);border:1px solid rgba(6,182,212,.3);border-radius:18px;padding:30px">
+        ${bookingFormHTML().replace('class="v1-form-card"','style="background:transparent;padding:0;box-shadow:none;border:none;color:#E2E8F0"')}
+      </div>
+    </div>
+  </section>`;
+}
+
+function v3Orders(){
+  return `
+  <section class="v3-block">
+    <div class="v3-wrap">
+      <div class="v3-sec-head"><h2>إدارة الطلبات</h2></div>
+      <div>${ordersHTML()}</div>
+    </div>
+  </section>`;
+}
+
+function v3Bikes(){
+  return `
+  <section class="v3-block">
+    <div class="v3-wrap">
+      <div class="v3-sec-head"><h2>إدارة الدبابات</h2></div>
+      <div>${bikesHTML()}</div>
+    </div>
+  </section>`;
+}
+
+function v3Contact(){
+  return `
+  <section class="v3-block">
+    <div class="v3-wrap" style="max-width:980px">
+      <div class="v3-sec-head"><h2>تواصل معنا</h2></div>
+      <div class="v3-grid v3-g3" style="margin-bottom:30px">
+        <a href="tel:${OFFICIAL_PHONE_RAW}" class="v3-card" style="text-decoration:none">
+          <div class="ico">📞</div><h3>اتصال</h3><p style="color:#06B6D4;font-weight:700" dir="ltr">${OFFICIAL_PHONE}</p>
+        </a>
+        <a href="${WHATSAPP}" target="_blank" class="v3-card" style="text-decoration:none">
+          <div class="ico">💬</div><h3>واتساب</h3><p style="color:#06B6D4;font-weight:700" dir="ltr">+966500079374</p>
+        </a>
+        <div class="v3-card">
+          <div class="ico">🕐</div><h3>الأوقات</h3><p style="color:#06B6D4;font-weight:700">4 العصر — 11 الليل</p>
+        </div>
+      </div>
+      <div style="background:rgba(15,23,42,.7);border:1px solid rgba(6,182,212,.3);border-radius:18px;padding:30px">
+        ${contactFormHTML().replace('class="v1-form-card"','style="background:transparent;padding:0;box-shadow:none;border:none;color:#E2E8F0"')}
+      </div>
+    </div>
+  </section>`;
+}
+
+/* ================================================================
+   التصميم 4: الإعلاني المميز
+   ================================================================ */
+function renderV4(){
+  return `
+  <div class="v4-root">
+    <div class="v4-banner">
+      <span class="v4-countdown">🔥 ينتهي العرض خلال <b id="v4Countdown">03:00:00</b></span>
+      عرض الأسبوع: غسيل شامل بـ 35 ريال بدل 40!
+    </div>
+    <header class="v4-header">
+      <div class="v4-nav">
+        <div class="v4-brand">
+          <div class="logo">T</div>
+          <div><b>TurboWash</b><span>MOBILE · الرياض</span></div>
+        </div>
+        <nav class="v4-menu">
+          <a data-v4-go="home" class="active">الرئيسية</a>
+          <a data-v4-go="booking">الحجز</a>
+          <a data-v4-go="orders">الطلبات</a>
+          <a data-v4-go="bikes">الدبابات</a>
+          <a data-v4-go="contact">تواصل</a>
+        </nav>
+        <div class="v4-actions">
+          <a class="btn btn-orange btn-sm" href="${WHATSAPP}" target="_blank">🔥 احجز الآن</a>
+        </div>
+      </div>
+    </header>
+    <main data-v4-content></main>
+    <div class="v4-slider">
+      <div class="v4-slider-inner">
+        <span class="v4-slide"><span class="dot-sl"></span> 🎉 عرض الأسبوع: شامل 35 ريال</span>
+        <span class="v4-slide"><span class="dot-sl"></span> 💎 اشتراك شهري: 4 غسلات بـ 70</span>
+        <span class="v4-slide"><span class="dot-sl"></span> ⚡ وصول خلال 45 دقيقة</span>
+        <span class="v4-slide"><span class="dot-sl"></span> 🎁 نقاط ولاء على كل غسلة</span>
+        <span class="v4-slide"><span class="dot-sl"></span> 🎉 عرض الأسبوع: شامل 35 ريال</span>
+        <span class="v4-slide"><span class="dot-sl"></span> 💎 اشتراك شهري: 4 غسلات بـ 70</span>
+        <span class="v4-slide"><span class="dot-sl"></span> ⚡ وصول خلال 45 دقيقة</span>
+        <span class="v4-slide"><span class="dot-sl"></span> 🎁 نقاط ولاء على كل غسلة</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function v4Home(){
+  return `
+  <section class="v4-hero-promo">
+    <div class="v4-hero-grid">
+      <div>
+        <h1>وفّر أكثر مع <em>عروض TurboWash</em></h1>
+        <p class="lead">عرض الأسبوع: غسيل شامل بـ 35 ريال بدل 40. واحصل على نقاط ولاء مع كل غسلة!</p>
+        <div class="v4-cta">
+          <a class="btn btn-orange" data-v4-go="booking">🔥 احجز الآن</a>
+          <a class="btn btn-ghost" href="${WHATSAPP}" target="_blank">💬 واتساب</a>
+        </div>
+      </div>
+      <div class="v4-big-price">
+        <div class="lbl">🎉 عرض الأسبوع</div>
+        <div class="num">35<small>ريال</small></div>
+        <div class="old">40 ريال</div>
+        <div class="save">وفّر 5 ريال</div>
+      </div>
+    </div>
+  </section>
+  <section class="v4-block">
+    <div class="v4-wrap">
+      <div class="v4-sec-head"><span class="tag">خدماتنا</span><h2>اختر الخدمة</h2></div>
+      <div class="v4-grid v4-g4">
+        ${SERVICES.map((s,i) => `
+          <div class="v4-card ${i===2?'hot':''}">
+            <div class="ico">${s.icon}</div>
+            <h3>${s.name}</h3>
+            <p>${s.desc}</p>
+            <div class="v4-price">${s.price}<small>ريال</small></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  </section>
+  <section class="v4-block" style="background:#FFF8F0">
+    <div class="v4-wrap">
+      <div class="v4-loyalty">
+        <div>
+          <h3>🎁 نظام نقاط الولاء</h3>
+          <p>كل غسلة تمنحك نقاطاً، والنقاط تتحول إلى غسلات مجانية!</p>
+          <div class="v4-points">
+            <div class="v4-point"><div class="n">+10</div><div class="l">نقاط/غسلة</div></div>
+            <div class="v4-point"><div class="n">100</div><div class="l">غسلة مجانية</div></div>
+            <div class="v4-point"><div class="n">3x</div><div class="l">نقاط مضاعفة</div></div>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:80px">🏆</div>
+          <p style="color:#F97316;font-weight:900;font-size:18px;margin-top:10px">كن عميلنا الذهبي!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="v4-block">
+    <div class="v4-wrap">
+      <div class="v4-sec-head"><span class="tag">الأسطول</span><h2>دباباتنا</h2></div>
+      <div class="v4-grid v4-g3">${bikesHTML()}</div>
+    </div>
+  </section>`;
+}
+
+function v4Booking(){
+  return `
+  <section class="v4-block">
+    <div class="v4-wrap" style="max-width:880px">
+      <div class="v4-sec-head"><span class="tag">الحجز</span><h2>احجز موعدك</h2></div>
+      <div data-booking-result></div>
+      <div class="v4-form-card">
+        <div class="v4-progress"><div class="v4-progress-bar" data-progress></div></div>
+        <p style="font-size:12px;color:#F97316;font-weight:700;margin-bottom:14px" data-progress-label>الخطوة 1 من 4</p>
+        ${bookingFormHTML().replace('class="v1-form-card"','style="background:transparent;padding:0;box-shadow:none;border:none"')}
+      </div>
+    </div>
+  </section>`;
+}
+
+function v4Orders(){
+  return `
+  <section class="v4-block">
+    <div class="v4-wrap">
+      <div class="v4-sec-head"><span class="tag">لوحة التحكم</span><h2>إدارة الطلبات</h2></div>
+      <div>${ordersHTML()}</div>
+    </div>
+  </section>`;
+}
+
+function v4Bikes(){
+  return `
+  <section class="v4-block">
+    <div class="v4-wrap">
+      <div class="v4-sec-head"><span class="tag">الأسطول</span><h2>إدارة الدبابات</h2></div>
+      <div>${bikesHTML()}</div>
+    </div>
+  </section>`;
+}
+
+function v4Contact(){
+  return `
+  <section class="v4-block">
+    <div class="v4-wrap" style="max-width:980px">
+      <div class="v4-sec-head"><span class="tag">تواصل</span><h2>نحن في خدمتك</h2></div>
+      <div class="v4-grid v4-g3" style="margin-bottom:30px">
+        <a href="tel:${OFFICIAL_PHONE_RAW}" class="v4-card" style="text-decoration:none">
+          <div class="ico">📞</div><h3>اتصال</h3><p style="color:#F97316;font-weight:700" dir="ltr">${OFFICIAL_PHONE}</p>
+        </a>
+        <a href="${WHATSAPP}" target="_blank" class="v4-card" style="text-decoration:none">
+          <div class="ico">💬</div><h3>واتساب</h3><p style="color:#F97316;font-weight:700" dir="ltr">+966500079374</p>
+        </a>
+        <div class="v4-card">
+          <div class="ico">🕐</div><h3>الأوقات</h3><p style="color:#F97316;font-weight:700">4 العصر — 11 الليل</p>
+        </div>
+      </div>
+      <div class="v4-form-card">
+        ${contactFormHTML().replace('class="v1-form-card"','style="background:transparent;padding:0;box-shadow:none;border:none"')}
+      </div>
+    </div>
+  </section>`;
+}
+
+/* ================================================================
+   مُشغِّل التصاميم (Switcher)
+   ================================================================ */
+function renderVersion(){
+  const v = state.version;
+  const root = $('#appRoot');
+  const switcher = $('#versionSwitcher');
+  switcher.className = 'v' + v;
+  $('#vNum').textContent = v;
+  $('#vCurrent').textContent = v;
+  const ind = $('#vIndicator');
+  const icons = { 1:'📱', 2:'✨', 3:'🌙', 4:'🔥' };
+  const names = { 1:'التطبيقي', 2:'الفخم', 3:'العصري', 4:'الإعلاني' };
+  ind.querySelector('.ic').textContent = icons[v];
+  ind.querySelector('span:last-child').innerHTML = `التصميم <span id="vCurrent">${v}</span> من 4 · ${names[v]}`;
+
+  if(v === 1) root.innerHTML = renderV1(), initV1();
+  else if(v === 2) root.innerHTML = renderV2(), initV2();
+  else if(v === 3) root.innerHTML = renderV3(), initV3();
+  else if(v === 4) root.innerHTML = renderV4(), initV4();
+}
+
+function goV(n){
+  state.version = n;
+  save.version();
+  renderVersion();
+  window.scrollTo(0,0);
+}
+
+$('#vNext').addEventListener('click', () => goV(state.version === 4 ? 1 : state.version + 1));
+$('#vPrev').addEventListener('click', () => goV(state.version === 1 ? 4 : state.version - 1));
+
+/* ================================================================
+   تفعيل كل تصميم
+   ================================================================ */
+function initV1(){
+  // التنقل بين الصفحات الداخلية
+  const go = (p) => {
+    $$('[data-v1-page]').forEach(x => x.classList.toggle('active', x.dataset.v1Page === p));
+    $$('.v1-bnav').forEach(b => b.classList.toggle('active', b.dataset.v1Go === p));
+  };
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-v1-go]');
+    if(b){ go(b.dataset.v1Go); }
+  });
+  // خريطة
+  setTimeout(() => {
+    try{
+      const m = L.map('v1-map', { zoomControl:false, attributionControl:false }).setView([24.7136,46.6753],11);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(m);
+      L.circle([24.7136,46.6753], { radius:9000, color:'#1E6FD9', fillColor:'#1E6FD9', fillOpacity:.12, weight:2 }).addTo(m);
+    }catch(e){}
+  }, 150);
+}
+
+function initV2(){
+  const go = (p) => {
+    const c = $('[data-v2-content]');
+    c.innerHTML = p === 'home' ? v2Home() : p === 'booking' ? v2Booking() : p === 'orders' ? v2Orders() : p === 'bikes' ? v2Bikes() : p === 'contact' ? v2Contact() : v2Rating();
+    $$('.v2-menu a').forEach(a => a.classList.toggle('active', a.dataset.v2Go === p));
+    window.scrollTo(0,0);
+  };
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-v2-go]');
+    if(b){ e.preventDefault(); go(b.dataset.v2Go); }
+  });
+  go('home');
+}
+
+function initV3(){
+  const go = (p) => {
+    const c = $('[data-v3-content]');
+    c.innerHTML = p === 'home' ? v3Home() : p === 'booking' ? v3Booking() : p === 'orders' ? v3Orders() : p === 'bikes' ? v3Bikes() : v3Contact();
+    $$('.v3-menu a').forEach(a => a.classList.toggle('active', a.dataset.v3Go === p));
+    window.scrollTo(0,0);
+  };
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-v3-go]');
+    if(b){ e.preventDefault(); go(b.dataset.v3Go); }
+  });
+  go('home');
+}
+
+function initV4(){
+  const go = (p) => {
+    const c = $('[data-v4-content]');
+    c.innerHTML = p === 'home' ? v4Home() : p === 'booking' ? v4Booking() : p === 'orders' ? v4Orders() : p === 'bikes' ? v4Bikes() : v4Contact();
+    $$('.v4-menu a').forEach(a => a.classList.toggle('active', a.dataset.v4Go === p));
+    window.scrollTo(0,0);
+  };
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-v4-go]');
+    if(b){ e.preventDefault(); go(b.dataset.v4Go); }
+  });
+  go('home');
+
+  // العد التنازلي
+  clearInterval(window._v4timer);
+  window._v4timer = setInterval(() => {
+    const el = $('#v4Countdown');
+    if(!el){ clearInterval(window._v4timer); return; }
+    const diff = Math.max(0, state.countdownEnd - Date.now());
+    const h = String(Math.floor(diff / 3600000)).padStart(2,'0');
+    const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
+    const s = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
+    el.textContent = `${h}:${m}:${s}`;
+  }, 1000);
+}
+
+/* ================================================================
+   الأحداث المشتركة (تعمل في كل التصاميم)
+   ================================================================ */
+document.addEventListener('click', e => {
+  // خدمة
+  const svc = e.target.closest('[data-service]');
+  if(svc){
+    sessionStorage.setItem('tw_preselect', svc.dataset.service);
+    toast('تم اختيار الخدمة ✅', 'ok');
+    // انتقل لصفحة الحجز حسب التصميم الحالي
+    const v = state.version;
+    if(v === 1) $$('[data-v1-go]').forEach(b => b.dataset.v1Go === 'booking' && b.click());
+    else if(v === 2) { const b = document.querySelector('[data-v2-go="booking"]'); b && b.click(); }
+    else if(v === 3) { const b = document.querySelector('[data-v3-go="booking"]'); b && b.click(); }
+    else if(v === 4) { const b = document.querySelector('[data-v4-go="booking"]'); b && b.click(); }
+    return;
+  }
+  // إرسال طلب دباب
+  const send = e.target.closest('[data-send]');
+  if(send){
+    toast('تم اختيار الدباب ✅', 'ok');
+    const v = state.version;
+    if(v === 1) $$('[data-v1-go]').forEach(b => b.dataset.v1Go === 'booking' && b.click());
+    else if(v === 2) { const b = document.querySelector('[data-v2-go="booking"]'); b && b.click(); }
+    else if(v === 3) { const b = document.querySelector('[data-v3-go="booking"]'); b && b.click(); }
+    else if(v === 4) { const b = document.querySelector('[data-v4-go="booking"]'); b && b.click(); }
+    return;
+  }
+  // تبديل حالة دباب
+  const tog = e.target.closest('[data-toggle]');
+  if(tog){
+    const b = state.bikes.find(x => x.id === Number(tog.dataset.toggle));
+    b.status = b.status === 'available' ? 'busy' : 'available';
+    save.bikes();
+    toast(`${b.name} → ${b.status === 'available' ? 'متاح' : 'مشغول'}`, 'ok');
+    // أعد رسم التصميم الحالي
+    renderVersion();
+    return;
+  }
+  // بدء غسيل
+  const st = e.target.closest('[data-start]');
+  if(st){
+    const o = state.orders.find(x => x.id === st.dataset.start);
+    o.status = 'washing'; save.orders();
+    toast('بدأ التنفيذ 🚿', 'ok');
+    renderVersion();
+    return;
+  }
+  // تم التسليم
+  const dn = e.target.closest('[data-done]');
+  if(dn){
+    const o = state.orders.find(x => x.id === dn.dataset.done);
+    o.status = 'done'; save.orders();
+    toast('تم التسليم ✅', 'ok');
+    renderVersion();
+    return;
+  }
+  // نجوم التقييم
+  const st2 = e.target.closest('[data-star]');
+  if(st2){
+    state.ratingValue = Number(st2.dataset.star);
+    const box = st2.closest('[data-rating-box]');
+    box.querySelectorAll('[data-star]').forEach(s => {
+      const on = Number(s.dataset.star) <= state.ratingValue;
+      s.style.color = on ? '#D4AF37' : '#D8E2EF';
+      s.style.transform = on ? 'scale(1.1)' : 'scale(1)';
+    });
+    const labels = { 1:'ضعيف', 2:'مقبول', 3:'جيد', 4:'جيد جداً', 5:'ممتاز ⭐' };
+    box.querySelector('[data-rating-label]').textContent = labels[state.ratingValue];
+    return;
+  }
+});
+
+// تقديم النماذج
+document.addEventListener('submit', e => {
+  const f = e.target;
+
+  if(f.matches('[data-booking-form]')){
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(f).entries());
+    if(!d.name || !d.phone || !d.location || !d.car || !d.time){ toast('يرجى تعبئة الحقول', 'err'); return; }
+    if(!/^0?5\d{8}$/.test(d.phone.replace(/\s|-/g,''))){ toast('رقم الجوال غير صحيح', 'err'); return; }
+    const svc = SERVICES.find(s => s.id === d.service) || SERVICES[0];
+    let bike = state.bikes.find(b => b.status === 'available') || state.bikes[0];
+    const order = {
+      id: uid('ORD'), code: uid('TW'),
+      serviceId: svc.id, serviceName: svc.name, price: svc.price,
+      name: d.name.trim(), phone: d.phone.trim(), location: d.location.trim(),
+      car: d.car.trim(), time: d.time, bikeId: bike.id,
+      status: 'paid', createdAt: todayStr()
+    };
+    state.orders.push(order); save.orders();
+    const res = document.querySelector('[data-booking-result]');
+    if(res) res.innerHTML = `
+      <div style="background:#E6F7EF;color:#0B5C3E;border:1px solid #B7E7CE;border-radius:14px;padding:14px 18px;margin-bottom:18px;font-size:13.5px;line-height:1.7">
+        <div style="font-size:16px;font-weight:900;margin-bottom:6px">✅ تم تأكيد حجزك!</div>
+        <div>رقم الحجز: <b>${order.code}</b></div>
+        <div>${esc(order.serviceName)} — ${money(order.price)}</div>
+        <div>الموعد: <b>${order.time}</b> · ${esc(order.location)}</div>
+        <div>الدباب: <b>${esc(bike.name)}</b></div>
+        <a class="btn btn-wa btn-sm" style="margin-top:10px" target="_blank" rel="noopener" href="${WHATSAPP}?text=${encodeURIComponent('مرحباً، حجزي ' + order.code)}">📤 إرسال اللوكيشن واتساب</a>
+      </div>`;
+    f.reset();
+    toast('تم تأكيد الحجز ✅', 'ok');
+    return;
+  }
+
+  if(f.matches('[data-contact-form]')){
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(f).entries());
+    if(!d.name || !d.phone || !d.message){ toast('يرجى تعبئة الحقول', 'err'); return; }
+    state.messages.push({ ...d, at: todayStr() }); save.messages();
+    f.reset();
+    toast('تم إرسال رسالتك ✅', 'ok');
+    return;
+  }
+
+  if(f.matches('[data-rating-form]')){
+    e.preventDefault();
+    if(!state.ratingValue){ toast('اختر تقييمك', 'err'); return; }
+    const d = Object.fromEntries(new FormData(f).entries());
+    state.ratings.push({ value: state.ratingValue, name: d.name || 'عميل', note: d.note || '', at: todayStr() });
+    save.ratings();
+    const box = f.closest('[data-rating-box]');
+    if(box) box.innerHTML = `
+      <div style="text-align:center;padding:20px 10px">
+        <div style="font-size:56px">🎉</div>
+        <h3 style="font-size:22px;font-weight:900;color:#12855A;margin:8px 0">شكراً لك!</h3>
+        <p style="color:#5B6B80">قيّمتنا بـ <b style="color:#D4AF37;font-size:20px">${state.ratingValue}/5</b></p>
+      </div>`;
+    toast('شكراً لتقييمك ⭐', 'ok');
+    return;
+  }
+});
+
+/* ================================================================
+   البوت الذكي (مشترك لكل التصاميم)
+   ================================================================ */
+const BOT = {
+  norm(s){
+    return String(s).replace(/[\u064B-\u0652\u0670\u0640]/g,'')
+      .replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').replace(/ة/g,'ه')
+      .replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
+  },
+  intents: [
+    { key:'sub', words:['اشتراك','شهري','شهريه'], reply:'📅 الاشتراك الشهري:\n4 غسلات بـ 80 ريال خلال الشهر — يشمل غسيل شامل.' },
+    { key:'offer', words:['عرض','عروض','خصم','تخفيض','اوفر'], reply:'🔥 عرض الأسبوع:\nغسيل شامل بـ 35 ريال بدل 40.\n\n+ اشتراك شهري: 4 غسلات بـ 70.' },
+    { key:'book', words:['احجز','حجز','موعد','كيف احجز'], reply:'📝 الحجز عبر الصفحة الرسمية.\nأو أرسل لنا: ' + OFFICIAL_PHONE },
+    { key:'sendLoc', words:['ارسل الموقع','اللوكيشن','لوكيشن'], reply:'📍 أرسل اللوكيشن عبر واتساب:\n' + WHATSAPP },
+    { key:'svc', words:['خدمات','خدمه','وش تسوون'], reply:'🚿 خدماتنا:\n• خارجي — 20\n• داخلي — 25\n• شامل — 40\n• اشتراك شهري — 80' },
+    { key:'hours', words:['وقت','اوقات','متى','تفتحون'], reply:'🕓 أوقات العمل:\nمن 4 العصر إلى 11 الليل.' },
+    { key:'loc', words:['موقع','وين انتم','مكان','احياء'], reply:'🏙️ نخدم جميع أحياء الرياض.' },
+    { key:'contact', words:['تواصل','رقم','جوال','اتصال','واتساب'], reply:'📞 ' + OFFICIAL_PHONE + '\n\nواتساب:\n' + WHATSAPP },
+    { key:'rate', words:['تقييم','قيم','راي','نجوم'], reply:'⭐ أرسل تقييمك من 1 إلى 5.' },
+    { key:'price', words:['سعر','اسعار','كم','بكم','تكلفه'], reply:'💰 أسعارنا:\n• خارجي: 20\n• داخلي: 25\n• شامل: 40\n• اشتراك شهري: 80' },
+    { key:'greet', words:['سلام','هلا','مرحبا','السلام','هاي','صباح','مساء'], reply:'وعليكم السلام 🌿\nأنا مساعد TurboWash. كيف أساعدك؟' }
+  ],
+  match(text){
+    const n = this.norm(text);
+    if(!n) return null;
+    for(const it of this.intents){
+      for(const w of it.words){ if(n.includes(this.norm(w))) return it; }
+    }
+    return null;
+  },
+  fallback(){ return 'ما فهمت سؤالك 🤔\nجرّب: الأسعار، الخدمات، العروض، الحجز، أوقات العمل.\nأو تواصل: ' + OFFICIAL_PHONE; }
+};
+
+const botPanel = $('#botPanel'), botMsgs = $('#botMsgs');
+const QUICK = ['كم الأسعار؟','وش الخدمات؟','وش العروض؟','كيف أحجز؟','أوقات العمل'];
+
+$('#botQuick').innerHTML = QUICK.map(q => `<button class="chip" data-q="${q}">${q}</button>`).join('');
+
+function botPush(text, who='bot'){
+  const el = document.createElement('div');
+  el.className = 'msg ' + who;
+  el.textContent = text;
+  botMsgs.appendChild(el);
+  botMsgs.scrollTop = botMsgs.scrollHeight;
+}
+function botTyping(on){
+  let el = $('#botTyping');
+  if(on){
+    if(el) return;
+    el = document.createElement('div');
+    el.id = 'botTyping';
+    el.className = 'msg bot typing';
+    el.innerHTML = '<i></i><i></i><i></i>';
+    botMsgs.appendChild(el);
+    botMsgs.scrollTop = botMsgs.scrollHeight;
+  } else if(el) el.remove();
+}
+async function botReply(text){
+  const intent = BOT.match(text);
+  botTyping(true);
+  await new Promise(r => setTimeout(r, 450));
+  botTyping(false);
+  botPush(intent ? intent.reply : BOT.fallback(), 'bot');
+}
+function botOpen(){
+  botPanel.classList.add('open');
+  if(!botMsgs.dataset.init){
+    botMsgs.dataset.init = '1';
+    botPush('أهلًا وسهلًا 🌿\nأنا مساعد TurboWash. اسألني عن الأسعار، الخدمات، العروض، أو الحجز.', 'bot');
+  }
+  setTimeout(() => $('#botText').focus(), 220);
+}
+$('#botToggle').addEventListener('click', () => botPanel.classList.contains('open') ? botPanel.classList.remove('open') : botOpen());
+$('#botClose').addEventListener('click', () => botPanel.classList.remove('open'));
+$('#botQuick').addEventListener('click', e => {
+  const c = e.target.closest('[data-q]');
+  if(!c) return;
+  botPush(c.dataset.q, 'user');
+  botReply(c.dataset.q);
+});
+$('#botForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const t = $('#botText').value.trim();
+  if(!t) return;
+  botPush(t, 'user');
+  $('#botText').value = '';
+  botReply(t);
+});
+
+/* ================================================================
+   الإقلاع
+   ================================================================ */
+renderVersion();
+</script>
+</body>
+</html>
