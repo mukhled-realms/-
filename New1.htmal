@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TurboWash Mobile | غسيل سيارات متنقل بالرياض</title>
+    <!-- Google Fonts: Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0A192F;
+            --secondary: #1E3A8A;
+            --gold: #D4AF37;
+            --gold-light: #F3E5AB;
+            --accent: #3B82F6;
+            --bg-light: #F8FAFC;
+            --text-dark: #1E293B;
+            --text-light: #64748B;
+            --white: #FFFFFF;
+            --success: #10B981;
+            --shadow: 0 10px 25px -5px rgba(10, 25, 47, 0.1), 0 8px 10px -6px rgba(10, 25, 47, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: var(--primary);
+            color: var(--gold-light);
+            padding: 8px 5%;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .top-bar a {
+            color: var(--gold-light);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* Header */
+        header {
+            background: rgba(10, 25, 47, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--gold), #aa8c2c);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            color: var(--white);
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 11px;
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), #c5a028);
+            color: var(--primary);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+        }
+
+        .btn-outline:hover {
+            background: var(--gold);
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(10, 25, 47, 0.85), rgba(30, 58, 138, 0.9)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%230A192F' fill-opacity='1' d='M0,192L48,181.3C96,171,192,149,288,154.7C384,160,480,192,576,186.3C672,181,768,139,864,128C960,117,1056,139,1152,149.3C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 90px 5% 70px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-svg-bg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0.15;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h2 {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+
+        .hero h2 span {
+            color: var(--gold);
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #CBD5E1;
+            margin-bottom: 35px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 45px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 20px;
+            border-radius: 16px;
+        }
+
+        .stat-item h3 {
+            font-size: 28px;
+            color: var(--gold);
+            font-weight: 900;
+        }
+
+        .stat-item p {
+            font-size: 14px;
+            color: #E2E8F0;
+            margin: 0;
+        }
+
+        /* Sections General */
+        .section {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 5%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            color: var(--primary);
+            font-weight: 900;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        /* Cards Grids */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -10px rgba(10, 25, 47, 0.15);
+            border-color: rgba(212, 175, 55, 0.4);
+        }
+
+        .badge-popular {
+            position: absolute;
+            top: 15px;
+            left: -30px;
+            background: var(--gold);
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 900;
+            padding: 4px 35px;
+            transform: rotate(-45deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            font-size: 20px;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .card .price {
+            font-size: 26px;
+            color: var(--secondary);
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+
+        .card .price span {
+            font-size: 14px;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        /* How it works */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .step-card {
+            background: var(--white);
+            padding: 30px 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--gold);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            margin: 0 auto 15px;
+        }
+
+        /* CTA Section */
+        .cta-banner {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            color: var(--white);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gold);
+            margin: 60px auto;
+            max-width: 1200px;
+        }
+
+        .cta-banner h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: var(--gold);
+        }
+
+        .cta-banner p {
+            color: #CBD5E1;
+            margin-bottom: 25px;
+            font-size: 18px;
+        }
+
+        /* Views management */
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active-view {
+            display: block;
+        }
+
+        /* Forms Styling */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Order Tables & Stats */
+        .stats-cards-mini {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .mini-stat {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border-right: 4px solid var(--gold);
+        }
+
+        .mini-stat h4 {
+            font-size: 24px;
+            color: var(--primary);
+            font-weight: 900;
+        }
+
+        .mini-stat p {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .table-container {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        th {
+            background: var(--primary);
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .status-pending { background: #FEF3C7; color: #D97706; }
+        .status-progress { background: #DBEAFE; color: #1D4ED8; }
+        .status-done { background: #D1FAE5; color: #047857; }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            padding: 50px 5% 20px;
+            border-top: 3px solid var(--gold);
+            margin-top: 80px;
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-col h4 {
+            color: var(--gold);
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .footer-col p, .footer-col ul {
+            color: #94A3B8;
+            font-size: 14px;
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #94A3B8;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            font-size: 13px;
+            color: #64748B;
+        }
+
+        /* Smart Chatbot Widget */
+        .chatbot-btn {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--gold), #aa8c2c);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+            cursor: pointer;
+            z-index: 9999;
+            transition: var(--transition);
+            font-size: 24px;
+        }
+
+        .chatbot-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 95px;
+            left: 25px;
+            width: 350px;
+            height: 480px;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transform: scale(0);
+            transform-origin: bottom left;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .chatbot-window.open {
+            transform: scale(1);
+        }
+
+        .chat-header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #F8FAFC;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .message.bot {
+            background: var(--white);
+            color: var(--text-dark);
+            align-self: flex-start;
+            border: 1px solid #E2E8F0;
+        }
+
+        .message.user {
+            background: var(--secondary);
+            color: var(--white);
+            align-self: flex-end;
+        }
+
+        .chat-quick-replies {
+            padding: 10px;
+            background: var(--white);
+            border-top: 1px solid #E2E8F0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .quick-btn {
+            background: #EFF6FF;
+            color: var(--secondary);
+            border: 1px solid #BFDBFE;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .quick-btn:hover {
+            background: var(--secondary);
+            color: var(--white);
+        }
+
+        /* Responsive */
+        @media(max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h2 { font-size: 28px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .chatbot-window { width: calc(100% - 50px); left: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <span>🚗 نخدم جميع أحياء الرياض — من 4 العصر إلى 11 الليل</span>
+        <div>جوال: <a href="tel:+966500079374">+966 50 007 9374</a></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="navbar">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0A192F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18 10l-2.7-4.5c-.3-.5-.9-.8-1.5-.8H9.2c-.6 0-1.2.3-1.5.8L5 10l-2.5 1.1C1.7 11.3 1 12.1 1 13v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+                </div>
+                <div class="logo-text">
+                    <h1>TurboWash Mobile</h1>
+                    <span>غسيل سيارات متنقل</span>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a onclick="switchView('home')" class="active" id="nav-home">الرئيسية</a></li>
+                <li><a onclick="switchView('booking')" id="nav-booking">الحجز</a></li>
+                <li><a onclick="switchView('fleet')" id="nav-fleet">الدبابات</a></li>
+                <li><a onclick="switchView('orders')" id="nav-orders">إدارة الطلبات</a></li>
+                <li><a onclick="switchView('rating')" id="nav-rating">التقييم</a></li>
+                <li><a onclick="switchView('contact')" id="nav-contact">تواصل معنا</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="https://wa.me/966500079374" target="_blank" class="btn btn-outline">واتساب</a>
+                <a href="tel:+966500079374" class="btn btn-gold">اتصال</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main>
+
+        <!-- HOME VIEW -->
+        <div id="view-home" class="view-section active-view">
+            <!-- Hero -->
+            <section class="hero">
+                <!-- Skyline SVG Background -->
+                <svg class="hero-svg-bg" viewBox="0 0 1200 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#FFFFFF" d="M0,300 L0,220 L30,220 L30,180 L45,180 L45,220 L70,220 L70,120 L85,120 L85,100 L95,100 L95,120 L110,120 L110,220 L150,220 L150,80 L165,50 L180,80 L180,220 L240,220 L240,150 L270,150 L270,220 L350,220 L350,110 L370,80 L390,110 L390,220 L480,220 L480,70 L500,40 L520,70 L520,220 L620,220 L620,130 L650,130 L650,220 L750,220 L750,90 L770,60 L790,90 L790,220 L900,220 L900,140 L930,140 L930,220 L1050,220 L1050,100 L1080,70 L1110,100 L1110,220 L1200,220 L1200,300 Z"/>
+                </svg>
+                <div class="hero-content">
+                    <h2>سيارتك نظيفة <span>بدون ما تتحرك من مكانك</span></h2>
+                    <p>نجيك بموقعك في أي حي داخل الرياض بدبابات مجهّزة بالكامل وبأعلى معايير الجودة والفخامة.</p>
+                    <div class="hero-buttons">
+                        <button onclick="switchView('booking')" class="btn btn-gold" style="padding: 12px 30px; font-size: 16px;">احجز الآن</button>
+                        <a href="https://wa.me/966500079374" target="_blank" class="btn btn-outline" style="padding: 12px 30px; font-size: 16px;">تواصل واتساب</a>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <h3>+1200</h3>
+                            <p>سيارة غُسلت</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>2</h3>
+                            <p>دباب مجهز</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>4.9</h3>
+                            <p>تقييم العملاء</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>45د</h3>
+                            <p>متوسط الوصول</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section class="section">
+                <div class="section-title">
+                    <h2>خدماتنا المميزة</h2>
+                    <p>اختر الخدمة المناسبة لسيارتك واستمتع بالنظافة الفورية</p>
+                </div>
+                <div class="grid-4">
+                    <div class="card">
+                        <div>
+                            <h3>غسيل خارجي</h3>
+                            <div class="price">20 <span>ريال</span></div>
+                            <p style="color: var(--text-light); font-size: 14px;">غسيل الهيكل الخارجي وإزالة الأتربة بماء مضغوط ومادة حماية الطلاء.</p>
+                        </div>
+                        <button onclick="switchView('booking')" class="btn btn-outline" style="width: 100%; margin-top: 20px; justify-content: center;">اختر الخدمة</button>
+                    </div>
+                    <div class="card">
+                        <div>
+                            <h3>غسيل داخلي</h3>
+                            <div class="price">25 <span>ريال</span></div>
+                            <p style="color: var(--text-light); font-size: 14px;">تنظيف المرتكزات الداخلية، شفط الأتربة، وتلميع الطبلون والدعاسات.</p>
+                        </div>
+                        <button onclick="switchView('booking')" class="btn btn-outline" style="width: 100%; margin-top: 20px; justify-content: center;">اختر الخدمة</button>
+                    </div>
+                    <div class="card" style="border: 2px solid var(--gold);">
+                        <div class="badge-popular">الأكثر طلباً</div>
+                        <div>
+                            <h3>غسيل شامل</h3>
+                            <div class="price">40 <span>ريال</span></div>
+                            <p style="color: var(--text-light); font-size: 14px;">غسيل خارجي كامل + تنظيف داخلي دقيق + تعطير فاخر للسيارة.</p>
+                        </div>
+                        <button onclick="switchView('booking')" class="btn btn-gold" style="width: 100%; margin-top: 20px; justify-content: center;">اختر الخدمة</button>
+                    </div>
+                    <div class="card">
+                        <div>
+                            <h3>اشتراك شهري</h3>
+                            <div class="price">80 <span>ريال</span></div>
+                            <p style="color: var(--text-light); font-size: 14px;">4 غسلات شاملة خلال الشهر في أي وقت تختاره بموقعك بالرياض.</p>
+                        </div>
+                        <button onclick="switchView('booking')" class="btn btn-outline" style="width: 100%; margin-top: 20px; justify-content: center;">اختر الخدمة</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Offers Section -->
+            <section class="section">
+                <div class="section-title">
+                    <h2>العروض الحصرية</h2>
+                    <p>وفر أكثر مع باقاتنا الترويجية الخاصة بفترة التشغيل</p>
+                </div>
+                <div class="grid-2">
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <h3>عرض الأسبوع</h3>
+                            <span style="background:#FEF3C7; color:#D97706; padding: 4px 10px; border-radius:6px; font-size:12px; font-weight:700;">خصم خاص</span>
+                        </div>
+                        <div style="margin: 15px 0;">
+                            <span style="text-decoration: line-through; color: var(--text-light); font-size: 18px;">40 ريال</span>
+                            <div class="price" style="display:inline-block; margin-right: 15px;">35 <span>ريال</span></div>
+                        </div>
+                        <p style="color: var(--text-light); font-size: 14px;">غسيل شامل متكامل لسيارتك في أي حي من أحياء الرياض بسعر مخفض.</p>
+                        <button onclick="switchView('booking')" class="btn btn-gold" style="width: 100%; margin-top: 20px; justify-content: center;">استغل العرض</button>
+                    </div>
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <h3>اشتراك شهري مخفّض</h3>
+                            <span style="background:#FEF3C7; color:#D97706; padding: 4px 10px; border-radius:6px; font-size:12px; font-weight:700;">توفير عالي</span>
+                        </div>
+                        <div style="margin: 15px 0;">
+                            <span style="text-decoration: line-through; color: var(--text-light); font-size: 18px;">80 ريال</span>
+                            <div class="price" style="display:inline-block; margin-right: 15px;">70 <span>ريال</span></div>
+                        </div>
+                        <p style="color: var(--text-light); font-size: 14px;">احصل على 4 غسلات شاملة طوال الشهر بأسعار استثنائية لعملائنا الجدد.</p>
+                        <button onclick="switchView('booking')" class="btn btn-gold" style="width: 100%; margin-top: 20px; justify-content: center;">اشترك الآن</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fleet Section -->
+            <section class="section">
+                <div class="section-title">
+                    <h2>الأسطول المجهز</h2>
+                    <p>دبابات حديثة مجهزة بأحدث تقنيات ضخ المياه والصيانة المتنقلة</p>
+                </div>
+                <div class="grid-2">
+                    <div class="card">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                            <div style="width: 50px; height: 50px; background: #0A192F; border-radius: 12px; display:flex; align-items:center; justify-content:center; color:var(--gold);">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                            </div>
+                            <div>
+                                <h3>دباب 1 (أصفر وأسود)</h3>
+                                <span class="status-badge status-done">متاح للطلب</span>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-light); font-size: 14px; margin-bottom: 15px;">مجهّز بخزان ماء بسعة عالية، ومضخة غسيل ذات ضغط عالٍ، ومولد طاقة مستقل.</p>
+                        <button onclick="switchView('booking')" class="btn btn-outline" style="width: 100%; justify-content: center;">إرسال الطلب لهذا الدباب</button>
+                    </div>
+                    <div class="card">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                            <div style="width: 50px; height: 50px; background: #991B1B; border-radius: 12px; display:flex; align-items:center; justify-content:center; color:var(--white);">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                            </div>
+                            <div>
+                                <h3>دباب 2 (أحمر)</h3>
+                                <span class="status-badge status-done">متاح للأحياء القريبة</span>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-light); font-size: 14px; margin-bottom: 15px;">مخصص للسرعة في الأحياء الحيوية، مجهز بالكامل لعمليات الغسيل السريع والشامل.</p>
+                        <button onclick="switchView('booking')" class="btn btn-outline" style="width: 100%; justify-content: center;">إرسال الطلب لهذا الدباب</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How it works -->
+            <section class="section">
+                <div class="section-title">
+                    <h2>كيف نعمل</h2>
+                    <p>أربع خطوات بسيطة لتنظيف سيارتك بأعلى احترافية</p>
+                </div>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3 style="font-size: 16px; margin-bottom: 8px;">اختر الخدمة</h3>
+                        <p style="font-size: 13px; color: var(--text-light);">حدد نوع الغسيل أو العرض المناسب لك.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3 style="font-size: 16px; margin-bottom: 8px;">أدخل بياناتك</h3>
+                        <p style="font-size: 13px; color: var(--text-light);">سجل اسمك، رقم جوالك، وحيك في الرياض.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3 style="font-size: 16px; margin-bottom: 8px;">نجيك بموقعك</h3>
+                        <p style="font-size: 13px; color: var(--text-light);">ينطلق الدباب فوراً إلى موقعك بدقة فائقة.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3 style="font-size: 16px; margin-bottom: 8px;">استلم سيارتك</h3>
+                        <p style="font-size: 13px; color: var(--text-light);">تمتع بسيارة نظيفة وامسح لتقييم الخدمة.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Banner -->
+            <div class="section">
+                <div class="cta-banner">
+                    <h2>جاهز لتنظيف سيارتك الآن؟</h2>
+                    <p>لا تتعب نفسك بالذهاب لمغاسل السيارات، نحن نصل إليك أينما كنت في الرياض!</p>
+                    <button onclick="switchView('booking')" class="btn btn-gold" style="padding: 12px 30px; font-size: 16px;">احجز موعدك الآن</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOOKING VIEW -->
+        <div id="view-booking" class="view-section">
+            <div class="section">
+                <div class="section-title">
+                    <h2>حجز خدمة غسيل سيارة</h2>
+                    <p>املأ النموذج أدناه وسيتوجه إليك أقرب دباب مجهز</p>
+                </div>
+                <div style="max-width: 600px; margin: 0 auto; background: var(--white); padding: 40px; border-radius: 16px; box-shadow: var(--shadow);">
+                    <form id="booking-form" onsubmit="handleBooking(event)">
+                        <div class="form-group">
+                            <label>اختر الخدمة المطلوبة</label>
+                            <select id="b-service" class="form-control" required>
+                                <option value="غسيل خارجي (20 ريال)">غسيل خارجي — 20 ريال</option>
+                                <option value="غسيل داخلي (25 ريال)">غسيل داخلي — 25 ريال</option>
+                                <option value="غسيل شامل (40 ريال)" selected>غسيل شامل — 40 ريال (الأكثر طلباً)</option>
+                                <option value="اشتراك شهري (80 ريال)">اشتراك شهري — 80 ريال</option>
+                                <option value="عرض الأسبوع: غسيل شامل (35 ريال)">عرض الأسبوع: غسيل شامل — 35 ريال</option>
+                                <option value="اشتراك شهري مخفّض (70 ريال)">اشتراك شهري مخفّض — 70 ريال</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>الاسم الكامل</label>
+                            <input type="text" id="b-name" class="form-control" placeholder="أدخل اسمك الكريم" required>
+                        </div>
+                        <div class="form-group">
+                            <label>رقم الجوال</label>
+                            <input type="tel" id="b-phone" class="form-control" placeholder="05xxxxxxxx" required>
+                        </div>
+                        <div class="form-group">
+                            <label>الموقع / الحي في الرياض</label>
+                            <input type="text" id="b-location" class="form-control" placeholder="مثال: حي الياسمين، شارع الإمام..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>نوع السيارة واللون</label>
+                            <input type="text" id="b-car" class="form-control" placeholder="مثال: تويوتا كامري - أبيض" required>
+                        </div>
+                        <div class="form-group">
+                            <label>وقت الحجز (بين 4 العصر و 11 الليل)</label>
+                            <input type="time" id="b-time" class="form-control" min="16:00" max="23:00" required>
+                        </div>
+                        <button type="submit" class="btn btn-gold" style="width: 100%; justify-content: center; padding: 12px; font-size: 16px;">تأكيد الحجز</button>
+                    </form>
+                    <div id="booking-success" style="display:none; text-align:center; padding: 30px;">
+                        <div style="font-size: 50px; color: var(--success); margin-bottom: 15px;">✓</div>
+                        <h3 style="color: var(--primary); margin-bottom: 10px;">تم تأكيد حجزك بنجاح!</h3>
+                        <p style="color: var(--text-light); margin-bottom: 20px;">تم تسجيل طلبك وتوجيه أقرب دباب إليك.</p>
+                        <a id="whatsapp-link" href="#" target="_blank" class="btn btn-gold" style="justify-content: center; width: 100%;">أرسل اللوكيشن على واتساب</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FLEET MANAGEMENT VIEW -->
+        <div id="view-fleet" class="view-section">
+            <div class="section">
+                <div class="section-title">
+                    <h2>إدارة الدبابات</h2>
+                    <p>متابعة حالة الدبابات وتعيين الحالات التشغيلية</p>
+                </div>
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>دباب 1 (أصفر وأسود)</h3>
+                        <p style="margin: 10px 0; color: var(--text-light);">الحالة الحالية: <span id="fleet1-status" class="status-badge status-done">متاح</span></p>
+                        <p style="font-size: 13px; color: var(--text-light); margin-bottom: 20px;">خزان ماء، مضخة ضغط عالي، مولد طاقة.</p>
+                        <div style="display:flex; gap: 10px;">
+                            <button onclick="toggleFleetStatus(1)" class="btn btn-outline" style="flex:1; justify-content:center;">تبديل الحالة</button>
+                            <button onclick="switchView('booking')" class="btn btn-gold" style="flex:1; justify-content:center;">إرسال طلب</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>دباب 2 (أحمر)</h3>
+                        <p style="margin: 10px 0; color: var(--text-light);">الحالة الحالية: <span id="fleet2-status" class="status-badge status-done">متاح</span></p>
+                        <p style="font-size: 13px; color: var(--text-light); margin-bottom: 20px;">مخصص للأحياء القريبة والغسيل السريع.</p>
+                        <div style="display:flex; gap: 10px;">
+                            <button onclick="toggleFleetStatus(2)" class="btn btn-outline" style="flex:1; justify-content:center;">تبديل الحالة</button>
+                            <button onclick="switchView('booking')" class="btn btn-gold" style="flex:1; justify-content:center;">إرسال طلب</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ORDERS MANAGEMENT VIEW -->
+        <div id="view-orders" class="view-section">
+            <div class="section">
+                <div class="section-title">
+                    <h2>لوحة إدارة الطلبات</h2>
+                    <p>متابعة سير العمل وحالات الطلبات المسجلة محلياً</p>
+                </div>
+                <div class="stats-cards-mini">
+                    <div class="mini-stat">
+                        <h4 id="stat-total">0</h4>
+                        <p>إجمالي الطلبات</p>
+                    </div>
+                    <div class="mini-stat">
+                        <h4 id="stat-done">0</h4>
+                        <p>تم التسليم</p>
+                    </div>
+                    <div class="mini-stat">
+                        <h4 id="stat-progress">0</h4>
+                        <p>قيد التنفيذ</p>
+                    </div>
+                    <div class="mini-stat">
+                        <h4 id="stat-pending">0</h4>
+                        <p>الطلبات الجديدة</p>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                href
+                                <th>العميل</th>
+                                <th>الخدمة</th>
+                                <th>الحي / الموقع</th>
+                                <th>السيارة</th>
+                                <th>الوقت</th>
+                                <th>الحالة</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <thtbody id="orders-table-body">
+                            <!-- Populated via JS -->
+                        </thtbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- RATING VIEW -->
+        <div id="view-rating" class="view-section">
+            <div class="section">
+                <div class="section-title">
+                    <h2>تقييم خدمة العملاء</h2>
+                    <p>رأيك يهمنا لنستمر في تقديم أفضل خدمة غسيل سيارات بالرياض</p>
+                </div>
+                <div style="max-width: 500px; margin: 0 auto; background: var(--white); padding: 40px; border-radius: 16px; box-shadow: var(--shadow); text-align: center;">
+                    <div id="rating-form-box">
+                        <div style="display: flex; justify-content: center; gap: 10px; font-size: 32px; cursor: pointer; margin-bottom: 20px;" id="star-container">
+                            <span onclick="setRating(1)" class="star" data-value="1">☆</span>
+                            <span onclick="setRating(2)" class="star" data-value="2">☆</span>
+                            <span onclick="setRating(3)" class="star" data-value="3">☆</span>
+                            <span onclick="setRating(4)" class="star" data-value="4">☆</span>
+                            <span onclick="setRating(5)" class="star" data-value="5">☆</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="r-name" class="form-control" placeholder="اسمك الكريم (اختياري)">
+                        </div>
+                        <div class="form-group">
+                            <textarea id="r-note" class="form-control" placeholder="ملاحظاتك أو انطباعك عن الخدمة (اختياري)" rows="3"></textarea>
+                        </div>
+                        <button onclick="submitRating()" class="btn btn-gold" style="width: 100%; justify-content: center;">إرسال التقييم</button>
+                    </div>
+                    <div id="rating-thanks" style="display:none; padding: 20px;">
+                        <h3 style="color: var(--gold); margin-bottom: 10px;">شكراً لتقييمك!</h3>
+                        <p style="color: var(--text-light);">نسعد دائماً بخدمتك وتقديم الأفضل لك.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTACT VIEW -->
+        <div id="view-contact" class="view-section">
+            <div class="section">
+                <div class="section-title">
+                    <h2>تواصل معنا</h2>
+                    <p>نحن دائماً في خدمتك طوال ساعات العمل الرسمية</p>
+                </div>
+                <div class="grid-2" style="max-width: 900px; margin: 0 auto;">
+                    <div class="card">
+                        <h3>معلومات الاتصال</h3>
+                        <p style="margin: 15px 0; color: var(--text-light);"><strong>رقم الجوال:</strong> +966 50 007 9374</p>
+                        <p style="margin: 15px 0; color: var(--text-light);"><strong>واتساب:</strong> <a href="https://wa.me/966500079374" target="_blank" style="color: var(--secondary);">محادثة فورية</a></p>
+                        <p style="margin: 15px 0; color: var(--text-light);"><strong>نطاق العمل:</strong> جميع أحياء الرياض</p>
+                        <p style="margin: 15px 0; color: var(--text-light);"><strong>أوقات العمل:</strong> من 4 العصر إلى 11 الليل</p>
+                    </div>
+                    <div class="card">
+                        <h3>نموذج مراسلة سريعة</h3>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="الاسم">
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" class="form-control" placeholder="رقم الجوال">
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" placeholder="رسالتك أو استفسارك" rows="3"></textarea>
+                        </div>
+                        <button onclick="alert('تم ارسال رسالتك بنجاح، سنتواصل معك قريباً.')" class="btn btn-gold" style="width: 100%; justify-content: center;">إرسال الرسالة</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>TurboWash Mobile</h4>
+                <p>بنية تحتية متطورة لخدمات غسيل السيارات المتنقلة في مدينة الرياض. نصلك أينما كنت بدبابات مجهزة بالكامل.</p>
+            </div>
+            <div class="footer-col">
+                <h4>روابط سريعة</h4>
+                <ul>
+                    <li><a onclick="switchView('home')">الرئيسية</a></li>
+                    <li><a onclick="switchView('booking')">حجز خدمة</a></li>
+                    <li><a onclick="switchView('fleet')">الأسطول والدبابات</a></li>
+                    <li><a onclick="switchView('rating')">التقييم</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>تواصل رسمي</h4>
+                <ul>
+                    <li>الهاتف: +966 50 007 9374</li>
+                    <li>واتساب: <a href="https://wa.me/966500079374" target="_blank">رابط المراسلة</a></li>
+                    <li>المدينة: الرياض، السعودية</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>أوقات العمل</h4>
+                <p>نعمل طوال أيام الأسبوع من الساعة 4:00 عصراً وحتى 11:00 مساءً لخدمة جميع أحياء الرياض.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            جميع الحقوق محفوظة © 2026 TurboWash Mobile — غسيل سيارات متنقل بالرياض
+        </div>
+    </footer>
+
+    <!-- Smart Chatbot Widget -->
+    <div class="chatbot-btn" onclick="toggleChatbot()">💬</div>
+    <div class="chatbot-window" id="chatbot-window">
+        <div class="chat-header">
+            <span style="font-weight: 700; font-size: 14px;">مساعد TurboWash الذكي</span>
+            <span style="cursor: pointer; font-size: 16px;" onclick="toggleChatbot()">✕</span>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">أهلاً بك! أنا مساعد توربو واش الذكي. كيف يمكنني خدمتك اليوم في غسيل سيارتك بالرياض؟</div>
+        </div>
+        <div class="chat-quick-replies">
+            <button class="quick-btn" onclick="sendQuickChat('كم الأسعار؟')">كم الأسعار؟</button>
+            <button class="quick-btn" onclick="sendQuickChat('وش الخدمات؟')">وش الخدمات؟</button>
+            <button class="quick-btn" onclick="sendQuickChat('وش العروض؟')">وش العروض؟</button>
+            <button class="quick-btn" onclick="sendQuickChat('كيف أحجز؟')">كيف أحجز؟</button>
+            <button class="quick-btn" onclick="sendQuickChat('وين موقعكم؟')">وين موقعكم؟</button>
+            <button class="quick-btn" onclick="sendQuickChat('أرسل الموقع')">أرسل الموقع</button>
+            <button class="quick-btn" onclick="sendQuickChat('تواصل معنا')">تواصل معنا</button>
+            <button class="quick-btn" onclick="sendQuickChat('التقييم')">التقييم</button>
+            <button class="quick-btn" onclick="sendQuickChat('أوقات العمل')">أوقات العمل</button>
+            <button class="quick-btn" onclick="sendQuickChat('الاشتراك الشهري')">الاشتراك الشهري</button>
+        </div>
+    </div>
+
+    <!-- Script Application Logic -->
+    <script>
+        // Navigation Handler
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
+            document.getElementById('view-' + viewId).classList.add('active-view');
+            
+            document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
+            const navEl = document.getElementById('nav-' + viewId);
+            if(navEl) navEl.classList.add('active');
+            
+            window.scrollTo(0, 0);
+            if(viewId === 'orders') renderOrdersTable();
+        }
+
+        // LocalStorage Orders Management
+        function getOrders() {
+            let orders = localStorage.getItem('turbowash_orders');
+            if(!orders) {
+                orders = [
+                    { id: 1, name: 'سلطان القحطاني', service: 'غسيل شامل (40 ريال)', location: 'حي الياسمين', car: 'تويوتا كامري - أبيض', time: '17:00', status: 'done' },
+                    { id: 2, name: 'فهد العتيبي', service: 'غسيل خارجي (20 ريال)', location: 'حي النرجس', car: 'هوندا أورد - أسود', time: '18:30', status: 'progress' }
+                ];
+                localStorage.setItem('turbowash_orders', JSON.stringify(orders));
+            }
+            return JSON.parse(orders);
+        }
+
+        function saveOrders(orders) {
+            localStorage.setItem('turbowash_orders', JSON.stringify(orders));
+        }
+
+        function handleBooking(e) {
+            e.preventDefault();
+            const service = document.getElementById('b-service').value;
+            const name = document.getElementById('b-name').value;
+            const phone = document.getElementById('b-phone').value;
+            const location = document.getElementById('b-location').value;
+            const car = document.getElementById('b-car').value;
+            const time = document.getElementById('b-time').value;
+
+            const orders = getOrders();
+            const newOrder = {
+                id: Date.now(),
+                name,
+                service,
+                location,
+                car,
+                time,
+                status: 'pending'
+            };
+            orders.unshift(newOrder);
+            saveOrders(orders);
+
+            // Setup WhatsApp Link
+            const waText = encodeURIComponent(`السلام عليكم، أرغب بتأكيد حجز غسيل سيارة:\nالاسم: ${name}\nالخدمة: ${service}\nالحي: ${location}\nالسيارة: ${car}\nالوقت: ${time}`);
+            document.getElementById('whatsapp-link').href = `https://wa.me/966500079374?text=${waText}`;
+
+            document.getElementById('booking-form').style.display = 'none';
+            document.getElementById('booking-success').style.display = 'block';
+        }
+
+        function renderOrdersTable() {
+            const orders = getOrders();
+            const tbody = document.getElementById('orders-table-body');
+            tbody.innerHTML = '';
+
+            let total = orders.length;
+            let done = orders.filter(o => o.status === 'done').length;
+            let progress = orders.filter(o => o.status === 'progress').length;
+            let pending = orders.filter(o => o.status === 'pending').length;
+
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-done').innerText = done;
+            document.getElementById('stat-progress').innerText = progress;
+            document.getElementById('stat-pending').innerText = pending;
+
+            orders.forEach(o => {
+                let badgeClass = 'status-pending';
+                let statusText = 'جديد';
+                if(o.status === 'progress') { badgeClass = 'status-progress'; statusText = 'قيد التنفيذ'; }
+                if(o.status === 'done') { badgeClass = 'status-done'; statusText = 'تم التسليم'; }
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${o.name}</td>
+                        <td>${o.service}</td>
+                        <td>${o.location}</td>
+                        <td>${o.car}</td>
+                        <td>${o.time}</td>
+                        <td><span class="status-badge ${badgeClass}">${statusText}</span></td>
+                        <td>
+                            <button onclick="updateOrderStatus(${o.id}, 'progress')" class="btn btn-outline" style="padding: 3px 8px; font-size:11px;">بدء</button>
+                            <button onclick="updateOrderStatus(${o.id}, 'done')" class="btn btn-gold" style="padding: 3px 8px; font-size:11px;">تم</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function updateOrderStatus(id, newStatus) {
+            let orders = getOrders();
+            orders = orders.map(o => o.id === id ? {...o, status: newStatus} : o);
+            saveOrders(orders);
+            renderOrdersTable();
+        }
+
+        // Fleet Toggle Status
+        function toggleFleetStatus(num) {
+            const el = document.getElementById(`fleet${num}-status`);
+            if(el.innerText.includes('متاح')) {
+                el.innerText = 'مشغول حالياً';
+                el.className = 'status-badge status-pending';
+            } else {
+                el.innerText = 'متاح';
+                el.className = 'status-badge status-done';
+            }
+        }
+
+        // Rating System
+        let currentRating = 0;
+        function setRating(val) {
+            currentRating = val;
+            const stars = document.querySelectorAll('#star-container .star');
+            stars.forEach((s, idx) => {
+                s.innerText = idx < val ? '★' : '☆';
+                s.style.color = idx < val ? 'var(--gold)' : 'inherit';
+            });
+        }
+
+        function submitRating() {
+            if(currentRating === 0) {
+                alert('الرجاء اختيار التقييم بالنجوم أولاً.');
+                return;
+            }
+            document.getElementById('rating-form-box').style.display = 'none';
+            document.getElementById('rating-thanks').style.display = 'block';
+        }
+
+        // Chatbot Widget Logic
+        function toggleChatbot() {
+            const win = document.getElementById('chatbot-window');
+            win.classList.toggle('open');
+        }
+
+        const botKnowledge = {
+            'كم الأسعار؟': 'خارجي 20، داخلي 25، شامل 40، اشتراك شهري 80 ريال.',
+            'وش الخدمات؟': 'خارجي، داخلي، شامل، اشتراك شهري، وتلميع بسيط.',
+            'وش العروض؟': 'عرض الأسبوع: شامل بـ 35 بدل 40 ريال.',
+            'كيف أحجز؟': 'عبر صفحة الحجز الرسمية بالموقع، أو أرسل على واتساب: +966500079374',
+            'وين موقعكم؟': 'نخدم جميع أحياء الرياض متنقلين عبر دبابات مجهزة.',
+            'أرسل الموقع': 'أرسل اللوكيشن على واتساب: https://wa.me/966500079374',
+            'تواصل معنا': 'رقم التواصل الرسمي: +966 50 007 9374',
+            'التقييم': 'يمكنك إرسال تقييمك من صفحة التقييم من 1 إلى 5 نجوم.',
+            'أوقات العمل': 'من 4 العصر إلى 11 الليل طوال أيام الأسبوع.',
+            'الاشتراك الشهري': '4 غسلات شاملة بـ 80 ريال.'
+        };
+
+        function sendQuickChat(question) {
+            const container = document.getElementById('chat-messages');
+            
+            // User message
+            container.innerHTML += `<div class="message user">${question}</div>`;
+            
+            // Bot response
+            setTimeout(() => {
+                const answer = botKnowledge[question] || 'عذراً، يمكنك التواصل معنا مباشرة عبر واتساب للمساعدة.';
+                container.innerHTML += `<div class="message bot">${answer}</div>`;
+                container.scrollTop = container.scrollHeight;
+            }, 300);
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Initialize orders on load
+        getOrders();
+    </script>
+</body>
+</html>
