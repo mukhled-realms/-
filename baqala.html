@@ -13,14 +13,12 @@ body.d2{--bg:#f0fdf4;--card:#fff;--primary:#12855A;--accent:#F59E0B;--text:#1118
 body.d3{--bg:#0f172a;--card:#1e293b;--primary:#F97316;--accent:#FBBF24;--text:#f1f5f9;--muted:#94a3b8;--line:#334155;--header:#0f172a;--success:#22c55e;--danger:#ef4444}
 body{background:var(--bg);color:var(--text);transition:.35s}
 
-/* شريط التبديل */
 .switcher{position:sticky;top:0;z-index:100;background:var(--primary);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 15px rgba(0,0,0,.15);flex-wrap:wrap;gap:10px}
 .switcher h1{font-size:14px;font-weight:900}
 .switcher-btns{display:flex;gap:6px}
 .switcher-btns button{padding:6px 12px;border-radius:999px;border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;cursor:pointer;font-family:inherit;font-weight:700;font-size:11.5px;transition:.2s}
 .switcher-btns button.active{background:var(--accent);color:#1a1a2e;border-color:var(--accent)}
 
-/* التبويبات */
 .tabs{display:flex;gap:6px;padding:12px 16px;background:var(--card);border-bottom:1px solid var(--line);overflow-x:auto;position:sticky;top:52px;z-index:99}
 .tabs::-webkit-scrollbar{display:none}
 .tab{padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--muted);font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;transition:.2s}
@@ -29,7 +27,6 @@ body{background:var(--bg);color:var(--text);transition:.35s}
 .tab-content{display:none;padding:20px 16px 40px;max-width:920px;margin:0 auto}
 .tab-content.active{display:block}
 
-/* الهيدر */
 .header{background:var(--header);color:#fff;padding:24px 20px;text-align:center;position:relative;overflow:hidden}
 .header::before{content:"";position:absolute;top:-50px;right:-50px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06)}
 .header h2{font-size:20px;font-weight:900;margin-bottom:6px;position:relative}
@@ -37,18 +34,15 @@ body{background:var(--bg);color:var(--text);transition:.35s}
 .header .info{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:14px;font-size:12.5px;position:relative}
 .header .info a{color:var(--accent);font-weight:700;text-decoration:none;background:rgba(255,255,255,.1);padding:5px 12px;border-radius:999px}
 
-/* الأقسام */
 .section{background:var(--card);border-radius:16px;padding:22px;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,.06);border:1px solid var(--line)}
 .section h3{font-size:17px;font-weight:900;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:8px}
 
-/* الجمهور */
 .audience{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 @media(max-width:600px){.audience{grid-template-columns:repeat(3,1fr)}}
 .aud{text-align:center;padding:12px 6px;background:var(--bg);border-radius:10px;border:1px solid var(--line)}
 .aud .em{font-size:24px;display:block;margin-bottom:4px}
 .aud span{font-size:11.5px;font-weight:700;color:var(--muted)}
 
-/* المنتجات */
 .products{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 @media(max-width:600px){.products{grid-template-columns:1fr}}
 .product{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;position:relative;overflow:hidden}
@@ -61,7 +55,6 @@ body{background:var(--bg);color:var(--text);transition:.35s}
 .product-price .new{font-size:16px;font-weight:900;color:var(--primary)}
 .product-price .new small{font-size:10px;font-weight:500;color:var(--muted)}
 
-/* الحقول */
 .field{margin-bottom:14px}
 .field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:var(--text)}
 .field input,.field select,.field textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;background:var(--bg);color:var(--text);transition:.2s}
@@ -72,7 +65,6 @@ body.d3 .field input[readonly]{background:#0f172a}
 .row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:600px){.row-2{grid-template-columns:1fr}}
 
-/* الأزرار */
 .btn{display:block;width:100%;padding:14px;border-radius:12px;border:none;font-family:inherit;font-size:15px;font-weight:900;cursor:pointer;transition:.2s;text-align:center;text-decoration:none}
 .btn-primary{background:var(--primary);color:#fff}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.15)}
@@ -83,7 +75,6 @@ body.d3 .field input[readonly]{background:#0f172a}
 .btn-danger{background:var(--danger);color:#fff}
 .btn-sm{padding:8px 14px;font-size:13px;border-radius:10px;width:auto;display:inline-block}
 
-/* نتيجة الحجز */
 .result{display:none;background:#ecfdf5;border:2px solid var(--success);border-radius:14px;padding:18px;margin-top:16px}
 .result.show{display:block;animation:fadeIn .3s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -95,11 +86,9 @@ body.d3 .result h4{color:#a7f3d0}
 body.d3 .result .details{background:#022c22;color:#d1fae5}
 body.d3 .result .details b{color:#a7f3d0}
 
-/* التنبيهات */
 .notice{background:#fef3c7;color:#92400e;padding:10px 14px;border-radius:10px;font-size:12px;font-weight:700;margin-top:12px;text-align:center;line-height:1.6}
 body.d3 .notice{background:#422006;color:#fbbf24}
 
-/* الطلبات */
 .order-card{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px;position:relative}
 .order-card::before{content:"";position:absolute;top:0;right:0;bottom:0;width:4px;border-radius:0 12px 12px 0}
 .order-card.pending::before{background:#f59e0b}
@@ -114,7 +103,6 @@ body.d3 .notice{background:#422006;color:#fbbf24}
 .order-card h4{font-size:14px;font-weight:900;margin-bottom:6px;color:var(--text)}
 .order-card p{font-size:12px;color:var(--muted);line-height:1.8;margin:2px 0}
 
-/* الحاسبة */
 .calc-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px;align-items:end}
 @media(max-width:700px){.calc-row{grid-template-columns:1fr 1fr}}
 .calc-row .field{margin:0}
@@ -125,21 +113,17 @@ body.d3 .notice{background:#422006;color:#fbbf24}
 .calc-line b{color:var(--primary)}
 .calc-line.green b{color:var(--success)}
 
-/* الخطوات */
 .steps{font-size:13.5px;line-height:2.1;color:var(--muted)}
 .steps b{color:var(--primary)}
 
-/* Toast */
 #toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:14px 24px;border-radius:999px;font-size:13.5px;font-weight:700;opacity:0;transition:.3s;pointer-events:none;z-index:9999;box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:90vw;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(-10px)}
 #toast.ok{background:var(--success)}
 #toast.err{background:var(--danger)}
 
-/* الفوتر */
 .footer{text-align:center;padding:30px 20px;color:var(--muted);font-size:12.5px;line-height:1.9}
 .footer a{color:var(--primary);font-weight:700;text-decoration:none}
 
-/* السجل */
 .empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px}
 .empty .big{font-size:44px;margin-bottom:8px;opacity:.6}
 </style>
@@ -169,15 +153,14 @@ body.d3 .notice{background:#422006;color:#fbbf24}
   <h2>🏢 مؤسسة مخلد محمد بن سليمان العنزي</h2>
   <p>منصة الحجز المسبق — توزيع عروض بنده للبقالات والمطاعم</p>
   <div class="info">
-    <a href="tel:966592859590" dir="ltr">📞 +966 59 285 9590</a>
-    <a href="https://wa.me/966500079374" target="_blank">💬 واتساب</a>
+    <a href="tel:+966551134404" dir="ltr">📞 +966 55 113 4404</a>
+    <a href="https://wa.me/966551134404" target="_blank">💬 واتساب</a>
   </div>
 </div>
 
 <!-- ============ تبويب الرئيسية ============ -->
 <div class="tab-content active" id="tab-home">
 
-  <!-- الجمهور المستهدف -->
   <div class="section">
     <h3>🎯 نخدم</h3>
     <div class="audience">
@@ -189,7 +172,6 @@ body.d3 .notice{background:#422006;color:#fbbf24}
     </div>
   </div>
 
-  <!-- عروض اليوم -->
   <div class="section">
     <h3>🔥 عروض اليوم</h3>
     <div class="products">
@@ -221,7 +203,6 @@ body.d3 .notice{background:#422006;color:#fbbf24}
     <div class="notice">⚠️ العروض محدودة — تُحدّث يومياً حسب متوفر بنده</div>
   </div>
 
-  <!-- كيف نعمل -->
   <div class="section">
     <h3>ℹ️ كيف نعمل</h3>
     <div class="steps">
@@ -233,11 +214,10 @@ body.d3 .notice{background:#422006;color:#fbbf24}
     </div>
   </div>
 
-  <!-- CTA -->
   <div class="section">
     <h3>🚀 جاهز تطلب؟</h3>
     <button class="btn btn-primary" onclick="showTab('booking', event)">📝 ابدأ الحجز الآن</button>
-    <a class="btn btn-wa" href="https://wa.me/966500079374" target="_blank">💬 تواصل واتساب</a>
+    <a class="btn btn-wa" href="https://wa.me/966551134404" target="_blank">💬 تواصل واتساب</a>
   </div>
 </div>
 
@@ -348,7 +328,6 @@ body.d3 .notice{background:#422006;color:#fbbf24}
     <button class="btn btn-ghost" onclick="clearCalc()">🔄 مسح</button>
   </div>
 
-  <!-- السجل -->
   <div class="section">
     <h3>📊 سجل العمليات</h3>
     <div id="historyList">
@@ -368,13 +347,12 @@ body.d3 .notice{background:#422006;color:#fbbf24}
 <!-- الفوتر -->
 <div class="footer">
   <p>© 2026 مؤسسة مخلد محمد بن سليمان العنزي — الرياض 🇸🇦</p>
-  <p>📞 <a href="tel:966592859590" dir="ltr">+966 59 285 9590</a> · 💬 <a href="https://wa.me/966500079374" target="_blank">واتساب</a></p>
+  <p>📞 <a href="tel:+966551134404" dir="ltr">+966 55 113 4404</a> · 💬 <a href="https://wa.me/966551134404" target="_blank">واتساب</a></p>
 </div>
 
 <div id="toast"></div>
 
 <script>
-/* ============ التصميم ============ */
 function setDesign(n){
   document.body.className = 'd' + n;
   document.querySelectorAll('.switcher-btns button').forEach((b,i)=>{
@@ -383,7 +361,6 @@ function setDesign(n){
   try{ localStorage.setItem('baqala_design', n); }catch(e){}
 }
 
-/* ============ التبويبات ============ */
 function showTab(t, e){
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById('tab-' + t).classList.add('active');
@@ -394,7 +371,6 @@ function showTab(t, e){
   if(t === 'calc') renderHistory();
 }
 
-/* ============ Toast ============ */
 function toast(msg, type){
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -403,7 +379,6 @@ function toast(msg, type){
   setTimeout(()=>{ t.classList.remove('show'); }, 3000);
 }
 
-/* ============ الحجز ============ */
 function submitOrder(e){
   e.preventDefault();
   const name = document.getElementById('name').value.trim();
@@ -431,12 +406,10 @@ function submitOrder(e){
     createdAt: new Date().toLocaleString('ar-SA')
   };
 
-  // حفظ الطلب
   const orders = getOrders();
   orders.push(order);
   saveOrders(orders);
 
-  // عرض النتيجة
   document.getElementById('resultDetails').innerHTML = `
     <div><b>رقم الطلب:</b> ${order.id}</div>
     <div><b>الاسم:</b> ${name}</div>
@@ -460,7 +433,7 @@ function submitOrder(e){
     (notes ? `📝 ملاحظات: ${notes}\n` : '') +
     `\n💰 الدفع: نقداً عند الاستلام`;
 
-  document.getElementById('waLink').href = 'https://wa.me/966500079374?text=' + encodeURIComponent(waText);
+  document.getElementById('waLink').href = 'https://wa.me/966551134404?text=' + encodeURIComponent(waText);
 
   document.getElementById('result').classList.add('show');
   toast('✅ تم استلام طلبك', 'ok');
@@ -474,7 +447,6 @@ function resetForm(){
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-/* ============ الطلبات ============ */
 function getOrders(){
   try{ return JSON.parse(localStorage.getItem('baqala_orders') || '[]'); }catch(e){ return []; }
 }
@@ -539,7 +511,6 @@ function clearOrders(){
   toast('تم المسح', 'ok');
 }
 
-/* ============ الحاسبة ============ */
 let calcId = 0;
 
 function addCalcRow(name='', qty='', buy='', sell=''){
@@ -629,7 +600,6 @@ function saveCalc(){
   clearCalc();
 }
 
-/* ============ السجل ============ */
 function renderHistory(){
   const history = JSON.parse(localStorage.getItem('baqala_history') || '[]');
   const list = document.getElementById('historyList');
@@ -683,7 +653,6 @@ function clearHistory(){
   toast('تم مسح السجل', 'ok');
 }
 
-/* ============ البدء ============ */
 try{
   const saved = localStorage.getItem('baqala_design');
   if(saved) setDesign(Number(saved));
