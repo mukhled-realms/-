@@ -548,3 +548,790 @@ section { padding: 50px 20px; }
 </footer>
 
 <script>
+// ========================================
+// DATA: PRODUCTS (40 items)
+// ========================================
+const products = [
+  {id:1,name:'مياه بيرين',name_en:'Beren Water',name_ur:'برین پانی',cat:'water',spec:'48×200 مل',price:18,save:4,emoji:'💧'},
+  {id:2,name:'مياه أكوافينا',name_en:'Aquafina',name_ur:'اکواوینا پانی',cat:'water',spec:'6×1.5 لتر',price:11,save:3,emoji:'💧'},
+  {id:3,name:'مياه صفا مكة',name_en:'Safa Makkah',name_ur:'صفا مکہ پانی',cat:'water',spec:'40×330 مل',price:18,save:3,emoji:'💧'},
+  {id:4,name:'مياه نوفا',name_en:'Nova Water',name_ur:'نوا پانی',cat:'water',spec:'40×330 مل',price:18,save:4,emoji:'💧'},
+  {id:5,name:'حليب نستله مكثف',name_en:'Nestle Condensed',name_ur:'نیسٹل کنڈنسڈ دودھ',cat:'milk',spec:'370غ',price:10,save:2,emoji:'🥛'},
+  {id:6,name:'حليب لونا المبخر',name_en:'Lona Evaporated',name_ur:'لونا ابیپریٹڈ دودھ',cat:'milk',spec:'170غ',price:9,save:2,emoji:'🥛'},
+  {id:7,name:'حليب المراعي طويل الأجل',name_en:'Almarai UHT',name_ur:'المراعی دودھ',cat:'milk',spec:'لنگر',price:22,save:3,emoji:'🥛'},
+  {id:8,name:'حليب السعودية',name_en:'Saudi Milk',name_ur:'سعودی دودھ',cat:'milk',spec:'18×200 مل',price:33,save:5,emoji:'🥛'},
+  {id:9,name:'عصير جهينة',name_en:'Bahia Juice',name_ur:'جہینہ رس',cat:'juice',spec:'1 لتر',price:12,save:3,emoji:'🧃'},
+  {id:10,name:'عصير KDD',name_en:'KDD Juice',name_ur:'کے ڈی ڈی رس',cat:'juice',spec:'18×125 مل',price:18,save:3,emoji:'🧃'},
+  {id:11,name:'بيربيكان',name_en:'Pepsi',name_ur:'پیپسی',cat:'juice',spec:'6×250 مل',price:14,save:2,emoji:'🧃'},
+  {id:12,name:'عصير الربيع',name_en:'Spring Juice',name_ur:'رباعی رس',cat:'juice',spec:'1 لتر',price:8,save:2,emoji:'🧃'},
+  {id:13,name:'ميني إم آند إمز/سكيتلز',name_en:"M&M's/Skittles",name_ur:'ایم اینڈ ایمز',cat:'snack',spec:'حقيبة',price:15,save:3,emoji:'🍫'},
+  {id:14,name:'بسكوت أولكر',name_en:'Olaycookies',name_ur:'اولکر بِسکٹ',cat:'snack',spec:'30×36',price:10,save:2.5,emoji:'🍪'},
+  {id:15,name:'شيبس مارامي',name_en:'Marami Chips',name_ur:'مارامی چپس',cat:'snack',spec:'100غ',price:8,save:1.75,emoji:'🍟'},
+  {id:16,name:'تاسالي شيبس',name_en:'Tazli Chips',name_ur:'تازلی چپس',cat:'snack',spec:'155غ',price:8,save:2.25,emoji:'🍟'},
+  {id:17,name:'فول لونا',name_en:'Lona Beans',name_ur:'لونا فول',cat:'cans',spec:'450غ',price:16,save:3.25,emoji:'🫘'},
+  {id:18,name:'تونة لونا',name_en:'Lona Tuna',name_ur:'لونا ٹیون',cat:'cans',spec:'170غ',price:11,save:2,emoji:'🥫'},
+  {id:19,name:'كاتشب ديلسيو',name_en:'Deluceo Ketchup',name_ur:'ڈیلسیو کیٹچپ',cat:'cans',spec:'500غ',price:17,save:3,emoji:'🍅'},
+  {id:20,name:'جبن شيدر ديلي ديري',name_en:'Dairy Cheddar',name_ur:'ڈیری چیڈر چیز',cat:'cans',spec:'عبوة',price:9,save:2,emoji:'🧀'},
+  {id:21,name:'جبن المراعي فيتا',name_en:'Almarai Feta',name_ur:'المراعی فیٹا چیز',cat:'cans',spec:'عبوة',price:22,save:3,emoji:'🧀'},
+  {id:22,name:'سائل صابون ميزا',name_en:'Miza Soap',name_ur:'میزا صابن',cat:'clean',spec:'500 مل',price:8,save:1.75,emoji:'🧴'},
+  {id:23,name:'سائل صابون فيري',name_en:'Feri Soap',name_ur:'فری صابن',cat:'clean',spec:'900 مل',price:15,save:3,emoji:'🧴'},
+  {id:24,name:'صابون دوف',name_en:'Dove Soap',name_ur:'ڈوو صابن',cat:'clean',spec:'125غ',price:7,save:2,emoji:'🧴'},
+  {id:25,name:'شامبو هيد آند شولدرز',name_en:'H&S Shampoo',name_ur:'ہیڈ اینڈ شولڈرز شیمپو',cat:'clean',spec:'عبوة',price:14,save:3,emoji:'🧴'},
+  {id:26,name:'مناديل بنده',name_en:'Bande Napkins',name_ur:'بینڈے نپکین',cat:'clean',spec:'6 حبات',price:7,save:2,emoji:'🧻'},
+  {id:27,name:'أرز الشعلان',name_en:'AlShulaan Rice',name_ur:'الشعلان چاول',cat:'rice',spec:'5 كغ',price:47,save:5,emoji:'🍚'},
+  {id:28,name:'طحين فبنة',name_en:'Fableen Flour',name_ur:'فبین آٹا',cat:'rice',spec:'10 كغ',price:8,save:3,emoji:'🌾'},
+  {id:29,name:'أرز التواقة',name_en:'AlTuwayq Rice',name_ur:'التواقہ چاول',cat:'rice',spec:'5 كغ',price:42,save:5,emoji:'🍚'},
+  {id:30,name:'زيت مازولا',name_en:'Mazola Oil',name_ur:'مازولا تیل',cat:'rice',spec:'1 لتر',price:14,save:3,emoji:'🫒'},
+  {id:31,name:'نسكافيه كلاسيك',name_en:'Nescafe Classic',name_ur:'نسکافیہ کلاسک',cat:'coffee',spec:'190غ',price:28,save:4,emoji:'☕'},
+  {id:32,name:'نسكافيه جولد',name_en:'Nescafe Gold',name_ur:'نسکافیہ گولڈ',cat:'coffee',spec:'عبوة',price:31,save:4,emoji:'☕'},
+  {id:33,name:'أندومي كوري',name_en:'Indomie Curry',name_ur:'انڈومی کری',cat:'indomie',spec:'5 حبات',price:8,save:2.25,emoji:'🍜'},
+  {id:34,name:'أندومي كأس',name_en:'Indomie Cup',name_ur:'انڈومی کپ',cat:'indomie',spec:'82غ',price:4,save:1.5,emoji:'🍜'},
+  {id:35,name:'نقانق رضوى',name_en:'Rawdah Sausages',name_ur:'رضوہ سوسیج',cat:'meat',spec:'400غ',price:7,save:2,emoji:'🍗'},
+  {id:36,name:'ملح ساسا',name_en:'Sasa Salt',name_ur:'ساسا نمک',cat:'meat',spec:'700غ',price:5,save:2,emoji:'🧂'},
+  {id:37,name:'بهارات متنوعة',name_en:'Mixed Spices',name_ur:'مخلوط مسالہ',cat:'meat',spec:'عبوة',price:6.5,save:1.5,emoji:'🧂'},
+  {id:38,name:'سكر الياسمين',name_en:'Yasmin Sugar',name_ur:'یاسمین چینی',cat:'rice',spec:'1 كغ',price:9,save:2,emoji:'🍬'},
+  {id:39,name:'بيبسي/7UP/ميراندا',name_en:'Pepsi/7UP/Miranda',name_ur:'پیپسی/7UP',cat:'drinks',spec:'15 علبة',price:15,save:3,emoji:'🥤'},
+  {id:40,name:'فيمتو',name_en:'Vimto',name_ur:'وائمو',cat:'drinks',spec:'عبوة',price:12,save:2,emoji:'🥤'}
+];
+
+const translations = {
+  ar: { chatWelcome:'مرحباً 👋! كيف يمكنني مساعدتك؟', chatPrice:'💰 عروضنا تتغير أسبوعياً! تصفّح المنتجات.', chatProducts:'📦 عندنا 40+ منتج متنوع!', chatDelivery:'🚚 خلال 24 ساعة في الرياض.', chatPayment:'💳 كاش عند الاستلام', chatEnd:'⏰ ينتهي كل ثلاثاء 11:59 مساءً!', chatContact:'📞 +966 53 567 7870', chatBook:'📝 احجز الآن:', chatThanks:'شكراً لتواصلك! 🙏', toastAdded:'تمت الإضافة ✅', toastOrdered:'تم تأكيد الطلب 🎉', toastNoProduct:'السلة فارغة ❌', toastSuccess:'تم ✅', noOrders:'لا توجد طلبات', noOrdersD:'ستظهر طلباتك هنا', noProducts:'لا توجد منتجات', noOrdersAdmin:'لا توجد طلبات', noCustomers:'لا يوجد عملاء', noActivity:'لا يوجد نشاط', total:'المجموع:', msgSent:'تم إرسال الرسالة ✅' },
+  en: { chatWelcome:'Hello 👋!', chatPrice:'💰 Offers change weekly!', chatProducts:'📦 40+ products!', chatDelivery:'🚚 24h delivery in Riyadh.', chatPayment:'💳 Cash on delivery', chatEnd:'⏰ Ends Tuesday 11:59 PM!', chatContact:'📞 +966 53 567 7870', chatBook:'📝 Order now:', chatThanks:'Thanks! 🙏', toastAdded:'Added ✅', toastOrdered:'Order confirmed 🎉', toastNoProduct:'Cart empty ❌', toastSuccess:'Done ✅', noOrders:'No orders', noOrdersD:'Your orders will appear here', noProducts:'No products', noOrdersAdmin:'No orders', noCustomers:'No customers', noActivity:'No activity', total:'Total:', msgSent:'Sent ✅' },
+  ur: { chatWelcome:'ہیلو 👋!', chatPrice:'💰 قیمتیں ہر ہفتے!', chatProducts:'📦 40+ پروڈکٹس!', chatDelivery:'🚚 24 گھنٹے میں ڈیلیوری۔', chatPayment:'💳 ڈیلیوری پر کیش', chatEnd:'⏰ منگل 11:59!', chatContact:'📞 +966 53 567 7870', chatBook:'📝 آرڈر کریں:', chatThanks:'شکریہ! 🙏', toastAdded:'شامل ✅', toastOrdered:'تصدیق 🎉', toastNoProduct:'خالی ❌', toastSuccess:'مکمل ✅', noOrders:'کوئی آرڈر نہیں', noOrdersD:'یہاں ظاہر ہوں گے', noProducts:'کوئی پروڈکٹ نہیں', noOrdersAdmin:'کوئی آرڈر نہیں', noCustomers:'کوئی گاہک نہیں', noActivity:'کوئی سرگرمی نہیں', total:'کل:', msgSent:'بھیج دیا ✅' }
+};
+
+let currentLang = localStorage.getItem('lang') || 'ar';
+let currentTheme = localStorage.getItem('theme') || 'light';
+let currentPage = 'home';
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+let currentFilter = 'all';
+let chatbotOpen = false;
+const ADMIN_PASSWORD = '14051405';
+const PROFIT_PASSWORD = 'admin123';
+const WEEKLY_DEADLINE_DAY = 2;
+const WEEKLY_DEADLINE_HOUR = 23;
+const WEEKLY_DEADLINE_MIN = 59;
+let currentAdmin = null;
+let adminOrdersFilter = 'all';
+const ADMIN_USERS = {
+  'owner': { name: 'مخلد', role: 'المالك' },
+  'partner': { name: 'عبد الطيف', role: 'الشريك' }
+};
+
+function t(key) {
+  return (translations[currentLang] && translations[currentLang][key]) || key;
+}
+
+function init() {
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    const txt = b.textContent.trim();
+    b.classList.toggle('active', txt === (currentLang === 'ar' ? 'عربي' : currentLang === 'en' ? 'EN' : 'اردو'));
+  });
+  applyTheme(currentTheme);
+  renderProducts();
+  renderCart();
+  renderOrders();
+  updateWeeklyCountdown();
+  setInterval(updateWeeklyCountdown, 1000);
+  setInterval(updateProductCountdowns, 60000);
+  initChatbot();
+  updateAdminStats();
+  checkAdminSession();
+}
+
+function checkAdminSession() {
+  const session = sessionStorage.getItem('adminSession');
+  if (session && ADMIN_USERS[session]) {
+    currentAdmin = ADMIN_USERS[session];
+    const loginEl = document.getElementById('adminLogin');
+    const dashEl = document.getElementById('adminDashboard');
+    if (loginEl) loginEl.classList.add('hidden');
+    if (dashEl) dashEl.classList.remove('hidden');
+    const nameEl = document.getElementById('adminName');
+    if (nameEl) nameEl.textContent = currentAdmin.name;
+    loadAdminDashboard();
+  }
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    const txt = b.textContent.trim();
+    b.classList.toggle('active', txt === (lang === 'ar' ? 'عربي' : lang === 'en' ? 'EN' : 'اردو'));
+  });
+  renderProducts();
+  renderCart();
+  renderOrders();
+  initChatbot();
+  updateAdminStats();
+  showToast(t('toastSuccess'), 'success');
+}
+
+function toggleTheme() {
+  const themes = ['light', 'dark', 'simple'];
+  const idx = themes.indexOf(currentTheme);
+  currentTheme = themes[(idx + 1) % themes.length];
+  applyTheme(currentTheme);
+  showToast(t('toastSuccess'), 'success');
+}
+
+function applyTheme(theme) {
+  currentTheme = theme;
+  localStorage.setItem('theme', theme);
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.querySelector('.theme-btn');
+  if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+
+function navigateTo(page) {
+  currentPage = page;
+  document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
+  const pageEl = document.getElementById('page-' + page);
+  if (pageEl) pageEl.classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.classList.toggle('active', l.getAttribute('data-page') === page);
+  });
+  if (page === 'booking') renderCart();
+  if (page === 'orders') renderOrders();
+  if (page === 'admin') {
+    checkAdminSession();
+    if (currentAdmin) loadAdminDashboard();
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+  if (!link.getAttribute('onclick')) {
+    link.addEventListener('click', () => navigateTo(link.getAttribute('data-page')));
+  }
+});
+
+function renderProducts() {
+  const grid = document.getElementById('productsGrid');
+  if (!grid) return;
+  const filtered = currentFilter === 'all' ? products : products.filter(p => p.cat === currentFilter);
+  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  const final = filtered.filter(p => {
+    const name = currentLang === 'ar' ? p.name : currentLang === 'en' ? p.name_en : p.name_ur;
+    return name.toLowerCase().includes(search);
+  });
+  grid.innerHTML = final.map((p, i) => `
+    <div class="product-card" style="animation-delay:${i * 0.05}s">
+      <div class="product-banner">
+        <div class="product-emoji">${p.emoji}</div>
+        <div class="offer-tag">🔥 عرض</div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">${currentLang === 'ar' ? p.name : currentLang === 'en' ? p.name_en : p.name_ur}</div>
+        <div class="product-spec">${p.spec}</div>
+        <div class="countdown-small" id="cd-${p.id}">⏰ --</div>
+        <div class="product-price-row">
+          <div>
+            <span class="product-price">${p.price} ر.س</span>
+            <span class="product-save">وفّر ${p.save} ر.س</span>
+          </div>
+        </div>
+        <button class="add-cart-btn" onclick="addToCart(${p.id})">🛒 أضف للسلة</button>
+      </div>
+    </div>
+  `).join('');
+  updateProductCountdowns();
+}
+
+function filterProducts() { renderProducts(); }
+
+function setFilter(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts();
+}
+
+function getWeeklyDeadline() {
+  const now = new Date();
+  const day = now.getDay();
+  let daysUntil = WEEKLY_DEADLINE_DAY - day;
+  if (daysUntil < 0) daysUntil += 7;
+  if (day === WEEKLY_DEADLINE_DAY && now.getHours() >= WEEKLY_DEADLINE_HOUR) daysUntil = 7;
+  const deadline = new Date(now);
+  deadline.setDate(now.getDate() + daysUntil);
+  deadline.setHours(WEEKLY_DEADLINE_HOUR, WEEKLY_DEADLINE_MIN, 0, 0);
+  return deadline;
+}
+
+function updateWeeklyCountdown() {
+  const deadline = getWeeklyDeadline();
+  const now = new Date();
+  const diff = deadline - now;
+  const bar = document.getElementById('weeklyCountdownBar');
+  if (!bar) return;
+  if (diff <= 0) { bar.textContent = 'انتهى!'; return; }
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const secs = Math.floor((diff % (1000 * 60)) / 1000);
+  bar.textContent = `${days}d ${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+}
+
+function updateProductCountdowns() {
+  const deadline = getWeeklyDeadline();
+  products.forEach(p => {
+    const el = document.getElementById('cd-' + p.id);
+    if (!el) return;
+    const now = new Date();
+    const diff = deadline - now;
+    if (diff <= 0) { el.textContent = '⏰ انتهى العرض'; return; }
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    el.textContent = `⏰ ${days}d ${hours}h`;
+  });
+}
+
+function addToCart(productId) {
+  const existing = cart.find(c => c.productId === productId);
+  if (existing) { existing.qty++; }
+  else { cart.push({ productId, qty: 1 }); }
+  localStorage.setItem('cart', JSON.stringify(cart));
+  showToast(t('toastAdded'), 'success');
+  renderCart();
+}
+
+function removeFromCart(productId) {
+  cart = cart.filter(c => c.productId !== productId);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  renderCart();
+}
+
+function changeQty(productId, delta) {
+  const item = cart.find(c => c.productId === productId);
+  if (item) {
+    item.qty += delta;
+    if (item.qty <= 0) { removeFromCart(productId); return; }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+  }
+}
+
+function getCartTotal() {
+  return cart.reduce((sum, c) => {
+    const p = products.find(pr => pr.id === c.productId);
+    return sum + (p ? p.price * c.qty : 0);
+  }, 0);
+}
+
+function renderCart() {
+  const container = document.getElementById('cartItems');
+  const summary = document.getElementById('cartSummary');
+  const empty = document.getElementById('emptyCart');
+  if (!container || !summary || !empty) return;
+  if (cart.length === 0) {
+    container.innerHTML = '';
+    summary.classList.add('hidden');
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  summary.classList.remove('hidden');
+  container.innerHTML = cart.map(c => {
+    const p = products.find(pr => pr.id === c.productId);
+    if (!p) return '';
+    const name = currentLang === 'ar' ? p.name : currentLang === 'en' ? p.name_en : p.name_ur;
+    return `
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${p.emoji} ${name}</div>
+          <div class="cart-item-price">${p.price} ر.س × ${c.qty} = <strong>${p.price * c.qty} ر.س</strong></div>
+        </div>
+        <div class="cart-qty">
+          <button class="qty-btn" onclick="changeQty(${p.id},-1)">−</button>
+          <span class="qty-num">${c.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${p.id},1)">+</button>
+        </div>
+        <button class="remove-item" onclick="removeFromCart(${p.id})">🗑️</button>
+      </div>
+    `;
+  }).join('');
+  const ct = document.getElementById('cartTotal');
+  const ic = document.getElementById('itemsCount');
+  if (ct) ct.textContent = getCartTotal().toFixed(2) + ' ر.س';
+  if (ic) ic.textContent = cart.reduce((s, c) => s + c.qty, 0);
+}
+
+function confirmOrder() {
+  if (cart.length === 0) { showToast(t('toastNoProduct'), 'error'); return; }
+  const nameEl = document.getElementById('dlvName');
+  const phoneEl = document.getElementById('dlvPhone');
+  const areaEl = document.getElementById('dlvArea');
+  const addressEl = document.getElementById('dlvAddress');
+  const notesEl = document.getElementById('dlvNotes');
+  const name = nameEl.value.trim();
+  const phone = phoneEl.value.trim();
+  const area = areaEl.value;
+  const address = addressEl.value.trim();
+  const notes = notesEl ? notesEl.value.trim() : '';
+  if (!name || !phone || !area || !address) {
+    showToast('الرجاء ملء جميع بيانات التوصيل', 'error');
+    return;
+  }
+  const total = getCartTotal();
+  const order = {
+    id: 'ORD-' + Date.now().toString(36).toUpperCase(),
+    date: new Date().toLocaleDateString('ar-SA'),
+    items: cart.map(c => {
+      const p = products.find(pr => pr.id === c.productId);
+      return { name: p.name, qty: c.qty, price: p.price, total: p.price * c.qty };
+    }),
+    total,
+    delivery: { name, phone, area, address, notes },
+    status: 'pending',
+    timestamp: Date.now()
+  };
+  orders.unshift(order);
+  localStorage.setItem('orders', JSON.stringify(orders));
+  cart = [];
+  localStorage.setItem('cart', JSON.stringify(cart));
+  renderCart();
+  updateAdminStats();
+  showToast(t('toastOrdered'), 'success');
+
+  let msg = `🛒 *طلب جديد* | ${order.id}\n📅 ${order.date}\n\n`;
+  order.items.forEach(item => { msg += `${item.name} × ${item.qty} = ${item.total} ر.س\n`; });
+  msg += `\n💰 المجموع: ${total} ر.س\n📍 ${name} - ${area} - ${address}\n📞 ${phone}`;
+  if (notes) msg += `\n📝 ${notes}`;
+  window.open(`https://wa.me/966535677870?text=${encodeURIComponent(msg)}`, '_blank');
+
+  nameEl.value = ''; phoneEl.value = ''; areaEl.value = ''; addressEl.value = '';
+  if (notesEl) notesEl.value = '';
+  setTimeout(() => navigateTo('orders'), 2000);
+}
+
+function renderOrders() {
+  const container = document.getElementById('ordersList');
+  if (!container) return;
+  if (orders.length === 0) {
+    container.innerHTML = `<div class="empty-cart"><div class="empty-icon">📋</div><h3>${t('noOrders')}</h3><p>${t('noOrdersD')}</p></div>`;
+    return;
+  }
+  container.innerHTML = orders.map(o => {
+    const status = o.status || 'pending';
+    const statusClass = status === 'delivered' ? 'status-delivered' : status === 'transit' ? 'status-transit' : 'status-pending';
+    const statusText = status === 'delivered' ? 'تم التوصيل' : status === 'transit' ? 'في الطريق' : 'قيد المعالجة';
+    const progress = status === 'delivered' ? 4 : status === 'transit' ? 3 : status === 'confirmed' ? 2 : 1;
+    return `
+      <div class="order-card">
+        <div class="order-header">
+          <span class="order-id">#${o.id}</span>
+          <span class="order-status ${statusClass}">${statusText}</span>
+          <span style="color:var(--text-light);font-size:0.85rem;">${o.date}</span>
+        </div>
+        <div class="tracking-bar">${[1,2,3,4].map(i => `<div class="tracking-dot ${i <= progress ? 'active' : ''}"></div>`).join('')}</div>
+        <div class="tracking-labels"><span>طلب</span><span>تأكيد</span><span>شحن</span><span>توصيل</span></div>
+        <div class="order-items">${o.items.map(item => `<div class="order-item-row"><span>${item.name} × ${item.qty}</span><span>${item.total} ر.س</span></div>`).join('')}</div>
+        <div class="order-footer"><span>${t('total')}</span><span style="color:var(--primary);font-size:1.2rem;">${o.total} ر.س</span></div>
+      </div>
+    `;
+  }).join('');
+}
+
+function initChatbot() {
+  const welcome = document.getElementById('chatWelcome');
+  if (welcome) welcome.textContent = t('chatWelcome');
+}
+
+function toggleChatbot() {
+  chatbotOpen = !chatbotOpen;
+  document.getElementById('chatbotModal').classList.toggle('hidden', !chatbotOpen);
+  if (chatbotOpen) {
+    document.getElementById('chatbotFloat').style.animation = 'none';
+    const body = document.getElementById('chatBody');
+    if (body && !body.querySelector('.chat-quick-btn')) showChatQuickActions();
+  }
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  if (!input) return;
+  const msg = input.value.trim();
+  if (!msg) return;
+  addChatMsg(msg, 'user');
+  input.value = '';
+  setTimeout(() => addChatMsg(getChatResponse(msg), 'bot'), 600);
+}
+
+function addChatMsg(text, type) {
+  const body = document.getElementById('chatBody');
+  if (!body) return;
+  const msg = document.createElement('div');
+  msg.className = `chat-msg ${type === 'user' ? 'chat-user-msg' : 'chat-bot-msg'}`;
+  msg.innerHTML = text;
+  body.appendChild(msg);
+  body.scrollTop = body.scrollHeight;
+}
+
+function getChatResponse(msg) {
+  const lower = msg.toLowerCase();
+  if (lower.includes('سعر') || lower.includes('price')) return t('chatPrice');
+  if (lower.includes('منتج') || lower.includes('product') || lower.includes('عندك')) return t('chatProducts');
+  if (lower.includes('توصيل') || lower.includes('delivery')) return t('chatDelivery');
+  if (lower.includes('دفع') || lower.includes('payment')) return t('chatPayment');
+  if (lower.includes('انته') || lower.includes('متى')) return t('chatEnd');
+  if (lower.includes('تواصل') || lower.includes('contact')) return t('chatContact');
+  if (lower.includes('حجز') || lower.includes('احجز') || lower.includes('order')) return t('chatBook') + '<br><button class="chat-quick-btn" onclick="navigateTo(\'booking\');toggleChatbot();">اذهب للحجز</button>';
+  if (lower.includes('مرحبا') || lower.includes('hello')) return t('chatWelcome');
+  return t('chatThanks') + ' 🎵';
+}
+
+function showChatQuickActions() {
+  const body = document.getElementById('chatBody');
+  if (!body) return;
+  const actions = [
+    { label: '💰 وش الأسعار', key: 'price' },
+    { label: '📦 وش عندكم', key: 'products' },
+    { label: '🚚 التوصيل', key: 'delivery' },
+    { label: '💳 الدفع', key: 'payment' },
+    { label: '⏰ متى ينتهي', key: 'end' },
+    { label: '📞 تواصل', key: 'contact' },
+    { label: '📝 احجز', key: 'book' }
+  ];
+  actions.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = 'chat-quick-btn';
+    btn.textContent = a.label;
+    btn.onclick = () => {
+      addChatMsg(a.label, 'user');
+      setTimeout(() => addChatMsg(getChatResponse(a.key), 'bot'), 400);
+    };
+    body.appendChild(btn);
+  });
+}
+
+function adminLogin() {
+  const userEl = document.getElementById('adminUser');
+  const passEl = document.getElementById('adminPassword');
+  const errorEl = document.getElementById('adminError');
+  const user = userEl.value;
+  const pass = passEl.value;
+  if (pass === ADMIN_PASSWORD) {
+    currentAdmin = ADMIN_USERS[user];
+    sessionStorage.setItem('adminSession', user);
+    document.getElementById('adminLogin').classList.add('hidden');
+    document.getElementById('adminDashboard').classList.remove('hidden');
+    document.getElementById('adminName').textContent = currentAdmin.name;
+    passEl.value = '';
+    errorEl.textContent = '';
+    loadAdminDashboard();
+    logActivity(`🟢 ${currentAdmin.name} دخل لوحة التحكم`);
+    showToast(`أهلاً ${currentAdmin.name} 👋`, 'success');
+  } else {
+    errorEl.textContent = '❌ كلمة المرور غير صحيحة';
+    logActivity(`🔴 محاولة دخول فاشلة`);
+  }
+}
+
+function adminLogout() {
+  if (!confirm('تريد الخروج؟')) return;
+  if (currentAdmin) logActivity(`🚪 ${currentAdmin.name} خرج`);
+  sessionStorage.removeItem('adminSession');
+  currentAdmin = null;
+  document.getElementById('adminLogin').classList.remove('hidden');
+  document.getElementById('adminDashboard').classList.add('hidden');
+  showToast('تم الخروج', 'success');
+}
+
+function loadAdminDashboard() {
+  updateAdminStats();
+  renderAdminOrders();
+  renderAdminProducts();
+  renderAdminCustomers();
+  renderAdminProfit();
+  renderActivityLog();
+}
+
+function updateAdminStats() {
+  const total = orders.length;
+  const revenue = orders.reduce((s, o) => s + o.total, 0);
+  const profit = revenue * 0.30;
+  const pending = orders.filter(o => (o.status || 'pending') === 'pending').length;
+  const delivered = orders.filter(o => o.status === 'delivered').length;
+  const today = new Date().toDateString();
+  const todayCount = orders.filter(o => new Date(o.timestamp).toDateString() === today).length;
+  const sO = document.getElementById('statOrders');
+  if (sO) {
+    sO.textContent = total;
+    document.getElementById('statRevenue').textContent = revenue.toFixed(0);
+    document.getElementById('statProfit').textContent = profit.toFixed(0);
+    document.getElementById('statPending').textContent = pending;
+    document.getElementById('statDelivered').textContent = delivered;
+    document.getElementById('statToday').textContent = todayCount;
+  }
+}
+
+function adminTab(tab, btn) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  const tabEl = document.getElementById('adminTab-' + tab);
+  if (tabEl) tabEl.classList.add('active');
+}
+
+function filterAdminOrders(filter, btn) {
+  adminOrdersFilter = filter;
+  document.querySelectorAll('.admin-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAdminOrders();
+}
+
+function renderAdminOrders() {
+  const container = document.getElementById('adminOrdersList');
+  if (!container) return;
+  let filtered = orders;
+  if (adminOrdersFilter !== 'all') filtered = orders.filter(o => (o.status || 'pending') === adminOrdersFilter);
+  if (filtered.length === 0) { container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);">📭 ' + t('noOrdersAdmin') + '</div>'; return; }
+  container.innerHTML = filtered.map(o => {
+    const status = o.status || 'pending';
+    const statusText = status === 'pending' ? '⏳ قيد التنفيذ' : status === 'transit' ? '🚚 في الطريق' : '✅ مكتمل';
+    const phoneHref = 'https://wa.me/966' + (o.delivery?.phone || '').replace(/^0/, '');
+    return `<div class="admin-order-item ${status}">
+      <div class="admin-order-header"><span class="admin-order-id">#${o.id}</span><span class="admin-order-status ${status}">${statusText}</span></div>
+      <div class="admin-order-details">
+        <strong>👤 العميل:</strong> ${o.delivery?.name || '-'}<br>
+        <strong>📞 الجوال:</strong> ${o.delivery?.phone || '-'}<br>
+        <strong>📍 العنوان:</strong> ${o.delivery?.area || ''} - ${o.delivery?.address || ''}<br>
+        <strong>📦 المنتجات:</strong> ${o.items?.map(i => `${i.name}×${i.qty}`).join(', ') || '-'}<br>
+        <strong>💰 الإجمالي:</strong> ${o.total} ر.س<br>
+        <strong>📅 التاريخ:</strong> ${o.date || '-'}
+      </div>
+      <div class="admin-order-actions">
+        ${status === 'pending' ? `<button class="admin-action-btn start" onclick="updateOrderStatus('${o.id}', 'transit')">🚚 بدء الشحن</button>` : ''}
+        ${status === 'transit' ? `<button class="admin-action-btn done" onclick="updateOrderStatus('${o.id}', 'delivered')">✅ تم التسليم</button>` : ''}
+        <a href="${phoneHref}" target="_blank" class="admin-action-btn start">💬 واتساب</a>
+        <button class="admin-action-btn delete" onclick="deleteAdminOrder('${o.id}')">🗑️ حذف</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateOrderStatus(orderId, newStatus) {
+  const ord = JSON.parse(localStorage.getItem('orders') || '[]');
+  const idx = ord.findIndex(o => o.id === orderId);
+  if (idx === -1) return;
+  ord[idx].status = newStatus;
+  localStorage.setItem('orders', JSON.stringify(ord));
+  orders = ord;
+  logActivity(`📝 تحديث #${orderId} إلى ${newStatus}`);
+  showToast('تم تحديث الطلب ✅', 'success');
+  updateAdminStats();
+  renderAdminOrders();
+}
+
+function deleteAdminOrder(orderId) {
+  if (!confirm(`حذف الطلب #${orderId}؟`)) return;
+  let ord = JSON.parse(localStorage.getItem('orders') || '[]');
+  ord = ord.filter(o => o.id !== orderId);
+  localStorage.setItem('orders', JSON.stringify(ord));
+  orders = ord;
+  logActivity(`🗑️ حذف الطلب #${orderId}`);
+  showToast('تم الحذف', 'success');
+  updateAdminStats();
+  renderAdminOrders();
+}
+
+function renderAdminProducts() {
+  const customProducts = JSON.parse(localStorage.getItem('products') || '[]');
+  const container = document.getElementById('adminProductsList');
+  if (!container) return;
+  if (customProducts.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);">📭 ' + t('noProducts') + '</div>';
+    return;
+  }
+  container.innerHTML = customProducts.map((p, i) => `
+    <div class="admin-product-item">
+      <div class="admin-product-emoji">${p.emoji || '📦'}</div>
+      <div class="admin-product-info"><strong>${p.name}</strong><span>السعر: ${p.price} ر.س</span></div>
+      <div style="display:flex;gap:6px;">
+        <button class="admin-action-btn start" onclick="editProduct(${i})">✏️ تعديل</button>
+        <button class="admin-action-btn delete" onclick="deleteProduct(${i})">🗑️ حذف</button>
+      </div>
+    </div>`).join('');
+}
+
+function addNewProduct() {
+  const name = prompt('اسم المنتج:');
+  if (!name) return;
+  const price = parseFloat(prompt('السعر:'));
+  if (isNaN(price)) return;
+  const save = parseFloat(prompt('التوفير:')) || 0;
+  const emoji = prompt('الأيقونة:') || '📦';
+  const cp = JSON.parse(localStorage.getItem('products') || '[]');
+  cp.push({ name, price, save, emoji });
+  localStorage.setItem('products', JSON.stringify(cp));
+  logActivity(`➕ إضافة منتج "${name}"`);
+  showToast('تمت الإضافة ✅', 'success');
+  renderAdminProducts();
+}
+
+function editProduct(idx) {
+  const cp = JSON.parse(localStorage.getItem('products') || '[]');
+  const p = cp[idx];
+  const newName = prompt('الاسم:', p.name);
+  if (!newName) return;
+  const newPrice = parseFloat(prompt('السعر:', p.price));
+  if (isNaN(newPrice)) return;
+  const newSave = parseFloat(prompt('التوفير:', p.save)) || 0;
+  cp[idx] = { ...p, name: newName, price: newPrice, save: newSave };
+  localStorage.setItem('products', JSON.stringify(cp));
+  logActivity(`✏️ تعديل "${newName}"`);
+  showToast('تم التعديل ✅', 'success');
+  renderAdminProducts();
+}
+
+function deleteProduct(idx) {
+  const cp = JSON.parse(localStorage.getItem('products') || '[]');
+  if (!confirm(`حذف "${cp[idx].name}"؟`)) return;
+  cp.splice(idx, 1);
+  localStorage.setItem('products', JSON.stringify(cp));
+  logActivity(`🗑️ حذف منتج`);
+  showToast('تم الحذف', 'success');
+  renderAdminProducts();
+}
+
+function renderAdminCustomers() {
+  const container = document.getElementById('adminCustomersList');
+  if (!container) return;
+  const cm = {};
+  orders.forEach(o => {
+    if (!o.delivery?.phone) return;
+    const phone = o.delivery.phone;
+    if (!cm[phone]) cm[phone] = { name: o.delivery.name, phone, area: o.delivery.area, orders: 0, total: 0 };
+    cm[phone].orders++;
+    cm[phone].total += o.total;
+  });
+  const customers = Object.values(cm);
+  if (customers.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);">📭 ' + t('noCustomers') + '</div>';
+    return;
+  }
+  container.innerHTML = customers.map(c => `
+    <div class="admin-order-item">
+      <div class="admin-order-header"><span class="admin-order-id">👤 ${c.name}</span><span class="admin-order-status delivered">${c.orders} طلب</span></div>
+      <div class="admin-order-details">
+        <strong>📞 الجوال:</strong> ${c.phone}<br>
+        <strong>📍 المنطقة:</strong> ${c.area || '-'}<br>
+        <strong>💰 الإجمالي:</strong> ${c.total.toFixed(2)} ر.س
+      </div>
+      <div class="admin-order-actions">
+        <a href="tel:${c.phone}" class="admin-action-btn start">📞 اتصل</a>
+        <a href="https://wa.me/966${c.phone.replace(/^0/, '')}" target="_blank" class="admin-action-btn transit">💬 واتساب</a>
+      </div>
+    </div>`).join('');
+}
+
+function renderAdminProfit() {
+  const container = document.getElementById('adminProfitContent');
+  if (!container) return;
+  const totalRevenue = orders.reduce((s, o) => s + o.total, 0);
+  const estimatedCost = totalRevenue * 0.70;
+  const estimatedProfit = totalRevenue * 0.30;
+  container.innerHTML = `
+    <div class="admin-order-item">
+      <div class="admin-stat-row"><span>💵 إجمالي المبيعات</span><span><strong>${totalRevenue.toFixed(2)} ر.س</strong></span></div>
+      <div class="admin-stat-row"><span>🛒 تكلفة المنتجات</span><span><strong>${estimatedCost.toFixed(2)} ر.س</strong></span></div>
+      <div class="admin-stat-row"><span>📊 هامش الربح</span><span><strong>${estimatedProfit.toFixed(2)} ر.س</strong></span></div>
+      <div class="admin-stat-row"><span>📋 عدد الطلبات</span><span><strong>${orders.length}</strong></span></div>
+      <div class="admin-stat-row total"><span>💰 صافي الربح المتوقع</span><span>${estimatedProfit.toFixed(2)} ر.س</span></div>
+    </div>
+    <div class="admin-order-item" style="margin-top:20px;">
+      <h4 style="margin-bottom:15px;">📊 التقسيم (50/50)</h4>
+      <div class="admin-stat-row"><span>👤 مخلد (المالك)</span><span><strong>${(estimatedProfit/2).toFixed(2)} ر.س</strong></span></div>
+      <div class="admin-stat-row"><span>👤 عبد الطيف (الشريك)</span><span><strong>${(estimatedProfit/2).toFixed(2)} ر.س</strong></span></div>
+    </div>`;
+}
+
+function logActivity(text) {
+  const logs = JSON.parse(localStorage.getItem('activityLog') || '[]');
+  logs.unshift({ text, time: new Date().toLocaleString('ar-SA') });
+  if (logs.length > 200) logs.length = 200;
+  localStorage.setItem('activityLog', JSON.stringify(logs));
+}
+
+function renderActivityLog() {
+  const logs = JSON.parse(localStorage.getItem('activityLog') || '[]');
+  const container = document.getElementById('adminActivityList');
+  if (!container) return;
+  if (logs.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);">📭 ' + t('noActivity') + '</div>';
+    return;
+  }
+  container.innerHTML = logs.slice(0, 50).map(l => `<div class="admin-activity-item"><span>${l.text}</span><span class="time">${l.time}</span></div>`).join('');
+}
+
+function clearActivityLog() {
+  if (!confirm('مسح السجل؟')) return;
+  localStorage.removeItem('activityLog');
+  logActivity('🗑️ مسح السجل');
+  renderActivityLog();
+  showToast('تم المسح', 'success');
+}
+
+function openProfitCalc() {
+  const passEl = document.getElementById('profitPass');
+  if (!passEl) return;
+  if (passEl.value !== PROFIT_PASSWORD) { showToast('كلمة المرور غير صحيحة ❌', 'error'); return; }
+  const content = document.getElementById('profitContent');
+  if (content) content.classList.remove('hidden');
+  const revenue = orders.reduce((s, o) => s + o.total, 0);
+  const estimatedCost = revenue * 0.70;
+  const profit = revenue - estimatedCost;
+  const avgProfit = orders.length > 0 ? profit / orders.length : 0;
+  const pS = document.getElementById('pSales');
+  if (pS) {
+    pS.textContent = revenue.toFixed(2) + ' ر.س';
+    document.getElementById('pCost').textContent = estimatedCost.toFixed(2) + ' ر.س';
+    document.getElementById('pProfit').textContent = profit.toFixed(2) + ' ر.س';
+    document.getElementById('pOrders').textContent = orders.length;
+    document.getElementById('pAvg').textContent = avgProfit.toFixed(2) + ' ر.س';
+  }
+  showToast('تم فتح حاسبة الأرباح ✅', 'success');
+}
+
+function setRating(n) {
+  document.querySelectorAll('#ratingStars .star').forEach((s, i) => {
+    s.classList.toggle('active', i < n);
+  });
+}
+
+function sendMessage() {
+  const nameEl = document.getElementById('msgName');
+  const subjectEl = document.getElementById('msgSubject');
+  const bodyEl = document.getElementById('msgBody');
+  const name = nameEl.value.trim();
+  const subject = subjectEl.value.trim();
+  const body = bodyEl.value.trim();
+  if (!name || !subject || !body) { showToast('الرجاء ملء الحقول', 'error'); return; }
+  let msg = `📩 *رسالة جديدة*\n👤 ${name}\n📌 ${subject}\n\n${body}`;
+  window.open(`https://wa.me/966535677870?text=${encodeURIComponent(msg)}`, '_blank');
+  showToast(t('msgSent'), 'success');
+  nameEl.value = ''; subjectEl.value = ''; bodyEl.value = '';
+}
+
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `${type === 'success' ? '✅' : '❌'} ${message}`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const sInput = document.getElementById('searchInput');
+  if (sInput) sInput.addEventListener('input', filterProducts);
+});
+
+init();
+</script>
+</body>
+</html>
