@@ -130,7 +130,6 @@ body.d3 .notice{background:#422006;color:#fbbf24}
 </head>
 <body class="d1">
 
-<!-- شريط التبديل -->
 <div class="switcher">
   <h1>🏢 منصة التوزيع - مؤسسة مخلد العنزي</h1>
   <div class="switcher-btns">
@@ -140,7 +139,6 @@ body.d3 .notice{background:#422006;color:#fbbf24}
   </div>
 </div>
 
-<!-- التبويبات -->
 <div class="tabs">
   <button class="tab active" onclick="showTab('home', event)">🏠 الرئيسية</button>
   <button class="tab" onclick="showTab('booking', event)">📝 حجز جديد</button>
@@ -148,17 +146,15 @@ body.d3 .notice{background:#422006;color:#fbbf24}
   <button class="tab" onclick="showTab('calc', event)">🧮 حاسبة الأرباح</button>
 </div>
 
-<!-- الهيدر -->
 <div class="header">
   <h2>🏢 مؤسسة مخلد محمد بن سليمان العنزي</h2>
   <p>منصة الحجز المسبق — توزيع عروض بنده للبقالات والمطاعم</p>
   <div class="info">
-    <a href="tel:+966551134404" dir="ltr">📞 +966 55 113 4404</a>
-    <a href="https://wa.me/966551134404" target="_blank">💬 واتساب</a>
+    <a href="tel:+966511344046" dir="ltr">📞 +966 51 134 4046</a>
+    <a href="https://wa.me/966511344046" target="_blank">💬 واتساب</a>
   </div>
 </div>
 
-<!-- ============ تبويب الرئيسية ============ -->
 <div class="tab-content active" id="tab-home">
 
   <div class="section">
@@ -217,11 +213,10 @@ body.d3 .notice{background:#422006;color:#fbbf24}
   <div class="section">
     <h3>🚀 جاهز تطلب؟</h3>
     <button class="btn btn-primary" onclick="showTab('booking', event)">📝 ابدأ الحجز الآن</button>
-    <a class="btn btn-wa" href="https://wa.me/966551134404" target="_blank">💬 تواصل واتساب</a>
+    <a class="btn btn-wa" href="https://wa.me/966511344046" target="_blank">💬 تواصل واتساب</a>
   </div>
 </div>
 
-<!-- ============ تبويب الحجز ============ -->
 <div class="tab-content" id="tab-booking">
   <div class="section">
     <h3>📝 نموذج الحجز</h3>
@@ -291,7 +286,6 @@ body.d3 .notice{background:#422006;color:#fbbf24}
   </div>
 </div>
 
-<!-- ============ تبويب الطلبات ============ -->
 <div class="tab-content" id="tab-orders">
   <div class="section">
     <h3>📋 قائمة الطلبات</h3>
@@ -305,7 +299,6 @@ body.d3 .notice{background:#422006;color:#fbbf24}
   </div>
 </div>
 
-<!-- ============ تبويب الحاسبة ============ -->
 <div class="tab-content" id="tab-calc">
   <div class="section">
     <h3>🧮 حاسبة الأرباح</h3>
@@ -344,10 +337,9 @@ body.d3 .notice{background:#422006;color:#fbbf24}
   </div>
 </div>
 
-<!-- الفوتر -->
 <div class="footer">
   <p>© 2026 مؤسسة مخلد محمد بن سليمان العنزي — الرياض 🇸🇦</p>
-  <p>📞 <a href="tel:+966551134404" dir="ltr">+966 55 113 4404</a> · 💬 <a href="https://wa.me/966551134404" target="_blank">واتساب</a></p>
+  <p>📞 <a href="tel:+966511344046" dir="ltr">+966 51 134 4046</a> · 💬 <a href="https://wa.me/966511344046" target="_blank">واتساب</a></p>
 </div>
 
 <div id="toast"></div>
@@ -433,7 +425,7 @@ function submitOrder(e){
     (notes ? `📝 ملاحظات: ${notes}\n` : '') +
     `\n💰 الدفع: نقداً عند الاستلام`;
 
-  document.getElementById('waLink').href = 'https://wa.me/966551134404?text=' + encodeURIComponent(waText);
+  document.getElementById('waLink').href = 'https://wa.me/966511344046?text=' + encodeURIComponent(waText);
 
   document.getElementById('result').classList.add('show');
   toast('✅ تم استلام طلبك', 'ok');
