@@ -539,3 +539,137 @@ function stopTrackingUpdates() {
 setLanguage(currentLanguage);
 
 </script>
+<script>
+// =========================
+//  WHOLESALE OS – SIMULATED ENGINES
+// =========================
+
+// طلبات المتاجر (محاكاة)
+const orders = [
+    { id: 1, store: "Store A", status: "Pending", amount: 350.75, zone: "East Riyadh" },
+    { id: 2, store: "Store B", status: "Assigned", amount: 120.00, zone: "North Riyadh" },
+    { id: 3, store: "Store C", status: "Delivered", amount: 980.50, zone: "South Riyadh" }
+];
+
+// السائقين (محاكاة)
+const drivers = [
+    { id: 101, name: "Driver 1", status: "Available", zone: "East Riyadh" },
+    { id: 102, name: "Driver 2", status: "On Route", zone: "North Riyadh" },
+    { id: 103, name: "Driver 3", status: "Resting", zone: "South Riyadh" }
+];
+
+// محاكاة واتساب (رسائل طلبات)
+function simulateWhatsAppOrder(storeName, items) {
+    console.log(`[WhatsApp] New order from ${storeName}: ${items.join(", ")}`);
+    // هنا ممكن تربط لاحقاً بـ API حقيقي
+}
+
+// محاكاة OCR لتحويلات بنكية
+function simulateBankTransferOCR(imageId) {
+    console.log(`[OCR] Reading bank transfer image #${imageId}...`);
+    // نتيجة وهمية
+    return {
+        account: "SA123456789",
+        amount: 1250.75,
+        reference: "INV-2026-001",
+        status: "Parsed"
+    };
+}
+
+// محاكاة AI للتنبؤ بالطلب
+function simulateDemandForecast(storeName, zone) {
+    console.log(`[AI] Forecasting demand for ${storeName} in zone ${zone}...`);
+    return {
+        next7DaysCases: Math.floor(Math.random() * 50) + 10,
+        confidence: (Math.random() * 0.3 + 0.7).toFixed(2)
+    };
+}
+
+// محاكاة ZATCA (توليد فاتورة إلكترونية)
+function simulateZATCAInvoice(orderId) {
+    console.log(`[ZATCA] Generating e-invoice for order #${orderId}...`);
+    return {
+        invoiceId: `ZATCA-${orderId}-${Date.now()}`,
+        status: "Generated",
+        qr: "QR_CODE_PLACEHOLDER"
+    };
+}
+
+// محاكاة WASL / TGA (ربط تتبع)
+function simulateWASLTracking(driverId) {
+    console.log(`[WASL] Syncing driver #${driverId} location to WASL/TGA...`);
+    return {
+        driverId,
+        synced: true,
+        timestamp: new Date().toISOString()
+    };
+}
+
+// محاكاة رصيد ائتماني
+function simulateCreditCheck(storeName) {
+    console.log(`[Credit] Checking credit for ${storeName}...`);
+    return {
+        store: storeName,
+        limit: 5000,
+        used: Math.floor(Math.random() * 4000),
+        riskScore: Math.floor(Math.random() * 100)
+    };
+}
+
+// محاكاة استثناءات تشغيلية
+const exceptionsQueue = [];
+
+function raiseOperationalException(type, details) {
+    const ex = {
+        id: exceptionsQueue.length + 1,
+        type,
+        details,
+        time: new Date().toLocaleString()
+    };
+    exceptionsQueue.push(ex);
+    console.warn(`[EXCEPTION] ${type}: ${details}`);
+}
+
+// محاكاة POD (إثبات التسليم)
+function simulatePOD(orderId) {
+    console.log(`[POD] Capturing proof of delivery for order #${orderId}...`);
+    return {
+        orderId,
+        photo: "PHOTO_PLACEHOLDER",
+        signature: "SIGNATURE_PLACEHOLDER",
+        otp: Math.floor(100000 + Math.random() * 900000),
+        status: "Captured"
+    };
+}
+
+// =========================
+//  SIMPLE UI HOOKS (DEMO)
+// =========================
+
+function demoOwnerOps() {
+    console.log("=== OWNER OPS DEMO ===");
+    const forecast = simulateDemandForecast("Store A", "East Riyadh");
+    const credit = simulateCreditCheck("Store A");
+    const inv = simulateZATCAInvoice(1);
+    console.log({ forecast, credit, inv });
+}
+
+function demoAdminOps() {
+    console.log("=== ADMIN OPS DEMO ===");
+    const ocr = simulateBankTransferOCR(10);
+    const wasl = simulateWASLTracking(101);
+    raiseOperationalException("DelayedDelivery", "Driver 102 delayed due to traffic.");
+    console.log({ ocr, wasl, exceptionsQueue });
+}
+
+function demoFleetOps() {
+    console.log("=== FLEET OPS DEMO ===");
+    simulateWhatsAppOrder("Store B", ["Water 24x", "Rice 10kg"]);
+    const pod = simulatePOD(2);
+    console.log({ pod });
+}
+
+// ممكن تربط هذه الدوال بأزرار لاحقاً في الواجهة
+// مثلاً: زر "تشغيل تجريبي" للمالك، المشرف، الكابتن، إلخ.
+
+            </script>
