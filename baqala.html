@@ -164,3 +164,378 @@ button:hover{background:#0056b3;}
         </div>
     </div>
 </div>
+<script>
+
+// =========================
+//  TRANSLATIONS
+// =========================
+
+const translations = {
+    en: {
+        app_title: "Wholesale Distribution OS",
+        system_name: "Wholesale Distribution System",
+        welcome_message: "Welcome to your Dashboard",
+        dashboard_description: "Select your role to view the relevant dashboard.",
+        support_button: "Support / Help / Inquiries / Complaints",
+        support_number_label: "General Support: 800-111-222",
+        admin_panel_title: "Admin Panel",
+        admin_login_required: "Enter code and password to access the admin panel.",
+        admin_code_label: "Code:",
+        admin_password_label: "Password:",
+        login_button: "Login",
+        admin_login_error: "Invalid Code or Password.",
+        all_accounts: "All User Accounts",
+        sensitive_settings: "Sensitive Settings",
+        setting_example: "System configuration options, integration keys, etc.",
+        owner_dashboard_title: "Owner Dashboard",
+        kpis: "KPIs",
+        zone_heatmaps: "Zone heatmaps",
+        credit_risk: "Credit risk",
+        cashflow: "Cashflow",
+        profitability: "Profitability",
+        supplier_roi: "Supplier ROI",
+        admin_dashboard_title: "Admin Dashboard",
+        control_tower: "Control tower",
+        bank_transfer_ocr_queue: "Bank transfer OCR queue",
+        offer_scheduler: "Offer scheduler",
+        driver_management: "Driver management",
+        exception_handling: "Exception handling",
+        fleet_captain_dashboard_title: "Fleet Captain Dashboard",
+        dispatch_board: "Dispatch board",
+        route_splitting: "Route splitting",
+        route_locking: "Route locking",
+        driver_assignment: "Driver assignment",
+        escalation_queue: "Escalation queue",
+        live_tracking: "Live tracking",
+        zone_management: "Zone management",
+        iu_assistant_dashboard_title: "IU Assistant Dashboard",
+        read_only_access: "(Read-only access)",
+        products: "Products",
+        orders: "Orders",
+        drivers: "Drivers",
+        zones: "Zones",
+        tracking: "Tracking",
+        delivery_agent_view_title: "Delivery Agent View",
+        route_list: "Route list",
+        pod: "POD (photo, signature, OTP)",
+        masked_call_chat: "Masked call/chat",
+        offline_first_mode: "Offline-first mode",
+        store_customer_interface_title: "Store Customer Interface",
+        catalog: "Catalog",
+        offers: "Offers",
+        wallet: "Wallet",
+        invoices: "Invoices",
+        chat: "Chat",
+        live_tracking_updates: "Live Tracking Updates",
+        tracking_status: "Driver {driverId} at Lat: {lat}, Lng: {lng} - Status: {status}"
+    },
+
+    ar: {
+        app_title: "نظام التوزيع بالجملة",
+        system_name: "نظام التوزيع بالجملة",
+        welcome_message: "مرحباً بك في لوحة التحكم الخاصة بك",
+        dashboard_description: "اختر دورك لعرض لوحة التحكم المناسبة.",
+        support_button: "دعم / مساعدة / استفسارات / شكاوي",
+        support_number_label: "الدعم العام: 800-111-222",
+        admin_panel_title: "لوحة الإدارة",
+        admin_login_required: "أدخل الرمز وكلمة المرور للوصول إلى لوحة الإدارة.",
+        admin_code_label: "الرمز:",
+        admin_password_label: "كلمة المرور:",
+        login_button: "تسجيل الدخول",
+        admin_login_error: "رمز أو كلمة مرور غير صحيحة.",
+        all_accounts: "جميع حسابات المستخدمين",
+        sensitive_settings: "الإعدادات الحساسة",
+        setting_example: "خيارات تهيئة النظام، مفاتيح التكامل، إلخ.",
+        owner_dashboard_title: "لوحة تحكم المالك",
+        kpis: "مؤشرات الأداء",
+        zone_heatmaps: "الخرائط الحرارية للمناطق",
+        credit_risk: "مخاطر الائتمان",
+        cashflow: "التدفق النقدي",
+        profitability: "الربحية",
+        supplier_roi: "عائد المورد",
+        admin_dashboard_title: "لوحة تحكم المشرف",
+        control_tower: "برج التحكم",
+        bank_transfer_ocr_queue: "قائمة انتظار OCR للتحويلات البنكية",
+        offer_scheduler: "جدولة العروض",
+        driver_management: "إدارة السائقين",
+        exception_handling: "معالجة الاستثناءات",
+        fleet_captain_dashboard_title: "لوحة تحكم قائد الأسطول",
+        dispatch_board: "لوحة الإرسال",
+        route_splitting: "تقسيم المسار",
+        route_locking: "قفل المسار",
+        driver_assignment: "تعيين السائقين",
+        escalation_queue: "قائمة التصعيد",
+        live_tracking: "التتبع المباشر",
+        zone_management: "إدارة المناطق",
+        iu_assistant_dashboard_title: "لوحة تحكم مساعد الوحدة",
+        read_only_access: "(وصول للقراءة فقط)",
+        products: "المنتجات",
+        orders: "الطلبات",
+        drivers: "السائقون",
+        zones: "المناطق",
+        tracking: "التتبع",
+        delivery_agent_view_title: "عرض وكيل التسليم",
+        route_list: "قائمة المسارات",
+        pod: "إثبات التسليم (صورة، توقيع، OTP)",
+        masked_call_chat: "مكالمة/دردشة مقنعة",
+        offline_first_mode: "وضع عدم الاتصال أولاً",
+        store_customer_interface_title: "واجهة العميل",
+        catalog: "الكتالوج",
+        offers: "العروض",
+        wallet: "المحفظة",
+        invoices: "الفواتير",
+        chat: "الدردشة",
+        live_tracking_updates: "تحديثات التتبع المباشر",
+        tracking_status: "السائق {driverId} عند خط العرض {lat} وخط الطول {lng} - الحالة: {status}"
+    },
+
+    ur: {
+        app_title: "ہول سیل ڈسٹری بیوشن او ایس",
+        system_name: "ہول سیل ڈسٹری بیوشن سسٹم",
+        welcome_message: "آپ کے ڈیش بورڈ میں خوش آمدید",
+        dashboard_description: "متعلقہ ڈیش بورڈ دیکھنے کے لیے اپنا کردار منتخب کریں۔",
+        support_button: "سپورٹ / مدد / استفسارات / شکایات",
+        support_number_label: "جنرل سپورٹ: 800-111-222",
+        admin_panel_title: "ایڈمن پینل",
+        admin_login_required: "ایڈمن پینل تک رسائی کے لیے کوڈ اور پاس ورڈ درج کریں۔",
+        admin_code_label: "کوڈ:",
+        admin_password_label: "پاس ورڈ:",
+        login_button: "لاگ ان",
+        admin_login_error: "غلط کوڈ یا پاس ورڈ۔",
+        all_accounts: "تمام صارف اکاؤنٹس",
+        sensitive_settings: "حساس ترتیبات",
+        setting_example: "سسٹم کنفیگریشن کے اختیارات، انٹیگریشن کیز وغیرہ۔",
+        owner_dashboard_title: "مالک کا ڈیش بورڈ",
+        kpis: "کارکردگی کے اشاریے",
+        zone_heatmaps: "زون ہیٹ میپس",
+        credit_risk: "کریڈٹ رسک",
+        cashflow: "کیش فلو",
+        profitability: "منافع",
+        supplier_roi: "سپلائر ROI",
+        admin_dashboard_title: "ایڈمن ڈیش بورڈ",
+        control_tower: "کنٹرول ٹاور",
+        bank_transfer_ocr_queue: "بینک ٹرانسفر OCR قطار",
+        offer_scheduler: "آفر شیڈیولر",
+        driver_management: "ڈرائیور مینجمنٹ",
+        exception_handling: "استثناء ہینڈلنگ",
+        fleet_captain_dashboard_title: "فلیٹ کیپٹن ڈیش بورڈ",
+        dispatch_board: "ڈسپیچ بورڈ",
+        route_splitting: "روٹ تقسیم",
+        route_locking: "روٹ لاکنگ",
+        driver_assignment: "ڈرائیور تعیناتی",
+        escalation_queue: "اسکیلیشن قطار",
+        live_tracking: "لائیو ٹریکنگ",
+        zone_management: "زون مینجمنٹ",
+        iu_assistant_dashboard_title: "IU اسسٹنٹ ڈیش بورڈ",
+        read_only_access: "(صرف پڑھنے کی رسائی)",
+        products: "مصنوعات",
+        orders: "آرڈرز",
+        drivers: "ڈرائیورز",
+        zones: "زونز",
+        tracking: "ٹریکنگ",
+        delivery_agent_view_title: "ڈیلیوری ایجنٹ ویو",
+        route_list: "روٹ لسٹ",
+        pod: "ڈیلیوری کا ثبوت (تصویر، دستخط، OTP)",
+        masked_call_chat: "ماسکڈ کال/چیٹ",
+        offline_first_mode: "آف لائن فرسٹ موڈ",
+        store_customer_interface_title: "اسٹور کسٹمر انٹرفیس",
+        catalog: "کیٹلاگ",
+        offers: "آفرز",
+        wallet: "والٹ",
+        invoices: "انوائسز",
+        chat: "چیٹ",
+        live_tracking_updates: "لائیو ٹریکنگ اپڈیٹس",
+        tracking_status: "ڈرائیور {driverId} مقام {lat}, {lng} - اسٹیٹس: {status}"
+    }
+};
+
+
+// =========================
+//  USER ACCOUNTS
+// =========================
+
+const userAccounts = [
+    { role: "Owner", name: "Mokhled Al-Riyadh", code: "1405", password: "1405", access: "Full access" },
+    { role: "Fleet Captain", name: "Captain Sudan", phone: "+966 53 567 7870", code: "1405", password: "1405", access: "Operational access only" },
+    { role: "IU Assistant", name: "IU Pakistan", phone: "Hidden", code: "1405", password: "1405", access: "Read-only access", language: "en" }
+];
+
+
+// =========================
+//  LANGUAGE SWITCHING
+// =========================
+
+let currentLanguage = localStorage.getItem('currentLanguage') || 'en';
+
+function setLanguage(lang) {
+    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('dir', (lang === 'ar' || lang === 'ur') ? 'rtl' : 'ltr');
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = translations[lang][key] || translations['en'][key] || key;
+    });
+
+    currentLanguage = lang;
+    localStorage.setItem('currentLanguage', lang);
+}
+
+
+// =========================
+//  ADMIN PANEL LOGIN
+// =========================
+
+const adminLock = document.getElementById('adminLock');
+const adminPanel = document.getElementById('adminPanel');
+const adminLoginForm = document.getElementById('adminLoginForm');
+const adminLoginError = document.getElementById('adminLoginError');
+const adminContent = document.getElementById('adminContent');
+const userList = document.getElementById('userList');
+
+adminLock.addEventListener('click', () => {
+    adminPanel.classList.toggle('active');
+});
+
+adminLoginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const code = document.getElementById('adminCode').value;
+    const password = document.getElementById('adminPassword').value;
+
+    if (code === "1405" && password === "1405") {
+        adminLoginError.style.display = "none";
+        adminContent.style.display = "block";
+        loadUserAccounts();
+    } else {
+        adminLoginError.style.display = "block";
+    }
+});
+
+function loadUserAccounts() {
+    userList.innerHTML = "";
+    userAccounts.forEach(acc => {
+        const li = document.createElement('li');
+        li.textContent = `${acc.role} — ${acc.access}`;
+        userList.appendChild(li);
+    });
+}
+
+
+// =========================
+//  ROLE DASHBOARD SWITCHING
+// =========================
+
+function showDashboard(role) {
+    const dashboards = document.querySelectorAll('.dashboard-section');
+    dashboards.forEach(d => d.style.display = 'none');
+
+    if (role === "Owner") {
+        document.getElementById('ownerDashboard').style.display = 'block';
+        document.getElementById('adminDashboard').style.display = 'block';
+    }
+
+    if (role === "Fleet Captain") {
+        loadFleetCaptainDashboard();
+    }
+
+    if (role === "IU Assistant") {
+        setLanguage('en');
+        loadIUAssistantDashboard();
+    }
+}
+
+
+// =========================
+//  LIVE TRACKING SIMULATION
+// =========================
+
+let trackingIntervalId = null;
+
+function loadFleetCaptainDashboard() {
+    const container = document.getElementById('dashboardContainer');
+    container.innerHTML = `
+        <h2 data-i18n="fleet_captain_dashboard_title">${translations[currentLanguage].fleet_captain_dashboard_title}</h2>
+        <ul>
+            <li data-i18n="dispatch_board">${translations[currentLanguage].dispatch_board}</li>
+            <li data-i18n="route_splitting">${translations[currentLanguage].route_splitting}</li>
+            <li data-i18n="route_locking">${translations[currentLanguage].route_locking}</li>
+            <li data-i18n="driver_assignment">${translations[currentLanguage].driver_assignment}</li>
+            <li data-i18n="escalation_queue">${translations[currentLanguage].escalation_queue}</li>
+            <li data-i18n="live_tracking">${translations[currentLanguage].live_tracking}</li>
+            <li data-i18n="zone_management">${translations[currentLanguage].zone_management}</li>
+        </ul>
+
+        <h3>${translations[currentLanguage].live_tracking_updates}</h3>
+        <div id="liveTrackingOutput" style="border:1px solid #ccc;padding:10px;max-height:150px;overflow-y:auto;background:#f9f9f9;"></div>
+    `;
+
+    startTrackingUpdates();
+}
+
+function loadIUAssistantDashboard() {
+    const container = document.getElementById('dashboardContainer');
+    container.innerHTML = `
+        <h2>${translations.en.iu_assistant_dashboard_title}</h2>
+        <p>${translations.en.read_only_access}</p>
+        <ul>
+            <li>${translations.en.products}</li>
+            <li>${translations.en.orders}</li>
+            <li>${translations.en.drivers}</li>
+            <li>${translations.en.zones}</li>
+            <li>${translations.en.tracking}</li>
+        </ul>
+
+        <h3>${translations.en.live_tracking_updates}</h3>
+        <div id="liveTrackingOutput" style="border:1px solid #ccc;padding:10px;max-height:150px;overflow-y:auto;background:#f9f9f9;"></div>
+    `;
+
+    startTrackingUpdates();
+}
+
+function startTrackingUpdates() {
+    stopTrackingUpdates();
+
+    const trackingOutput = document.getElementById('liveTrackingOutput');
+    if (!trackingOutput) return;
+
+    let driverLat = 24.7136;
+    let driverLng = 46.6753;
+    let driverId = 101;
+    let statuses = ["En Route", "At Destination", "Delivered", "Delayed"];
+
+    trackingIntervalId = setInterval(() => {
+        driverLat += (Math.random() - 0.5) * 0.01;
+        driverLng += (Math.random() - 0.5) * 0.01;
+        const status = statuses[Math.floor(Math.random() * statuses.length)];
+
+        let text = translations[currentLanguage].tracking_status
+            .replace("{driverId}", driverId)
+            .replace("{lat}", driverLat.toFixed(4))
+            .replace("{lng}", driverLng.toFixed(4))
+            .replace("{status}", status);
+
+        const p = document.createElement('p');
+        p.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
+        trackingOutput.prepend(p);
+
+        if (trackingOutput.children.length > 5) {
+            trackingOutput.removeChild(trackingOutput.lastChild);
+        }
+    }, 3000);
+}
+
+function stopTrackingUpdates() {
+    if (trackingIntervalId) {
+        clearInterval(trackingIntervalId);
+        trackingIntervalId = null;
+    }
+}
+
+
+// =========================
+//  INITIALIZATION
+// =========================
+
+setLanguage(currentLanguage);
+
+</script>
