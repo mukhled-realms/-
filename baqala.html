@@ -1,675 +1,326 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="app_title"></title>
+import io
+import pandas as pd
+import streamlit as st
 
-<style>
-/* RESET */
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-    font-family:Arial,sans-serif;
-    background:#f4f4f4;
-    color:#333;
-    line-height:1.6;
-    text-align:start;
-}
-body[lang="ar"],body[lang="ur"]{
-    font-family:'Noto Kufi Arabic','Noto Naskh Arabic','Scheherazade New',sans-serif;
-}
+# ==========================================
+# 1. إعدادات الصفحة والتصميم السيادي (هوية نجد)
+# ==========================================
+st.set_page_config(
+    page_title="مرصد | نظام مسح الباركود والميدان",
+    page_icon="💎",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-/* RTL/LTR */
-[dir='rtl']{text-align:right;}
-.header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px 20px;
-    background:#007bff;
-    color:#fff;
-}
-.language-selector,.lock-icon{
-    padding:5px 10px;
-    background:#f0ad4e;
-    border:none;
-    color:white;
-    font-weight:bold;
-    border-radius:3px;
-    cursor:pointer;
-}
-.lock-icon{font-size:1.2em;}
-.main-content{padding:20px;}
-.dashboard-section{
-    background:#fff;
-    border:1px solid #ddd;
-    border-radius:5px;
-    padding:15px;
-    margin-bottom:15px;
-}
-h2{
-    color:#0056b3;
-    margin-bottom:10px;
-    border-bottom:2px solid #eee;
-    padding-bottom:5px;
-}
-.support-button{
-    display:block;
-    width:200px;
-    margin:20px auto;
-    padding:10px;
-    background:#28a745;
-    color:white;
-    text-align:center;
-    text-decoration:none;
-    border-radius:5px;
-}
-.admin-panel{
-    display:none;
-    background:#e9e9e9;
-    border:1px solid #ccc;
-    padding:20px;
-    margin-top:20px;
-    border-radius:5px;
-}
-.admin-panel.active{display:block;}
-.user-list li{
-    margin-bottom:5px;
-    padding:5px;
-    background:#f9f9f9;
-    border:1px solid #eee;
-    border-radius:3px;
-}
-input[type="password"]{
-    width:100%;
-    padding:8px;
-    margin-bottom:10px;
-    border:1px solid #ccc;
-    border-radius:4px;
-}
-button{
-    padding:10px 15px;
-    background:#007bff;
-    color:white;
-    border:none;
-    border-radius:4px;
-    cursor:pointer;
-}
-button:hover{background:#0056b3;}
-</style>
-</head>
-
-<body>
-<div class="header">
-    <div class="lock-icon" id="adminLock">🔒</div>
-    <h1 class="logo" data-i18n="system_name"></h1>
-    <select id="languageSelector" class="language-selector">
-        <option value="en">English</option>
-        <option value="ar">العربية</option>
-        <option value="ur">اردو</option>
-    </select>
-</div>
-
-<div class="main-content">
-    <div id="publicInterface">
-        <div id="dashboardContainer">
-            <h2 data-i18n="welcome_message"></h2>
-            <p data-i18n="dashboard_description"></p>
-
-            <div class="dashboard-section" id="ownerDashboard" style="display:none;">
-                <h2 data-i18n="owner_dashboard_title"></h2>
-                <ul>
-                    <li data-i18n="kpis"></li>
-                    <li data-i18n="zone_heatmaps"></li>
-                    <li data-i18n="credit_risk"></li>
-                    <li data-i18n="cashflow"></li>
-                    <li data-i18n="profitability"></li>
-                    <li data-i18n="supplier_roi"></li>
-                </ul>
-            </div>
-
-            <div class="dashboard-section" id="adminDashboard" style="display:none;">
-                <h2 data-i18n="admin_dashboard_title"></h2>
-                <ul>
-                    <li data-i18n="control_tower"></li>
-                    <li data-i18n="bank_transfer_ocr_queue"></li>
-                    <li data-i18n="offer_scheduler"></li>
-                    <li data-i18n="driver_management"></li>
-                    <li data-i18n="exception_handling"></li>
-                </ul>
-            </div>
-        </div>
-
-        <a href="#" class="support-button" data-i18n="support_button"></a>
-        <p class="support-number" data-i18n="support_number_label"></p>
-    </div>
-
-    <div id="adminPanel" class="admin-panel">
-        <h2 data-i18n="admin_panel_title"></h2>
-        <p data-i18n="admin_login_required"></p>
-        <form id="adminLoginForm">
-            <label data-i18n="admin_code_label"></label>
-            <input type="password" id="adminCode" required>
-            <label data-i18n="admin_password_label"></label>
-            <input type="password" id="adminPassword" required>
-            <button type="submit" data-i18n="login_button"></button>
-            <p id="adminLoginError" style="color:red;display:none;" data-i18n="admin_login_error"></p>
-        </form>
-
-        <div id="adminContent" style="display:none;">
-            <h3 data-i18n="all_accounts"></h3>
-            <ul id="userList" class="user-list"></ul>
-            <h3 data-i18n="sensitive_settings"></h3>
-            <p data-i18n="setting_example"></p>
-        </div>
-    </div>
-</div>
-<script>
-
-// =========================
-//  TRANSLATIONS
-// =========================
-
-const translations = {
-    en: {
-        app_title: "Wholesale Distribution OS",
-        system_name: "Wholesale Distribution System",
-        welcome_message: "Welcome to your Dashboard",
-        dashboard_description: "Select your role to view the relevant dashboard.",
-        support_button: "Support / Help / Inquiries / Complaints",
-        support_number_label: "General Support: 800-111-222",
-        admin_panel_title: "Admin Panel",
-        admin_login_required: "Enter code and password to access the admin panel.",
-        admin_code_label: "Code:",
-        admin_password_label: "Password:",
-        login_button: "Login",
-        admin_login_error: "Invalid Code or Password.",
-        all_accounts: "All User Accounts",
-        sensitive_settings: "Sensitive Settings",
-        setting_example: "System configuration options, integration keys, etc.",
-        owner_dashboard_title: "Owner Dashboard",
-        kpis: "KPIs",
-        zone_heatmaps: "Zone heatmaps",
-        credit_risk: "Credit risk",
-        cashflow: "Cashflow",
-        profitability: "Profitability",
-        supplier_roi: "Supplier ROI",
-        admin_dashboard_title: "Admin Dashboard",
-        control_tower: "Control tower",
-        bank_transfer_ocr_queue: "Bank transfer OCR queue",
-        offer_scheduler: "Offer scheduler",
-        driver_management: "Driver management",
-        exception_handling: "Exception handling",
-        fleet_captain_dashboard_title: "Fleet Captain Dashboard",
-        dispatch_board: "Dispatch board",
-        route_splitting: "Route splitting",
-        route_locking: "Route locking",
-        driver_assignment: "Driver assignment",
-        escalation_queue: "Escalation queue",
-        live_tracking: "Live tracking",
-        zone_management: "Zone management",
-        iu_assistant_dashboard_title: "IU Assistant Dashboard",
-        read_only_access: "(Read-only access)",
-        products: "Products",
-        orders: "Orders",
-        drivers: "Drivers",
-        zones: "Zones",
-        tracking: "Tracking",
-        delivery_agent_view_title: "Delivery Agent View",
-        route_list: "Route list",
-        pod: "POD (photo, signature, OTP)",
-        masked_call_chat: "Masked call/chat",
-        offline_first_mode: "Offline-first mode",
-        store_customer_interface_title: "Store Customer Interface",
-        catalog: "Catalog",
-        offers: "Offers",
-        wallet: "Wallet",
-        invoices: "Invoices",
-        chat: "Chat",
-        live_tracking_updates: "Live Tracking Updates",
-        tracking_status: "Driver {driverId} at Lat: {lat}, Lng: {lng} - Status: {status}"
-    },
-
-    ar: {
-        app_title: "نظام التوزيع بالجملة",
-        system_name: "نظام التوزيع بالجملة",
-        welcome_message: "مرحباً بك في لوحة التحكم الخاصة بك",
-        dashboard_description: "اختر دورك لعرض لوحة التحكم المناسبة.",
-        support_button: "دعم / مساعدة / استفسارات / شكاوي",
-        support_number_label: "الدعم العام: 800-111-222",
-        admin_panel_title: "لوحة الإدارة",
-        admin_login_required: "أدخل الرمز وكلمة المرور للوصول إلى لوحة الإدارة.",
-        admin_code_label: "الرمز:",
-        admin_password_label: "كلمة المرور:",
-        login_button: "تسجيل الدخول",
-        admin_login_error: "رمز أو كلمة مرور غير صحيحة.",
-        all_accounts: "جميع حسابات المستخدمين",
-        sensitive_settings: "الإعدادات الحساسة",
-        setting_example: "خيارات تهيئة النظام، مفاتيح التكامل، إلخ.",
-        owner_dashboard_title: "لوحة تحكم المالك",
-        kpis: "مؤشرات الأداء",
-        zone_heatmaps: "الخرائط الحرارية للمناطق",
-        credit_risk: "مخاطر الائتمان",
-        cashflow: "التدفق النقدي",
-        profitability: "الربحية",
-        supplier_roi: "عائد المورد",
-        admin_dashboard_title: "لوحة تحكم المشرف",
-        control_tower: "برج التحكم",
-        bank_transfer_ocr_queue: "قائمة انتظار OCR للتحويلات البنكية",
-        offer_scheduler: "جدولة العروض",
-        driver_management: "إدارة السائقين",
-        exception_handling: "معالجة الاستثناءات",
-        fleet_captain_dashboard_title: "لوحة تحكم قائد الأسطول",
-        dispatch_board: "لوحة الإرسال",
-        route_splitting: "تقسيم المسار",
-        route_locking: "قفل المسار",
-        driver_assignment: "تعيين السائقين",
-        escalation_queue: "قائمة التصعيد",
-        live_tracking: "التتبع المباشر",
-        zone_management: "إدارة المناطق",
-        iu_assistant_dashboard_title: "لوحة تحكم مساعد الوحدة",
-        read_only_access: "(وصول للقراءة فقط)",
-        products: "المنتجات",
-        orders: "الطلبات",
-        drivers: "السائقون",
-        zones: "المناطق",
-        tracking: "التتبع",
-        delivery_agent_view_title: "عرض وكيل التسليم",
-        route_list: "قائمة المسارات",
-        pod: "إثبات التسليم (صورة، توقيع، OTP)",
-        masked_call_chat: "مكالمة/دردشة مقنعة",
-        offline_first_mode: "وضع عدم الاتصال أولاً",
-        store_customer_interface_title: "واجهة العميل",
-        catalog: "الكتالوج",
-        offers: "العروض",
-        wallet: "المحفظة",
-        invoices: "الفواتير",
-        chat: "الدردشة",
-        live_tracking_updates: "تحديثات التتبع المباشر",
-        tracking_status: "السائق {driverId} عند خط العرض {lat} وخط الطول {lng} - الحالة: {status}"
-    },
-
-    ur: {
-        app_title: "ہول سیل ڈسٹری بیوشن او ایس",
-        system_name: "ہول سیل ڈسٹری بیوشن سسٹم",
-        welcome_message: "آپ کے ڈیش بورڈ میں خوش آمدید",
-        dashboard_description: "متعلقہ ڈیش بورڈ دیکھنے کے لیے اپنا کردار منتخب کریں۔",
-        support_button: "سپورٹ / مدد / استفسارات / شکایات",
-        support_number_label: "جنرل سپورٹ: 800-111-222",
-        admin_panel_title: "ایڈمن پینل",
-        admin_login_required: "ایڈمن پینل تک رسائی کے لیے کوڈ اور پاس ورڈ درج کریں۔",
-        admin_code_label: "کوڈ:",
-        admin_password_label: "پاس ورڈ:",
-        login_button: "لاگ ان",
-        admin_login_error: "غلط کوڈ یا پاس ورڈ۔",
-        all_accounts: "تمام صارف اکاؤنٹس",
-        sensitive_settings: "حساس ترتیبات",
-        setting_example: "سسٹم کنفیگریشن کے اختیارات، انٹیگریشن کیز وغیرہ۔",
-        owner_dashboard_title: "مالک کا ڈیش بورڈ",
-        kpis: "کارکردگی کے اشاریے",
-        zone_heatmaps: "زون ہیٹ میپس",
-        credit_risk: "کریڈٹ رسک",
-        cashflow: "کیش فلو",
-        profitability: "منافع",
-        supplier_roi: "سپلائر ROI",
-        admin_dashboard_title: "ایڈمن ڈیش بورڈ",
-        control_tower: "کنٹرول ٹاور",
-        bank_transfer_ocr_queue: "بینک ٹرانسفر OCR قطار",
-        offer_scheduler: "آفر شیڈیولر",
-        driver_management: "ڈرائیور مینجمنٹ",
-        exception_handling: "استثناء ہینڈلنگ",
-        fleet_captain_dashboard_title: "فلیٹ کیپٹن ڈیش بورڈ",
-        dispatch_board: "ڈسپیچ بورڈ",
-        route_splitting: "روٹ تقسیم",
-        route_locking: "روٹ لاکنگ",
-        driver_assignment: "ڈرائیور تعیناتی",
-        escalation_queue: "اسکیلیشن قطار",
-        live_tracking: "لائیو ٹریکنگ",
-        zone_management: "زون مینجمنٹ",
-        iu_assistant_dashboard_title: "IU اسسٹنٹ ڈیش بورڈ",
-        read_only_access: "(صرف پڑھنے کی رسائی)",
-        products: "مصنوعات",
-        orders: "آرڈرز",
-        drivers: "ڈرائیورز",
-        zones: "زونز",
-        tracking: "ٹریکنگ",
-        delivery_agent_view_title: "ڈیلیوری ایجنٹ ویو",
-        route_list: "روٹ لسٹ",
-        pod: "ڈیلیوری کا ثبوت (تصویر، دستخط، OTP)",
-        masked_call_chat: "ماسکڈ کال/چیٹ",
-        offline_first_mode: "آف لائن فرسٹ موڈ",
-        store_customer_interface_title: "اسٹور کسٹمر انٹرفیس",
-        catalog: "کیٹلاگ",
-        offers: "آفرز",
-        wallet: "والٹ",
-        invoices: "انوائسز",
-        chat: "چیٹ",
-        live_tracking_updates: "لائیو ٹریکنگ اپڈیٹس",
-        tracking_status: "ڈرائیور {driverId} مقام {lat}, {lng} - اسٹیٹس: {status}"
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background: linear-gradient(135deg, #fdfbf7 0%, #f4ebd0 100%);
+        color: #2c1810;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-};
+    .main-title { font-size: 2.2rem; font-weight: bold; color: #3d2314; }
+    .sub-title { font-size: 1.1rem; color: #5c3a21; }
+    .stat-card { background-color: #ffffff; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #c59b27;}
+    .stButton>button { background-color: #3d2314; color: #f3e5ab; border-radius: 8px; font-weight: bold; }
+    .stButton>button:hover { background-color: #5c3a21; color: white; }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
 
+# ==========================================
+# 2. الحماية بكلمة المرور السيادية
+# ==========================================
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
 
-// =========================
-//  USER ACCOUNTS
-// =========================
+if not st.session_state.authenticated:
+    st.markdown("<div class='main-title'>🔒 لوحة الإدارة السيادية المحمية</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-title'>الرجاء إدخال رمز الحماية (PIN) الخاص بالمدير للدخول.</div>", unsafe_allow_html=True)
+    pin_input = st.text_input("رمز الحماية", type="password")
+    if st.button("دخول النظام"):
+        if pin_input == "2026": # الرمز المعتمد للمشروع
+            st.session_state.authenticated = True
+            st.rerun()
+        else:
+            st.error("❌ رمز الحماية غير صحيح!")
+    st.stop()
 
-const userAccounts = [
-    { role: "Owner", name: "Mokhled Al-Riyadh", code: "1405", password: "1405", access: "Full access" },
-    { role: "Fleet Captain", name: "Captain Sudan", phone: "+966 53 567 7870", code: "1405", password: "1405", access: "Operational access only" },
-    { role: "IU Assistant", name: "IU Pakistan", phone: "Hidden", code: "1405", password: "1405", access: "Read-only access", language: "en" }
-];
+# ==========================================
+# 3. إدارة البيانات الأساسية (المخزون والديون والفوارغ)
+# ==========================================
+if "inventory" not in st.session_state:
+  st.session_state.inventory = pd.DataFrame([
+      {"باركود الصنف": "6281006401015", "كود الصنف": "SKU-001", "اسم المنتج": "مياه بيرين (كرتون 24×330 مل)", "سعر الجملة (ر.س)": 11.00, "سعر التجزئة (ر.س)": 14.00, "المخزون": 100, "الحالة": "متوفر"},
+      {"باركود الصنف": "6281072001928", "كود الصنف": "SKU-002", "اسم المنتج": "مسحوق غسيل تايد (2.5 كجم)", "سعر الجملة (ر.س)": 23.00, "سعر التجزئة (ر.س)": 28.00, "المخزون": 15, "الحالة": "قارب على النفاد"},
+      {"باركود الصنف": "6281101234567", "كود الصنف": "SKU-003", "اسم المنتج": "أرز أبو كاس (10 كجم)", "سعر الجملة (ر.س)": 82.99, "سعر التجزئة (ر.س)": 90.00, "المخزون": 30, "الحالة": "متوفر"},
+      {"باركود الصنف": "6281109876543", "كود الصنف": "SKU-004", "اسم المنتج": "معجون طماطم بنده (8×135 جم)", "سعر الجملة (ر.س)": 8.99, "سعر التجزئة (ر.س)": 12.00, "المخزون": 200, "الحالة": "متوفر"},
+  ])
 
+if "debts" not in st.session_state:
+    st.session_state.debts = pd.DataFrame(columns=["اسم البقالة / العميل", "رقم الجوال", "المبلغ المستحق (ر.س)", "حالة السداد"])
 
-// =========================
-//  LANGUAGE SWITCHING
-// =========================
+if "pallets_log" not in st.session_state:
+    st.session_state.pallets_log = pd.DataFrame(columns=["تاريخ الوردية", "رقم الطبلية / الشحنة", "عدد العبوات التالفة", "الملاحظات الأمنية"])
 
-let currentLanguage = localStorage.getItem('currentLanguage') || 'en';
+# ==========================================
+# 4. القائمة الجانبية للتنقل السيادي
+# ==========================================
+st.sidebar.title("💎 مرصد الفرص")
+st.sidebar.caption("المنصة التشغيلية المتقدمة لبيئة نجد")
+st.sidebar.write(f"👋 مرحباً بك، د. مخلد.")
 
-function setLanguage(lang) {
-    document.documentElement.setAttribute('lang', lang);
-    document.documentElement.setAttribute('dir', (lang === 'ar' || lang === 'ur') ? 'rtl' : 'ltr');
+menu = st.sidebar.radio(
+    "الانتقال إلى:",
+    [
+        "📊 لوحة التحكم العريضة",
+        "📷 مسح الباركود والكاميرا (سريع)",
+        "🧮 حاسبة الأسعار والعروض الفورية",
+        "📦 إدارة المستودع والمخزون",
+        "📒 دفتر ديون وحسابات البقالات",
+        "📋 تقارير الطبالي والفوارغ الميدانية",
+        "🔍 محرك تحليل فجوات الأسعار",
+        "🤖 التنبؤ بالطلب والذكاء الاصطناعي"
+    ],
+)
 
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        el.textContent = translations[lang][key] || translations['en'][key] || key;
-    });
+# ==========================================
+# 5. الأقسام والصفحات المعالجة
+# ==========================================
 
-    currentLanguage = lang;
-    localStorage.setItem('currentLanguage', lang);
-}
+# ----------------- 1. لوحة التحكم -----------------
+if menu == "📊 لوحة التحكم العريضة":
+  st.markdown("<div class='main-title'>📊 لوحة التحكم والتحليلات الفورية</div>", unsafe_allow_html=True)
+  st.divider()
 
+  df = st.session_state.inventory
+  total_items = len(df)
+  total_stock = df["المخزون"].sum()
+  total_valuation = (df["المخزون"] * df["سعر الجملة (ر.س)"]).sum()
+  
+  low_stock_items = df[df["المخزون"] < 20]
+  if not low_stock_items.empty:
+      st.warning(f"⚠️ تنبيه تشغيلي: يوجد {len(low_stock_items)} أصناف قاربت على النفاد (الكمية أقل من 20 قطعة).")
 
-// =========================
-//  ADMIN PANEL LOGIN
-// =========================
+  col1, col2, col3 = st.columns(3)
+  col1.metric("إجمالي الأصناف المسجلة", f"{total_items} أصناف")
+  col2.metric("إجمالي الوحدات بالمستودع", f"{total_stock:,.0f} قطعة")
+  col3.metric("تقييم المخزون (سعر الجملة)", f"{total_valuation:,.2f} ر.س")
 
-const adminLock = document.getElementById('adminLock');
-const adminPanel = document.getElementById('adminPanel');
-const adminLoginForm = document.getElementById('adminLoginForm');
-const adminLoginError = document.getElementById('adminLoginError');
-const adminContent = document.getElementById('adminContent');
-const userList = document.getElementById('userList');
+  st.divider()
+  st.subheader("📋 جدول الأصناف التشغيلية النشطة")
+  st.dataframe(df, use_container_width=True)
 
-adminLock.addEventListener('click', () => {
-    adminPanel.classList.toggle('active');
-});
+# ----------------- 2. مسح الباركود والكاميرا -----------------
+elif menu == "📷 مسح الباركود والكاميرا (سريع)":
+    st.markdown("<div class='main-title'>📷 مسح الباركود وإخراج المنتجات عبر الكاميرا</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-title'>وجه الكاميرا على باركود المنتج أو أدخل رقم الباركود يدوياً لتحديث المخزون وخصمه فوراً.</div>", unsafe_allow_html=True)
+    st.divider()
 
-adminLoginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+    col_cam1, col_cam2 = st.columns(2)
+    
+    with col_cam1:
+        st.subheader("🔍 إدخال الباركود أو مسحه")
+        scanned_code = st.text_input("أدخل أو امسح رقم الباركود (Barcode):", placeholder="مثال: 6281006401015")
+        
+        if scanned_code:
+            match = st.session_state.inventory[st.session_state.inventory["باركود الصنف"] == scanned_code]
+            if not match.empty:
+                prod_row = match.iloc[0]
+                st.success(f"✅ تم العثور على المنتج: {prod_row['اسم المنتج']}")
+                st.info(f"💰 السعر: {prod_row['سعر التجزئة (ر.س)']} ر.س | المخزون الحالي: {prod_row['المخزون']} قطعة")
+                
+                out_qty = st.number_input("الكمية المراد إخراجها / بيعها", min_value=1, max_value=int(prod_row['المخزون']), value=1)
+                if st.button("تأكيد إخراج المنتج وخصمه من المخزون"):
+                    # خصم الكمية من المخزون في الـ session_state
+                    idx = match.index[0]
+                    st.session_state.inventory.loc[idx, "المخزون"] -= out_qty
+                    st.success(f"🚀 تم بنجاح إخراج {out_qty} من ({prod_row['اسم المنتج']}) وتحديث المخزون!")
+                    st.rerun()
+            else:
+                st.error("❌ الباركود غير مسجل في النظام. يرجى إضافته إلى جدول المستودع أولاً.")
 
-    const code = document.getElementById('adminCode').value;
-    const password = document.getElementById('adminPassword').value;
+    with col_cam2:
+        st.subheader("📸 التقاط صورة المنتج بالميدان (معالجة مرئية)")
+        camera_photo = st.camera_input("التقط صورة لرف أو منتج للتدقيق البصري الفوري")
+        if camera_photo:
+            st.success("✅ تم استلام صورة الميدان بنجاح ومطابقتها مع الأرشيف البصري لمرصد.")
+            st.image(camera_photo, caption="صورة الوردية أو المنتج الميداني", use_column_width=True)
 
-    if (code === "1405" && password === "1405") {
-        adminLoginError.style.display = "none";
-        adminContent.style.display = "block";
-        loadUserAccounts();
-    } else {
-        adminLoginError.style.display = "block";
-    }
-});
+# ----------------- 3. حاسبة الأسعار -----------------
+elif menu == "🧮 حاسبة الأسعار والعروض الفورية":
+  st.markdown("<div class='main-title'>🧮 حاسبة التسعير وإرسال الفواتير</div>", unsafe_allow_html=True)
+  st.divider()
 
-function loadUserAccounts() {
-    userList.innerHTML = "";
-    userAccounts.forEach(acc => {
-        const li = document.createElement('li');
-        li.textContent = `${acc.role} — ${acc.access}`;
-        userList.appendChild(li);
-    });
-}
+  c1, c2 = st.columns(2)
+  with c1:
+    prod_name = st.text_input("اسم المنتج / البند", "مياه بيرين")
+    base_price = st.number_input("سعر التكلفة الأساسي (ر.س)", min_value=0.0, value=11.0, step=1.0)
+    margin_percent = st.slider("نسبة هامش الربح المستهدف (%)", 0, 100, 20)
 
+  with c2:
+    qty = st.number_input("الكمية المطلوبة (كراتين / حبات)", min_value=1, value=10, step=1)
+    discount_val = st.number_input("خصم إضافي (ر.س)", min_value=0.0, value=0.0, step=1.0)
+    tax_rate = st.checkbox("تطبيق ضريبة القيمة المضافة (15%)", value=False)
 
-// =========================
-//  ROLE DASHBOARD SWITCHING
-// =========================
+  unit_price_with_margin = base_price * (1 + margin_percent / 100)
+  subtotal = unit_price_with_margin * qty
+  subtotal_after_discount = max(0.0, subtotal - discount_val)
+  tax_amount = subtotal_after_discount * 0.15 if tax_rate else 0.0
+  final_grand_total = subtotal_after_discount + tax_amount
 
-function showDashboard(role) {
-    const dashboards = document.querySelectorAll('.dashboard-section');
-    dashboards.forEach(d => d.style.display = 'none');
+  st.markdown("---")
+  res_col1, res_col2, res_col3 = st.columns(3)
+  res_col1.metric("السعر قبل الضريبة", f"{subtotal_after_discount:,.2f} ر.س")
+  res_col2.metric("مبلغ الضريبة (15%)", f"{tax_amount:,.2f} ر.س")
+  res_col3.metric("الصافي الإجمالي النهائي", f"{final_grand_total:,.2f} ر.س")
 
-    if (role === "Owner") {
-        document.getElementById('ownerDashboard').style.display = 'block';
-        document.getElementById('adminDashboard').style.display = 'block';
-    }
+  st.write("---")
+  message = f"مرحباً، طلبكم من مرصد الفرص:\n📦 المنتج: {prod_name}\n🔢 الكمية: {qty}\n💰 الإجمالي النهائي: {final_grand_total:,.2f} ر.س\nشكراً لثقتكم بخدماتنا."
+  whatsapp_number = "966532340613"
+  whatsapp_url = f"https://wa.me/{whatsapp_number}?text={message.replace(' ', '%20').replace('\n', '%0A')}"
+  
+  st.markdown(f'''
+    <a href="{whatsapp_url}" target="_blank" style="text-decoration: none;">
+        <button style="background-color: #25D366; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%;">
+            📱 إرسال الفاتورة عبر واتساب للبقالة أو المندوب
+        </button>
+    </a>
+  ''', unsafe_allow_html=True)
 
-    if (role === "Fleet Captain") {
-        loadFleetCaptainDashboard();
-    }
+# ----------------- 4. إدارة المستودع -----------------
+elif menu == "📦 إدارة المستودع والمخزون":
+  st.markdown("<div class='main-title'>📦 سجل المستودع وإدارة الأصناف والباركات</div>", unsafe_allow_html=True)
+  st.divider()
 
-    if (role === "IU Assistant") {
-        setLanguage('en');
-        loadIUAssistantDashboard();
-    }
-}
+  with st.expander("➕ إضافة صنف جديد مع الباركود", expanded=False):
+    with st.form("add_item_form"):
+      fc1, fc2, fc3 = st.columns(3)
+      new_barcode = fc1.text_input("باركود الصنف (الرقمي)", "6281111111111")
+      new_code = fc2.text_input("كود الصنف", "SKU-005")
+      new_name = fc3.text_input("اسم المنتج", "منتج جديد")
 
+      fc4, fc5, fc6, fc7 = st.columns(4)
+      new_cost = fc4.number_input("سعر الجملة", min_value=0.0, value=50.0)
+      new_retail = fc5.number_input("سعر التجزئة", min_value=0.0, value=75.0)
+      new_stock = fc6.number_input("الكمية", min_value=0, value=100)
+      new_status = fc7.selectbox("الحالة", ["متوفر", "تحت المراجعة", "قارب على النفاد"])
 
-// =========================
-//  LIVE TRACKING SIMULATION
-// =========================
-
-let trackingIntervalId = null;
-
-function loadFleetCaptainDashboard() {
-    const container = document.getElementById('dashboardContainer');
-    container.innerHTML = `
-        <h2 data-i18n="fleet_captain_dashboard_title">${translations[currentLanguage].fleet_captain_dashboard_title}</h2>
-        <ul>
-            <li data-i18n="dispatch_board">${translations[currentLanguage].dispatch_board}</li>
-            <li data-i18n="route_splitting">${translations[currentLanguage].route_splitting}</li>
-            <li data-i18n="route_locking">${translations[currentLanguage].route_locking}</li>
-            <li data-i18n="driver_assignment">${translations[currentLanguage].driver_assignment}</li>
-            <li data-i18n="escalation_queue">${translations[currentLanguage].escalation_queue}</li>
-            <li data-i18n="live_tracking">${translations[currentLanguage].live_tracking}</li>
-            <li data-i18n="zone_management">${translations[currentLanguage].zone_management}</li>
-        </ul>
-
-        <h3>${translations[currentLanguage].live_tracking_updates}</h3>
-        <div id="liveTrackingOutput" style="border:1px solid #ccc;padding:10px;max-height:150px;overflow-y:auto;background:#f9f9f9;"></div>
-    `;
-
-    startTrackingUpdates();
-}
-
-function loadIUAssistantDashboard() {
-    const container = document.getElementById('dashboardContainer');
-    container.innerHTML = `
-        <h2>${translations.en.iu_assistant_dashboard_title}</h2>
-        <p>${translations.en.read_only_access}</p>
-        <ul>
-            <li>${translations.en.products}</li>
-            <li>${translations.en.orders}</li>
-            <li>${translations.en.drivers}</li>
-            <li>${translations.en.zones}</li>
-            <li>${translations.en.tracking}</li>
-        </ul>
-
-        <h3>${translations.en.live_tracking_updates}</h3>
-        <div id="liveTrackingOutput" style="border:1px solid #ccc;padding:10px;max-height:150px;overflow-y:auto;background:#f9f9f9;"></div>
-    `;
-
-    startTrackingUpdates();
-}
-
-function startTrackingUpdates() {
-    stopTrackingUpdates();
-
-    const trackingOutput = document.getElementById('liveTrackingOutput');
-    if (!trackingOutput) return;
-
-    let driverLat = 24.7136;
-    let driverLng = 46.6753;
-    let driverId = 101;
-    let statuses = ["En Route", "At Destination", "Delivered", "Delayed"];
-
-    trackingIntervalId = setInterval(() => {
-        driverLat += (Math.random() - 0.5) * 0.01;
-        driverLng += (Math.random() - 0.5) * 0.01;
-        const status = statuses[Math.floor(Math.random() * statuses.length)];
-
-        let text = translations[currentLanguage].tracking_status
-            .replace("{driverId}", driverId)
-            .replace("{lat}", driverLat.toFixed(4))
-            .replace("{lng}", driverLng.toFixed(4))
-            .replace("{status}", status);
-
-        const p = document.createElement('p');
-        p.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
-        trackingOutput.prepend(p);
-
-        if (trackingOutput.children.length > 5) {
-            trackingOutput.removeChild(trackingOutput.lastChild);
+      submitted = st.form_submit_button("حفظ الصنف في النظام")
+      if submitted:
+        new_row = {
+            "باركود الصنف": new_barcode, "كود الصنف": new_code, "اسم المنتج": new_name, 
+            "سعر الجملة (ر.س)": new_cost, "سعر التجزئة (ر.س)": new_retail, "المخزون": new_stock, "الحالة": new_status,
         }
-    }, 3000);
-}
+        st.session_state.inventory = pd.concat([st.session_state.inventory, pd.DataFrame([new_row])], ignore_index=True)
+        st.success("تم إضافة الصنف والباركود بنجاح!")
+        st.rerun()
 
-function stopTrackingUpdates() {
-    if (trackingIntervalId) {
-        clearInterval(trackingIntervalId);
-        trackingIntervalId = null;
-    }
-}
+  st.dataframe(st.session_state.inventory, use_container_width=True)
 
+  csv_buffer = io.StringIO()
+  st.session_state.inventory.to_csv(csv_buffer, index=False, encoding="utf-8-sig")
+  st.download_button(
+      label="📥 تحميل تقرير المخزون الكامل (CSV)",
+      data=csv_buffer.getvalue(),
+      file_name="marsad_inventory.csv",
+      mime="text/csv",
+  )
 
-// =========================
-//  INITIALIZATION
-// =========================
+# ----------------- 5. دفتر ديون البقالات -----------------
+elif menu == "📒 دفتر ديون وحسابات البقالات":
+    st.markdown("<div class='main-title'>📒 دفتر متابعة الديون والمستحقات الآجلة</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-title'>إدارة المبالغ المعلقة للبقالات والمطاعم التي تطلب الدفع لاحقاً.</div>", unsafe_allow_html=True)
+    st.divider()
 
-setLanguage(currentLanguage);
+    with st.form("debt_form"):
+        dc1, dc2, dc3 = st.columns(3)
+        store_name = dc1.text_input("اسم البقالة / المطعم", "بقالة الأمل")
+        store_phone = dc2.text_input("رقم الجوال", "05xxxxxxxx")
+        debt_amount = dc3.number_input("المبلغ المستحق (ر.س)", min_value=0.0, value=150.0)
+        debt_status = st.selectbox("حالة السداد", ["معلق (لم يُسدد)", "تم سداد النصف", "تم السداد بالكامل"])
+        
+        add_debt = st.form_submit_button("تسجيل المديونية في الدفتر")
+        if add_debt:
+            new_d = {"اسم البقالة / العميل": store_name, "رقم الجوال": store_phone, "المبلغ المستحق (ر.س)": debt_amount, "حالة السداد": debt_status}
+            st.session_state.debts = pd.concat([st.session_state.debts, pd.DataFrame([new_d])], ignore_index=True)
+            st.success("تم تسجيل المديونية بنجاح!")
+            st.rerun()
 
-</script>
-<script>
-// =========================
-//  WHOLESALE OS – SIMULATED ENGINES
-// =========================
+    st.subheader("📋 سجل المديونيات الحالي")
+    if not st.session_state.debts.empty:
+        st.dataframe(st.session_state.debts, use_container_width=True)
+        total_debts = st.session_state.debts[st.session_state.debts["حالة السداد"] != "تم السداد بالكامل"]["المبلغ المستحق (ر.س)"].sum()
+        st.metric("إجمالي الديون المعلقة في السوق", f"{total_debts:,.2f} ر.س")
+    else:
+        st.info("لا توجد ديون مسجلة حتى الآن.")
 
-// طلبات المتاجر (محاكاة)
-const orders = [
-    { id: 1, store: "Store A", status: "Pending", amount: 350.75, zone: "East Riyadh" },
-    { id: 2, store: "Store B", status: "Assigned", amount: 120.00, zone: "North Riyadh" },
-    { id: 3, store: "Store C", status: "Delivered", amount: 980.50, zone: "South Riyadh" }
-];
+# ----------------- 6. تقارير الطبالي والفوارغ -----------------
+elif menu == "📋 تقارير الطبالي والفوارغ الميدانية":
+    st.markdown("<div class='main-title'>📋 بروتوكول فحص الطبالي وإدارة الفوارغ</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-title'>تدقيق الشحنات الواردة، رصد التالف، ومنع الهدر التشغيلي.</div>", unsafe_allow_html=True)
+    st.divider()
 
-// السائقين (محاكاة)
-const drivers = [
-    { id: 101, name: "Driver 1", status: "Available", zone: "East Riyadh" },
-    { id: 102, name: "Driver 2", status: "On Route", zone: "North Riyadh" },
-    { id: 103, name: "Driver 3", status: "Resting", zone: "South Riyadh" }
-];
+    with st.form("pallet_form"):
+        pc1, pc2 = st.columns(2)
+        pallet_date = pc1.text_input("تاريخ الوردية", "2026-11-07")
+        pallet_id = pc2.text_input("رقم الطبلية / الشحنة الواردة", "PLT-8890")
+        
+        pc3, pc4 = st.columns(2)
+        damaged_count = pc3.number_input("عدد العبوات التالفة / المفتوحة", min_value=0, value=0)
+        security_notes = pc4.text_area("الملاحظات الأمنية والتشغيلية", "تم فحص الشحنة واستلام السليم ورفض التالف.")
+        
+        save_pallet = st.form_submit_button("توثيق تقرير الوردية")
+        if save_pallet:
+            new_p = {"تاريخ الوردية": pallet_date, "رقم الطبلية / الشحنة": pallet_id, "عدد العبوات التالفة": damaged_count, "الملاحظات الأمنية": security_notes}
+            st.session_state.pallets_log = pd.concat([st.session_state.pallets_log, pd.DataFrame([new_p])], ignore_index=True)
+            st.success("تم توثيق تقرير الوردية بنجاح في أرشيفك الميداني!")
+            st.rerun()
 
-// محاكاة واتساب (رسائل طلبات)
-function simulateWhatsAppOrder(storeName, items) {
-    console.log(`[WhatsApp] New order from ${storeName}: ${items.join(", ")}`);
-    // هنا ممكن تربط لاحقاً بـ API حقيقي
-}
+    st.subheader("📂 أرشيف تقارير الطبالي الميدانية")
+    if not st.session_state.pallets_log.empty:
+        st.dataframe(st.session_state.pallets_log, use_container_width=True)
+    else:
+        st.info("لم يتم تسجيل أي تقارير طبالي بعد.")
 
-// محاكاة OCR لتحويلات بنكية
-function simulateBankTransferOCR(imageId) {
-    console.log(`[OCR] Reading bank transfer image #${imageId}...`);
-    // نتيجة وهمية
-    return {
-        account: "SA123456789",
-        amount: 1250.75,
-        reference: "INV-2026-001",
-        status: "Parsed"
-    };
-}
+# ----------------- 7. محرك الفجوات -----------------
+elif menu == "🔍 محرك تحليل فجوات الأسعار":
+  st.markdown("<div class='main-title'>🔍 محرك تحليل فجوات الأسعار (Arbitrage)</div>", unsafe_allow_html=True)
+  st.divider()
 
-// محاكاة AI للتنبؤ بالطلب
-function simulateDemandForecast(storeName, zone) {
-    console.log(`[AI] Forecasting demand for ${storeName} in zone ${zone}...`);
-    return {
-        next7DaysCases: Math.floor(Math.random() * 50) + 10,
-        confidence: (Math.random() * 0.3 + 0.7).toFixed(2)
-    };
-}
+  df_arb = st.session_state.inventory.copy()
+  df_arb["الفجوة السعرية (ر.س)"] = df_arb["سعر التجزئة (ر.س)"] - df_arb["سعر الجملة (ر.س)"]
+  df_arb["نسبة الربح (%)"] = (df_arb["الفجوة السعرية (ر.س)"] / df_arb["سعر الجملة (ر.س)"]) * 100
+  df_arb["إجمالي الربح المتوقع (ر.س)"] = df_arb["الفجوة السعرية (ر.س)"] * df_arb["المخزون"]
 
-// محاكاة ZATCA (توليد فاتورة إلكترونية)
-function simulateZATCAInvoice(orderId) {
-    console.log(`[ZATCA] Generating e-invoice for order #${orderId}...`);
-    return {
-        invoiceId: `ZATCA-${orderId}-${Date.now()}`,
-        status: "Generated",
-        qr: "QR_CODE_PLACEHOLDER"
-    };
-}
+  st.dataframe(df_arb.style.format({
+          "سعر الجملة (ر.س)": "{:.2f}", "سعر التجزئة (ر.س)": "{:.2f}", 
+          "الفجوة السعرية (ر.س)": "{:.2f}", "نسبة الربح (%)": "{:.1f}%", "إجمالي الربح المتوقع (ر.س)": "{:.2f}",
+      }), use_container_width=True)
 
-// محاكاة WASL / TGA (ربط تتبع)
-function simulateWASLTracking(driverId) {
-    console.log(`[WASL] Syncing driver #${driverId} location to WASL/TGA...`);
-    return {
-        driverId,
-        synced: true,
-        timestamp: new Date().toISOString()
-    };
-}
+# ----------------- 8. التنبؤ بالطلب -----------------
+elif menu == "🤖 التنبؤ بالطلب والذكاء الاصطناعي":
+  st.markdown("<div class='main-title'>🤖 التنبؤ بالطلب والمخزون المستقبلي</div>", unsafe_allow_html=True)
+  st.markdown("<div class='sub-title'>محاكاة ذكية لحركة السحب ومعرفة الكميات المطلوبة للأسبوع القادم.</div>", unsafe_allow_html=True)
+  st.divider()
 
-// محاكاة رصيد ائتماني
-function simulateCreditCheck(storeName) {
-    console.log(`[Credit] Checking credit for ${storeName}...`);
-    return {
-        store: storeName,
-        limit: 5000,
-        used: Math.floor(Math.random() * 4000),
-        riskScore: Math.floor(Math.random() * 100)
-    };
-}
+  df = st.session_state.inventory
+  st.write("بناءً على معدل الطلب الميداني، هذه توقعات احتياجك للأسبوع القادم:")
+  
+  forecast_data = []
+  for index, row in df.iterrows():
+      predicted_demand = max(0, int(row["المخزون"] * 0.3))
+      if predicted_demand > 0:
+          forecast_data.append({
+              "المنتج": row["اسم المنتج"],
+              "المخزون الحالي": row["المخزون"],
+              "الطلب المتوقع (الأسبوع القادم)": predicted_demand,
+              "الحالة": "⚠️ تحتاج طلبية" if predicted_demand > row["المخزون"] else "✅ كافي"
+          })
+  
+  st.table(pd.DataFrame(forecast_data))
 
-// محاكاة استثناءات تشغيلية
-const exceptionsQueue = [];
-
-function raiseOperationalException(type, details) {
-    const ex = {
-        id: exceptionsQueue.length + 1,
-        type,
-        details,
-        time: new Date().toLocaleString()
-    };
-    exceptionsQueue.push(ex);
-    console.warn(`[EXCEPTION] ${type}: ${details}`);
-}
-
-// محاكاة POD (إثبات التسليم)
-function simulatePOD(orderId) {
-    console.log(`[POD] Capturing proof of delivery for order #${orderId}...`);
-    return {
-        orderId,
-        photo: "PHOTO_PLACEHOLDER",
-        signature: "SIGNATURE_PLACEHOLDER",
-        otp: Math.floor(100000 + Math.random() * 900000),
-        status: "Captured"
-    };
-}
-
-// =========================
-//  SIMPLE UI HOOKS (DEMO)
-// =========================
-
-function demoOwnerOps() {
-    console.log("=== OWNER OPS DEMO ===");
-    const forecast = simulateDemandForecast("Store A", "East Riyadh");
-    const credit = simulateCreditCheck("Store A");
-    const inv = simulateZATCAInvoice(1);
-    console.log({ forecast, credit, inv });
-}
-
-function demoAdminOps() {
-    console.log("=== ADMIN OPS DEMO ===");
-    const ocr = simulateBankTransferOCR(10);
-    const wasl = simulateWASLTracking(101);
-    raiseOperationalException("DelayedDelivery", "Driver 102 delayed due to traffic.");
-    console.log({ ocr, wasl, exceptionsQueue });
-}
-
-function demoFleetOps() {
-    console.log("=== FLEET OPS DEMO ===");
-    simulateWhatsAppOrder("Store B", ["Water 24x", "Rice 10kg"]);
-    const pod = simulatePOD(2);
-    console.log({ pod });
-}
-
-// ممكن تربط هذه الدوال بأزرار لاحقاً في الواجهة
-// مثلاً: زر "تشغيل تجريبي" للمالك، المشرف، الكابتن، إلخ.
-
-            </script>
+st.divider()
+st.caption("طُوّر بواسطة منصة مرصد الفرص | د. مخلد | 2026 - جميع الحقوق محفوظة")
